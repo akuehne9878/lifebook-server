@@ -4,52 +4,80 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "sap/ui/core/mvc/Controller"], fun
       this.getOwnerComponent().registerController(this);
     },
 
-    getSplitContainer: function() {
-      return this.getView().byId("splitApp");
+    getMasterDetailDSC: function() {
+      return this.getView().byId("masterDetailDSC");
     },
 
-    getMainDynamicSideConent: function() {
-      return this.getView().byId("mainDSC");
+    getDetailDSC: function() {
+      return this.getView().byId("detailDSC");
     },
 
-    getDynamicSideConent: function() {
-      return this.getView().byId("dsc");
+    getPage0: function() {
+      return this.getView().byId("page0");
+    },
+
+    getPage1: function() {
+      return this.getView().byId("page1");
     },
 
     setMasterView: function(oView) {
       oView.setHeight("100%");
 
-      this.getMainDynamicSideConent().removeAllSideContent();
-      this.getMainDynamicSideConent().addSideContent(oView);
-      this.getMainDynamicSideConent().setShowSideContent(true);
+      this.getMasterDetailDSC().removeAllSideContent();
+      this.getMasterDetailDSC().addSideContent(oView);
+      this.getMasterDetailDSC().setShowSideContent(true);
     },
 
     setDetailView: function(oView) {
       oView.setHeight("100%");
 
-      this.getDynamicSideConent().removeAllMainContent();
-      this.getDynamicSideConent().addMainContent(oView);
-      this.getDynamicSideConent().setShowSideContent(false);
+      this.getDetailDSC().removeAllMainContent();
+      this.getDetailDSC().addMainContent(oView);
+      this.getDetailDSC().setShowSideContent(false);
     },
 
     setSideContentView: function(oView) {
       oView.setHeight("100%");
 
-      this.getDynamicSideConent().removeAllSideContent();
-      this.getDynamicSideConent().addSideContent(oView);
-      this.getDynamicSideConent().setShowSideContent(true);
+      this.getDetailDSC().removeAllSideContent();
+      this.getDetailDSC().addSideContent(oView);
+      this.getDetailDSC().setShowSideContent(true);
+    },
+
+    hidePage0Header: function() {
+      this.getPage0().setShowHeader(false);
+    },
+
+    showPage0Header: function() {
+      this.getPage0().setShowHeader(true);
+    },
+
+    setPage0HeaderView: function(oView) {
+      this.getPage0().setCustomHeader(oView.getContent()[0]);
+    },
+
+    hidePage1Header: function() {
+      this.getPage1().setShowHeader(false);
+    },
+
+    showPage1Header: function() {
+      this.getPage1().setShowHeader(true);
+    },
+
+    setPage1HeaderView: function(oView) {
+      this.getPage1().setCustomHeader(oView.getContent()[0]);
     },
 
     closeSideContent: function() {
-      this.getDynamicSideConent().setShowSideContent(false);
+      this.getDetailDSC().setShowSideContent(false);
     },
 
     showMaster: function() {
-      this.getMainDynamicSideConent().setShowSideContent(true);
+      this.getMasterDetailDSC().setShowSideContent(true);
     },
 
     hideMaster: function() {
-      this.getMainDynamicSideConent().setShowSideContent(false);
+      this.getMasterDetailDSC().setShowSideContent(false);
     },
 
     deviceSetup: function() {

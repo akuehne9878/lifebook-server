@@ -4,6 +4,10 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
       // call the init function of the parent
       UIComponent.prototype.init.apply(this, arguments);
 
+      // create the views based on the url/hash
+      this.getRouter().initialize();
+
+
       this.setModel(new JSONModel(Device), "device");
 
       window.ownerComponent = this;
@@ -11,6 +15,7 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
 
       this.setModel(new JSONModel(), "currPage");
       this.setModel(new JSONModel(), "tree");
+
     },
 
     isPhone: function() {

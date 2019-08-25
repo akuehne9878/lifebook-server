@@ -1,0 +1,28 @@
+<mvc:View xmlns:grid="sap.ui.layout.cssgrid" xmlns:f="sap.f" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" controllerName="lifebook.view.main.detail.attachments.Attachments">
+
+			<f:GridList items="{currPage>/files}">
+
+				<f:customLayout>
+					<grid:GridBoxLayout boxWidth="18rem"/>
+				</f:customLayout>
+
+				<CustomListItem type="Active">
+					<VBox height="15rem">
+						<VBox justifyContent="SpaceBetween">
+							<layoutData>
+								<FlexItemData growFactor="1" shrinkFactor="0" /><!-- Don't shrink below minimum size. Fill space if available. -->
+							</layoutData>
+							<VBox class="sapUiSmallMargin">
+								<Title text="{currPage>name}" wrapping="true"/>
+								<Label text="{currPage>date}" wrapping="true" class="sapUiTinyMarginBottom"/>
+							</VBox>
+							<OverflowToolbar design="Transparent">
+								<ToolbarSpacer/>
+								<Button icon="sap-icon://delete" press="onDeleteFile" type="Transparent"/>
+							</OverflowToolbar>
+						</VBox>
+					</VBox>
+				</CustomListItem>
+
+			</f:GridList>
+</mvc:View>

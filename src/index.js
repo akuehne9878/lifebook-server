@@ -3,6 +3,7 @@ const Lifebook = require("./api/Lifebook");
 const fileUpload = require("express-fileupload");
 
 var fs = require("fs");
+
 var path = require("path");
 
 var app = express();
@@ -43,7 +44,6 @@ app.get("/wiki/*", function(req, res) {
   sendFile(path.join(__dirname, "../", decodeURIComponent(req.path)), res);
 });
 
-app.get("/api/nextSeq", Lifebook.nextSeq);
 
 app.get("/api/tree", Lifebook.tree);
 
@@ -55,12 +55,20 @@ app.post("/api/savePage", Lifebook.savePage);
 
 app.post("/api/deletePage", Lifebook.deletePage);
 
+app.post("/api/renamePage", Lifebook.renamePage);
+
+app.post("/api/copyPage", Lifebook.copyPage);
+
+app.post("/api/movePage", Lifebook.movePage);
+
+app.post("/api/deleteFile", Lifebook.deleteFile);
+
 app.post("*/upload", function(req, res) {
-  console.log(decodeURIComponent(req.path));
-  console.log(req.files); // the uploaded file object
+  //console.log(decodeURIComponent(req.path));
+  //console.log(req.files); // the uploaded file object
 
   var path = decodeURIComponent(req.path)
-    .replace("upload/", "")
+    .replace("upload", "")
     .substring(1);
 
   // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
@@ -70,7 +78,7 @@ app.post("*/upload", function(req, res) {
   uploadFile.mv(path + req.files.uploadFile.name, function(err) {
     if (err) return res.status(500).send(err);
 
-    res.send("File uploaded!");
+    res.status(200).send("200");
   });
 });
 

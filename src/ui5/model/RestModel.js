@@ -20,6 +20,22 @@ sap.ui.define(["jquery.sap.global", "sap/ui/model/json/JSONModel", "sap/ui/model
       return this._post("/api/deletePage", data);
     },
 
+    renamePage: function(data) {
+      return this._post("/api/renamePage", data);
+    },
+
+    copyPage: function(data) {
+      return this._post("/api/copyPage", data);
+    },
+
+    movePage: function(data) {
+      return this._post("/api/movePage", data);
+    },
+
+    deleteFile: function(data) {
+      return this._post("/api/deleteFile", data);
+    },
+
     _get: function(url) {
       return this._ajax(url, "GET");
     },

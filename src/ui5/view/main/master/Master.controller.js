@@ -12,13 +12,14 @@ sap.ui.define(
   function(BaseView, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Log) {
     return BaseView.extend("lifebook.view.main.master.Master", {
       onInit: function(oEvent) {
+        this.getOwnerComponent().registerController(this);
         this.reloadLifebookTree();
       },
 
       reloadLifebookTree: function() {
         var that = this;
         var oRestModel = new RestModel();
-        oRestModel.tree().then(function(data) {
+        return oRestModel.tree().then(function(data) {
           that._prepareLifebookModel(data);
           oRestModel.setProperty("/", data);
           that.getModel("tree").setProperty("/", oRestModel.getData());
@@ -51,20 +52,28 @@ sap.ui.define(
         }
 
         if (oObj.type === "lifebook" || oObj.type === "page") {
-          var that = this;
-          var oRestModel = new RestModel();
-          that.getModel("currPage").setProperty("/path", oObj.path.replace("/metainfo.json", ""));
-          oRestModel.loadPage({ path: oObj.path }).then(function(data) {
-            that.getModel("currPage").setProperty("/", oRestModel.getData());
-
-            var oDetailController = that.getController("lifebook.view.main.detail.Detail");
-            oDetailController.getToastEditor().setValue(data.content);
-
-            if (that.getOwnerComponent().isPhone()) {
-              that.getController("lifebook.base.Base").hideMaster();
-            }
-          });
+          this.getModel("currPage").setProperty("/path", oObj.path);
+          this.reloadPage(oObj.path);
         }
+      },
+
+      _navToPage: function(sPath) {
+        var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+        oRouter.navTo("page", {
+          path: sPath
+        });
+      },
+
+      reloadPage: function(sPath, options) {
+        var that = this;
+        if (options && options.reloadTree) {
+          this.reloadLifebookTree().then(function() {
+            that._navToPage(sPath);
+          })
+        } else {
+          this._navToPage(sPath);
+        }
+
       },
 
       onCreatePage: function(oEvent) {

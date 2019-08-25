@@ -25,19 +25,46 @@ sap.ui.define(
             that
               .getView()
               .byId("lifebook")
-              .addItem(oView);
+              .addContent(oView);
 
-            var pMasterView = that.getOwnerComponent().loadView("lifebook.view.main.master.Master");
-            var pDetailView = that.getOwnerComponent().loadView("lifebook.view.main.detail.Detail");
-
-            Promise.all([pMasterView, pDetailView]).then(function(values) {
+            var pMasterView = that.getOwnerComponent().loadView("lifebook.view.main.master.Master", that.getView());
+            var pDetailView = that.getOwnerComponent().loadView("lifebook.view.main.detail.Detail", that.getView());
+            var pPage1HeaderView = that.getOwnerComponent().loadView("lifebook.view.main.detail.Page1Header", that.getView());
+            Promise.all([pMasterView, pDetailView, pPage1HeaderView]).then(function(values) {
               oBase.setMasterView(values[0]);
               oBase.setDetailView(values[1]);
+              oBase.setPage1HeaderView(values[2]);
+
+              oBase.hidePage0Header();
 
               oBase.deviceSetup();
             });
           });
+
+          var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+          oRouter.getRoute("page").attachPatternMatched(this._onPageRouteMatched, this);
+
+      },
+
+      _onPageRouteMatched: function(oEvent) {
+
+        var path = oEvent.getParameter("arguments").path;
+
+        var that = this;
+        var oRestModel = new RestModel();        
+        oRestModel.loadPage({ path: path }).then(function(data) {
+          that.getModel("currPage").setProperty("/", oRestModel.getData());
+
+          if (that.getOwnerComponent().isPhone()) {
+            that.getController("lifebook.base.Base").hideMaster();
+          }
+        });        
+
+        
       }
+
+
+
     });
   }
 );

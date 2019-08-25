@@ -1,4 +1,5 @@
 var fs = require("fs");
+var fsExtra = require("fs-extra");
 var path = require("path");
 var rimraf = require("rimraf");
 
@@ -11,7 +12,7 @@ function buildResult(res, data) {
 }
 
 var Lifebook = {
-  loadPage: function(req, res) {
+  loadPage: function (req, res) {
     console.log(req.body);
 
     var fullIndexPath = req.body.path + "/index.md";
@@ -23,17 +24,25 @@ var Lifebook = {
 
     var files = [];
 
-    fs.readdirSync(req.body.path).forEach(file => {
-      files.push({ name: file });
+    fs.readdirSync(req.body.path, { withFileTypes: true }).forEach(function (dirent) {
+      if (dirent.isFile()) {
+        if (dirent.name !== "metainfo.json" && dirent.name !== "index.md") {
+          const stats = fs.statSync(req.body.path + "/" + dirent.name);
+
+          files.push({ name: dirent.name, date: stats.birthtime });
+        }
+      }
     });
 
     var fullMetaPath = req.body.path + "/metainfo.json";
-    var metaInfo = JSON.parse(fs.readFileSync(fullMetaPath));
+    // var metaInfo = JSON.parse(fs.readFileSync(fullMetaPath));
 
-    buildResult(res, JSON.stringify({ content: content, title: metaInfo.title, path: req.body.path, files: files }));
+    var title = req.body.path.split(path.sep).pop();
+
+    buildResult(res, JSON.stringify({ content: content, title: title, path: req.body.path, files: files }));
   },
 
-  savePage: function(req, res) {
+  savePage: function (req, res) {
     console.log(req.body);
 
     var fullIndexPath = req.body.path + "/index.md";
@@ -45,7 +54,21 @@ var Lifebook = {
     buildResult(res, JSON.stringify({}));
   },
 
-  deletePage: function(req, res) {
+  renamePage: function (req, res) {
+    console.log(req.body);
+
+    var oldName = req.body.path.split(path.sep).pop()
+    var newPath = req.body.path.replace(oldName, req.body.newTitle);
+
+    fs.renameSync(req.body.path, newPath, (err) => {
+      if (err) {
+        throw err;
+      }});
+
+    buildResult(res, JSON.stringify({}));
+  },
+
+  deletePage: function (req, res) {
     console.log(req.body);
 
     rimraf.sync(req.body.path);
@@ -53,7 +76,23 @@ var Lifebook = {
     Lifebook.tree(req, res);
   },
 
-  createPage: function(req, res) {
+  copyPage: function(req, res) {
+    console.log(req.body);
+
+    fsExtra.copySync(req.body.src, req.body.dst + path.sep + req.body.title);
+
+    Lifebook.tree(req, res);
+  },
+
+  movePage: function(req, res) {
+    console.log(req.body);
+
+    fsExtra.moveSync(req.body.src, req.body.dst + path.sep + req.body.title);
+
+    Lifebook.tree(req, res);
+  },
+
+  createPage: function (req, res) {
     console.log(req.body);
 
     Lifebook._create(req.body.title, req.body.path, res);
@@ -61,7 +100,7 @@ var Lifebook = {
     Lifebook.tree(req, res);
   },
 
-  _create: function(title, path, res) {
+  _create: function (title, path, res) {
     if (!path) {
       path = "./wiki";
     }
@@ -81,7 +120,7 @@ var Lifebook = {
     fs.writeFileSync(fullPath + "/metainfo.json", JSON.stringify(metainfo));
   },
 
-  tree: function(req, res) {
+  tree: function (req, res) {
     const walkSync = (dir, item) => {
       const files = fs.readdirSync(dir);
       var children = [];
@@ -99,11 +138,17 @@ var Lifebook = {
           children.push(child);
         } else {
           if (dirFile.endsWith("metainfo.json") && item != null) {
-            var metaInfo = JSON.parse(fs.readFileSync(dirFile));
-            item.title = metaInfo.title;
-            item.id = metaInfo.id;
+            // var metaInfo = JSON.parse(fs.readFileSync(dirFile));
+            // item.title = metaInfo.title;
+            // item.id = metaInfo.id;
+            // item.type = "page";
+
+            item.title = path
+              .dirname(dirFile)
+              .split(path.sep)
+              .pop();
             item.type = "page";
-            //item.a = metaInfo;
+            //item.id = 0;
           }
         }
       }
@@ -112,7 +157,7 @@ var Lifebook = {
 
     var directoryStructure = walkSync("./wiki");
 
-    directoryStructure = directoryStructure.map(function(item) {
+    directoryStructure = directoryStructure.map(function (item) {
       item.type = "lifebook";
       return item;
     });
@@ -120,27 +165,14 @@ var Lifebook = {
     buildResult(res, JSON.stringify({ items: directoryStructure }));
   },
 
-  nextSeq: function(req, res) {
-    var nextSeq = 1;
-    var seqFileName = "seq.txt";
+  deleteFile: function (req, res) {
+    console.log(req.body);
 
-    function write() {
-      fs.writeFile(seqFileName, nextSeq, function(err) {
-        if (err) throw err;
-        buildResult(res, nextSeq + "");
-      });
-    }
+    rimraf.sync(req.body.path + "/" + req.body.name);
 
-    if (fs.existsSync(seqFileName)) {
-      fs.readFile(seqFileName, function(err, data) {
-        nextSeq = parseInt(data, 10) + 1;
-
-        write();
-      });
-    } else {
-      write();
-    }
+    Lifebook.loadPage(req, res);
   }
+
 };
 
 module.exports = Lifebook;

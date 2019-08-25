@@ -1,34 +1,26 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.Detail">
-   <Page >
-      <customHeader>
-			<OverflowToolbar>
-			   <Button type="Transparent" icon="sap-icon://menu"  press="onShowMaster" visible="{=(${device>/system/tablet} &amp;&amp; ${device>/orientation/portrait}) || ${device>/system/phone}}" />
-            <Title text="{currPage>/title}" />
-				<ToolbarSpacer />
-
-            <Button type="Transparent" icon="sap-icon://settings" text="Eigenschaften" visible="{=${meta>/viewMode} &amp;&amp; ${currPage>/title} !== undefined}" press="onShowDownloads" />
-            <Button type="Transparent" icon="sap-icon://download" text="Downloads" visible="{=${meta>/viewMode} &amp;&amp; ${currPage>/title} !== undefined}" press="onShowDownloads" />
-
-
-            <Button type="Transparent" icon="sap-icon://save" text="Speichern" visible="{=!${meta>/viewMode}}" press="onSavePage" />
-            <Button type="Transparent" icon="sap-icon://decline" text="Schließen" visible="{=!${meta>/viewMode}}" press="onSwitchMode" />
-            <Button type="Transparent" icon="sap-icon://edit" text="Bearbeiten" visible="{=${meta>/viewMode} &amp;&amp; ${currPage>/title} !== undefined}" press="onSwitchMode" />
-
-         </OverflowToolbar>
-		</customHeader>
-      <content>
-
-
-    
-            <VBox height="100%" >
-               <VBox class="editSection" />
-               <VBox class="viewSection" />
-            </VBox>
-
- 
-       
-
-
+   <Page enableScrolling="false" showHeader="false">
+      <content>    
+         <FlexBox height="100%" width="100%" renderType="Bare" >
+            <IconTabBar expanded="true" expandable="false" stretchContentHeight="true">
+               <items>
+                  <IconTabFilter text="Vorschau">
+                     <Text text="Info content goes here ..." />
+                  </IconTabFilter>
+                  <IconTabFilter text="Editor" class="sapUiNoContentPadding" >                     
+                     <VBox height="100%" renderType="Bare">                        
+                        <codeeditor:CodeEditor  height="100%" width="100%"  type="markdown" value="{currPage>/content}"/>
+                     </VBox>
+                  </IconTabFilter>
+                  <IconTabFilter text="Attachments">
+                     <mvc:XMLView viewName="lifebook.view.main.detail.attachments.Attachments"/>
+                  </IconTabFilter>
+                   <IconTabFilter text="Eigenschaften">
+                     <Text text="Info content goes here ..." />
+                  </IconTabFilter>                                 
+               </items>
+            </IconTabBar>
+         </FlexBox>
       </content>
    </Page>
 </mvc:View>

@@ -11,63 +11,13 @@ sap.ui.define(
     "sap/base/Log"
   ],
   function(BaseView, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
-    var _editor = null;
-    var _viewer = null;
-
     return BaseView.extend("lifebook.view.main.detail.Detail", {
       onInit: function(oEvent) {
         this.getView().setModel(new JSONModel({ newLifebook: false, viewMode: true }), "meta");
       },
 
-      onAfterRendering: function(oEvent) {
-        //jQuery(".viewSection").show();
-        //jQuery(".editSection").hide();
-      },
-
-      getToastEditor() {
-        debugger;
-        if (window._editor) {
-          debugger;
-        }
-        window._editor = new tui.Editor({
-          el: document.querySelector(".editSection"),
-          initialEditType: "wysiwyg",
-          previewStyle: "vertical",
-          height: "100%",
-          usageStatistics: false,
-          viewer: false
-        });
-
-        return window._editor;
-      },
-
-      getToastViewer() {
-        if (!_viewer) {
-          _viewer = new tui.Editor({
-            el: document.querySelector(".viewSection"),
-            height: "100%",
-            usageStatistics: false
-          });
-        }
-        return _viewer;
-      },
-
       onShowMaster() {
-        debugger;
         this.getController("lifebook.base.Base").showMaster();
-      },
-
-      onSwitchMode: function(oEvent) {
-        var model = this.getView().getModel("meta");
-        model.setProperty("/viewMode", !model.getProperty("/viewMode"));
-
-        if (model.getProperty("/viewMode") === false) {
-          jQuery(".viewSection").hide();
-          jQuery(".editSection").show();
-        } else {
-          jQuery(".viewSection").show();
-          jQuery(".editSection").hide();
-        }
       },
 
       onOpenDialog: function() {
@@ -166,15 +116,6 @@ sap.ui.define(
               });
             }
           }
-        });
-      },
-
-      onShowDownloads: function(oEvent) {
-        var pSettings = this.getOwnerComponent().loadView("lifebook.view.main.settings.Settings");
-
-        var that = this;
-        pSettings.then(function(oView) {
-          that.getController("lifebook.base.Base").setSideContentView(oView);
         });
       }
     });
