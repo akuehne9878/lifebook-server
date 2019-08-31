@@ -1,4 +1,9 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.edit.Edit">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" 
+  xmlns="sap.m" 
+  xmlns:core="sap.ui.core" 
+  xmlns:layout="sap.ui.layout" 
+  xmlns:uxap="sap.uxap" 
+  xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.edit.Edit">
   <Page>
     <customHeader>
       <Bar>
@@ -6,7 +11,7 @@
           <Title text="Seite umbenennen" />
         </contentMiddle>
         <contentRight>
-          <Button type="Transparent" icon="sap-icon://decline"  press="onClose"  />
+          <Button type="Transparent" icon="sap-icon://decline" press="onClose" />
         </contentRight>
       </Bar>
     </customHeader>
@@ -14,9 +19,9 @@
       <VBox class="sapUiSmallMarginTopBottom">
         <VBox class="sapUiSmallMarginBeginEnd">
           <Input type="Text" value="{/title}" width="100%" class="sapUiSmallMarginEnd" />
-        </VBox> 
-        <VBox justifyContent="End"  alignItems="End" alignContent="End"  class="sapUiSmallMarginEnd">
-          <Button type="Emphasized" text="Umbenennen" icon="sap-icon://save"  press="onSave"  />
+        </VBox>
+        <VBox justifyContent="End" alignItems="End" alignContent="End" class="sapUiSmallMarginEnd">
+          <Button type="Emphasized" text="Umbenennen" icon="sap-icon://save" press="onSave" />
         </VBox>
       </VBox>
     </content>

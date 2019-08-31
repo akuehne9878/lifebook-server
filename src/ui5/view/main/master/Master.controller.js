@@ -1,6 +1,6 @@
 sap.ui.define(
   [
-    "lifebook/view/BaseView.controller",
+    "lifebook/view/BaseController.controller",
     "lifebook/model/RestModel",
     "jquery.sap.global",
     "sap/m/MessageBox",
@@ -9,40 +9,42 @@ sap.ui.define(
     "sap/ui/core/Fragment",
     "sap/base/Log"
   ],
-  function(BaseView, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Log) {
-    return BaseView.extend("lifebook.view.main.master.Master", {
-      onInit: function(oEvent) {
-        this.getOwnerComponent().registerController(this);
+  function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Log) {
+    return BaseController.extend("lifebook.view.main.master.Master", {
+      onInit: function (oEvent) {
         this.reloadLifebookTree();
       },
 
-      reloadLifebookTree: function() {
+      onAfterRendering: function (oEvent) {
+      },
+
+      reloadLifebookTree: function () {
         var that = this;
         var oRestModel = new RestModel();
-        return oRestModel.tree().then(function(data) {
+        return oRestModel.tree().then(function (data) {
           that._prepareLifebookModel(data);
           oRestModel.setProperty("/", data);
           that.getModel("tree").setProperty("/", oRestModel.getData());
         });
       },
 
-      _prepareLifebookModel: function(obj) {
+      _prepareLifebookModel: function (obj) {
         if (!obj.items) {
           obj.items = [];
         }
         var that = this;
-        obj.items.forEach(function(item) {
+        obj.items.forEach(function (item) {
           that._prepareLifebookModel(item);
         });
 
         obj.items.push({ type: "add", title: "Neue Seite", path: obj.path });
       },
 
-      onClose: function(oEvent) {
+      onClose: function (oEvent) {
         this.getController("lifebook.base.Base").hideMaster();
       },
 
-      onPress: function(oEvent) {
+      onPress: function (oEvent) {
         var oBindingContext = oEvent.getSource().getBindingContext("tree");
 
         var oObj = oBindingContext.getObject();
@@ -57,17 +59,17 @@ sap.ui.define(
         }
       },
 
-      _navToPage: function(sPath) {
+      _navToPage: function (sPath) {
         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
         oRouter.navTo("page", {
           path: sPath
         });
       },
 
-      reloadPage: function(sPath, options) {
+      reloadPage: function (sPath, options) {
         var that = this;
         if (options && options.reloadTree) {
-          this.reloadLifebookTree().then(function() {
+          this.reloadLifebookTree().then(function () {
             that._navToPage(sPath);
           })
         } else {
@@ -76,20 +78,20 @@ sap.ui.define(
 
       },
 
-      onCreatePage: function(oEvent) {
+      onCreatePage: function (oEvent) {
         var that = this;
         var oBindingContext = oEvent.getSource().getBindingContext("tree");
 
         var oObj = oBindingContext.getObject();
 
         var oRestModel = new RestModel();
-        oRestModel.createPage({ title: oObj.title, path: oObj.path }).then(function(data) {
+        oRestModel.createPage({ title: oObj.title, path: oObj.path }).then(function (data) {
           that._prepareLifebookModel(data);
           that.getModel("tree").setProperty("/", data);
         });
       },
 
-      onCancelCreatePage: function(oEvent) {
+      onCancelCreatePage: function (oEvent) {
         var oBindingContext = oEvent.getSource().getBindingContext("tree");
         oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/type", "add");
         oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/title", "Neue Seite");

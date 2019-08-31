@@ -1,6 +1,10 @@
-sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JSONModel", "sap/ui/model/resource/ResourceModel"], function(Device, UIComponent, JSONModel, ResourceModel) {
+sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JSONModel", "sap/ui/model/resource/ResourceModel"], function (Device, UIComponent, JSONModel, ResourceModel) {
   return UIComponent.extend("lifebook.Component", {
-    init: function() {
+    metadata: {
+      "includes": ["css/style.css"], //custom css file path
+    },
+
+    init: function () {
       // call the init function of the parent
       UIComponent.prototype.init.apply(this, arguments);
 
@@ -15,37 +19,57 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
 
       this.setModel(new JSONModel(), "currPage");
       this.setModel(new JSONModel(), "tree");
+      this.setModel(new JSONModel(), "detailHeader");
 
     },
 
-    isPhone: function() {
+    isPhone: function () {
       return this.getModel("device").getProperty("/system/phone");
     },
 
-    registerController: function(oController) {
+    registerController: function (oController) {
       var sName = oController.getMetadata().getName();
       this._controllers[sName] = oController;
     },
 
-    getController: function(sName) {
+    getController: function (sName) {
       return this._controllers[sName];
     },
 
-    loadView: function(sNamespace, oParentView) {
+    loadFragment: function (options) {
+
       var that = this;
-      var promise = new Promise(function(resolve, reject) {
-        that.runAsOwner(function() {
+      var promise = new Promise(function (resolve, reject) {
+        sap.ui.core.Fragment.load({
+          type: "XML",
+          controller: options.parentView.getController(),
+          name: options.namespace
+        }).then(function (oFragment) {
+
+          options.parentView.addDependent(oFragment);
+
+          resolve(oFragment);
+        });
+      });
+
+      return promise;
+    },
+
+    loadView: function (options) {
+      var that = this;
+      var promise = new Promise(function (resolve, reject) {
+        that.runAsOwner(function () {
           sap.ui
             .view({
-              viewName: sNamespace,
+              viewName: options.namespace,
               type: sap.ui.core.mvc.ViewType.XML,
               async: true
             })
             .loaded()
-            .then(function(oView) {
+            .then(function (oView) {
               that.registerController(oView.getController());
-              if (oParentView) {
-                oParentView.addDependent(oView);
+              if (options.parentView) {
+                options.parentView.addDependent(oView);
               }
               resolve(oView);
             });

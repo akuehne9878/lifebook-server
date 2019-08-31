@@ -20,7 +20,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "lifebook.view.App",
+      "viewName": "lifebook.layout.App",
       "type": "XML",
       "async": true
     },
@@ -38,34 +38,43 @@
         }
       }
     },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
     "routing": {
       "config": {
-         "routerClass": "sap.m.routing.Router",
-         "viewType": "XML",
-         "viewPath": "lifebook.view",
-         "controlId": "app",
-         "controlAggregation": "pages",
-         "async": true       
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "lifebook.layout",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "async": true
       },
-      "routes": [{
-         "pattern": "",
-         "target": "home"         
-      },
-      {
-        "pattern": "/{path}",
-        "name": "page",
-        "target": "page"         
-     }    ],
+      "routes": [
+        {
+          "pattern": "",
+          "target": "home"
+        },
+        {
+          "pattern": "/{path}",
+          "name": "page",
+          "target": "page"
+        }
+      ],
       "targets": {
-         "home": {
-            "viewName": "main.Main",
-            "viewLevel" : 1
-         },
-         "page": {
-          "viewName": "main.Main",
-          "viewLevel" : 1
-       }         
+        "home": {
+          "viewName": "BaseLayout",
+          "viewLevel": 1
+        },
+        "page": {
+          "viewName": "BaseLayout",
+          "viewLevel": 1
+        }
       }
-   }    
+    }
   }
 }

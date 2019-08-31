@@ -1,6 +1,6 @@
 sap.ui.define(
   [
-    "lifebook/view/BaseView.controller",
+    "lifebook/view/BaseController.controller",
     "lifebook/model/RestModel",
     "jquery.sap.global",
     "sap/m/MessageBox",
@@ -10,14 +10,14 @@ sap.ui.define(
     "sap/ui/core/mvc/Controller",
     "sap/base/Log"
   ],
-  function (BaseView, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
-    return BaseView.extend("lifebook.view.main.detail.new.New", {
+  function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
+    return BaseController.extend("lifebook.view.main.detail.new.New", {
       onInit: function (oEvent) {
         this.getView().setModel(new JSONModel({ title: this.getOwnerComponent().getModel("currPage").getProperty("/title") }))
       },
 
       onClose: function (oEvent) {
-        this.getController("lifebook.base.Base").closeSideContent();
+        this.getController("lifebook.layout.Layout").closeSideContent();
       },
 
       onSave: function (oEvent) {

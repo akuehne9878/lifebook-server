@@ -12,7 +12,7 @@
 		</customHeader>
       <content>
          <Tree items="{path: 'tree>/items'}">
-            <CustomTreeItem type="Active" press="onPress" expanded="true" highlight="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? 'Information': 'None' }">
+            <CustomTreeItem type="Active" press="onPress" highlight="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? 'Information': 'None' }">
                <HBox visible="{=${tree>type} === 'page' || ${tree>type} === 'lifebook' }">
                   <Text text="{tree>title}" />
                </HBox>

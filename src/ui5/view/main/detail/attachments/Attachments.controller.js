@@ -1,6 +1,6 @@
 sap.ui.define(
   [
-    "lifebook/view/BaseView.controller",
+    "lifebook/view/BaseController.controller",
     "lifebook/model/RestModel",
     "jquery.sap.global",
     "sap/m/MessageBox",
@@ -10,8 +10,8 @@ sap.ui.define(
     "sap/ui/core/mvc/Controller",
     "sap/base/Log"
   ],
-  function(BaseView, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
-    return BaseView.extend("lifebook.view.main.detail.attachments.Attachments", {
+  function(BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
+    return BaseController.extend("lifebook.view.main.detail.attachments.Attachments", {
       onInit: function(oEvent) {
         this.getView().setModel(new JSONModel({}), "meta");
       },

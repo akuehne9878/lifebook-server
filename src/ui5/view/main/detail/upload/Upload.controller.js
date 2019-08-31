@@ -1,6 +1,6 @@
 sap.ui.define(
   [
-    "lifebook/view/BaseView.controller",
+    "lifebook/view/BaseController.controller",
     "lifebook/model/RestModel",
     "jquery.sap.global",
     "sap/m/MessageBox",
@@ -10,12 +10,12 @@ sap.ui.define(
     "sap/ui/core/mvc/Controller",
     "sap/base/Log"
   ],
-  function(BaseView, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
-    return BaseView.extend("lifebook.view.main.detail.upload.Upload", {
+  function(BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
+    return BaseController.extend("lifebook.view.main.detail.upload.Upload", {
       onInit: function(oEvent) {},
 
       onClose: function(oEvent) {
-        this.getController("lifebook.base.Base").closeSideContent();
+        this.getController("lifebook.layout.Layout").closeSideContent();
       },
 
       handleUploadPress: function(oEvent) {

@@ -1,0 +1,6 @@
+<core:FragmentDefinition xmlns="sap.m" 
+    xmlns:core="sap.ui.core">
+    <OverflowToolbar>
+        <Title text="AppHeader" ></Title>
+    </OverflowToolbar>
+</core:FragmentDefinition>

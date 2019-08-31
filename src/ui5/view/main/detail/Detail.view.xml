@@ -2,22 +2,19 @@
    <Page enableScrolling="false" showHeader="false">
       <content>    
          <FlexBox height="100%" width="100%" renderType="Bare" >
-            <IconTabBar expanded="true" expandable="false" stretchContentHeight="true">
+            <IconTabBar expanded="true" expandable="false" select="onSelectTab" stretchContentHeight="true" class="whiteBackground">
                <items>
-                  <IconTabFilter text="Vorschau">
-                     <Text text="Info content goes here ..." />
+                  <IconTabFilter text="Vorschau" key="preview" class="whiteBackground">
+                     <core:HTML content="{currPage>/html}" sanitizeContent="true" />
                   </IconTabFilter>
-                  <IconTabFilter text="Editor" class="sapUiNoContentPadding" >                     
+                  <IconTabFilter text="Editor" key="edit" class="sapUiNoContentPadding" >                     
                      <VBox height="100%" renderType="Bare">                        
                         <codeeditor:CodeEditor  height="100%" width="100%"  type="markdown" value="{currPage>/content}"/>
                      </VBox>
                   </IconTabFilter>
-                  <IconTabFilter text="Attachments">
+                  <IconTabFilter text="Attachments" key="attachments">
                      <mvc:XMLView viewName="lifebook.view.main.detail.attachments.Attachments"/>
-                  </IconTabFilter>
-                   <IconTabFilter text="Eigenschaften">
-                     <Text text="Info content goes here ..." />
-                  </IconTabFilter>                                 
+                  </IconTabFilter>                                
                </items>
             </IconTabBar>
          </FlexBox>

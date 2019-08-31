@@ -1,0 +1,32 @@
+<mvc:View controllerName="lifebook.layout.Layout" 
+  xmlns="sap.m" 
+  xmlns:mvc="sap.ui.core.mvc" 
+  xmlns:core="sap.ui.core" 
+  xmlns:l="sap.ui.layout">
+  <Page id="mainPage" showHeader="true">
+    <customHeader>
+      <core:Fragment fragmentName="lifebook.layout.Header" type="XML" />
+    </customHeader>
+    <SplitContainer id="splitContainer">
+      <masterPages>
+
+      </masterPages>
+
+      <detailPages>
+        <Page id="detailPage" showHeader="true">
+          <customHeader>
+          </customHeader>
+          <l:DynamicSideContent id="detailDSC" sideContentPosition="End">
+            <l:mainContent>
+            </l:mainContent>
+
+            <l:sideContent>
+            </l:sideContent>
+          </l:DynamicSideContent>
+        </Page>
+      </detailPages>
+
+    </SplitContainer>
+  </Page>
+
+</mvc:View>
