@@ -99,9 +99,10 @@ sap.ui.define(
       _setMarkdownContent: function(sId, sMarkdownContent) {
 
         var currPage = this.getModel("currPage").getData();
+        var lifebookName = this.getModel("tree").getData().name;
 
         var html = this.getShowdownConverter().makeHtml(sMarkdownContent);
-        html = html.split("./").join(currPage.path + "/");
+        html = html.split("./").join("/" + lifebookName + "/" + currPage.path + "/");
 
         var htmlViewer = this.getView().byId(sId);
         htmlViewer.removeAllItems();

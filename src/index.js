@@ -1,6 +1,7 @@
 const express = require("express");
 const Lifebook = require("./api/Lifebook");
 const fileUpload = require("express-fileupload");
+const Constants = require("./Constants");
 
 var fs = require("fs");
 
@@ -13,7 +14,7 @@ app.use(express.json());
 // default options
 app.use(fileUpload());
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS");
@@ -22,7 +23,7 @@ app.use(function(req, res, next) {
 
 function sendFile(fileName, res) {
   if (fs.existsSync(fileName)) {
-    res.sendFile(fileName, function(err) {
+    res.sendFile(fileName, function (err) {
       if (err) throw err;
       console.log("File sent:", fileName);
     });
@@ -32,16 +33,17 @@ function sendFile(fileName, res) {
   }
 }
 // UI5 bootstrapping
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   sendFile(path.join(__dirname, "ui5/index.html"), res);
 });
 
-app.get("/ui5/*", function(req, res) {
+app.get("/ui5/*", function (req, res) {
   sendFile(path.join(__dirname, req.path), res);
 });
 
-app.get("/wiki/*", function(req, res) {
-  sendFile(path.join(__dirname, "../", decodeURIComponent(req.path)), res);
+app.get("/" + Constants.NAME + "/*", function (req, res) {
+  console.log("juhu");
+  sendFile(path.join(Constants.PATH, decodeURIComponent(req.path)), res);
 });
 
 

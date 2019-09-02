@@ -4,6 +4,7 @@ var path = require("path");
 var rimraf = require("rimraf");
 var sharp = require('sharp');
 var dateFormat = require('dateformat');
+const Constants = require("../Constants");
 
 function buildResult(res, data) {
   console.log(data);
@@ -14,11 +15,9 @@ function buildResult(res, data) {
 }
 
 
-var NAME = "wiki";
-
-var PATH = path.join("D:", "dev", "lifebook-data");
-
-var LIFEBOOK_PATH = path.join(PATH, NAME);
+var NAME = Constants.NAME;
+var PATH = Constants.PATH;
+var LIFEBOOK_PATH = Constants.LIFEBOOK_PATH;
 
 var Lifebook = {
   /**
@@ -221,9 +220,6 @@ var Lifebook = {
           }
         }
       }
-
-
-
       return children;
     };
 
@@ -234,7 +230,7 @@ var Lifebook = {
       return item;
     });
 
-    buildResult(res, JSON.stringify({ items: directoryStructure }));
+    buildResult(res, JSON.stringify({ items: directoryStructure, name: NAME }));
   },
 
   deleteFile: function (req, res) {

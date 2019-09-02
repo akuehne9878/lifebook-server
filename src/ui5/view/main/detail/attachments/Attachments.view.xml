@@ -5,6 +5,7 @@
 	xmlns:core="sap.ui.core" 
 	xmlns:layout="sap.ui.layout" controllerName="lifebook.view.main.detail.attachments.Attachments">
 
+
 	<HBox items="{currPage>/files}" wrap="Wrap" width="70rem" renderType="Bare">
 		<CustomListItem type="Active" press="onShowLightBox" class="sapUiSmallMarginEnd sapUiSmallMarginTop tile">
 			<VBox height="22rem" renderType="Bare">
