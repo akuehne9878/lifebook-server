@@ -15,9 +15,19 @@ sap.ui.define(
       onInit: function (oEvent) {
         this.getView().setModel(new JSONModel({ newLifebook: false, viewMode: true }), "meta");
 
+        this.setModel(new JSONModel({ html: "" }), "showdown");
+
 
         this.setViewMode("preview");
 
+        var converter = new showdown.Converter();
+        converter.setOption("tables", true);
+        this._converter = converter;
+
+      },
+
+      getShowdownConverter: function () {
+        return this._converter;
       },
 
       onAfterRendering: function (oEvent) {
@@ -74,6 +84,58 @@ sap.ui.define(
         }
       },
 
+      reloadPage: function (sPath) {
+
+        var model = new RestModel();
+
+        var that = this;
+        model.loadPage({ path: sPath }).then(function (data) {
+          that.getModel("currPage").setProperty("/", data);
+
+          that._setMarkdownContent("htmlViewer", data.content);
+        });
+      },
+
+      _setMarkdownContent: function(sId, sMarkdownContent) {
+
+        var currPage = this.getModel("currPage").getData();
+
+        var html = this.getShowdownConverter().makeHtml(sMarkdownContent);
+        html = html.split("./").join(currPage.path + "/");
+
+        var htmlViewer = this.getView().byId(sId);
+        htmlViewer.removeAllItems();
+
+        var control = new sap.ui.core.HTML({ content: html });
+        htmlViewer.addItem(control);
+      },
+
+
+      onShowEditMenu: function (oEvent) {
+
+        var oButton = oEvent.getSource();
+
+        // create popover
+        if (!this._oPopover) {
+          Fragment.load({
+            name: "lifebook.view.main.detail.EditMenu",
+            controller: this
+          }).then(function (pPopover) {
+            this._oPopover = pPopover;
+            this.getView().addDependent(this._oPopover);
+            this._oPopover.openBy(oButton);
+          }.bind(this));
+        } else {
+          this._oPopover.openBy(oButton);
+        }
+      },
+
+
+      onLiveChange: function(oEvent) {
+        this._setMarkdownContent("editorPreview", oEvent.getParameter("value"));
+      },
+
+
       onUploadPress: function (oEvent) {
         var oFileUploader = sap.ui.getCore().byId("fileUploader");
         oFileUploader.upload();
@@ -86,8 +148,7 @@ sap.ui.define(
         var oObj = oBindingContext.getObject();
 
         var path = decodeURIComponent(
-          this.getView()
-            .getModel("currPage")
+          this.getModel("currPage")
             .getProperty("/path")
         );
         window.open(path + "/" + oObj.name, "_blank");
@@ -95,17 +156,22 @@ sap.ui.define(
 
       onSavePage: function (oEvent) {
         var oRestModel = new RestModel();
-        var currPage = this.getView()
-          .getModel("currPage")
+        var currPage = this.getModel("currPage")
           .getData();
         var that = this;
-        oRestModel.savePage({ path: currPage.path, title: currPage.title, content: that.getToastEditor().getValue() }).then(function (data) {
-          that.getToastViewer().setValue(that.getToastEditor().getValue());
-          that.onSwitchMode(oEvent);
+        oRestModel.savePage({ path: currPage.path, title: currPage.title, content: currPage.content }).then(function (data) {
+         
+          that._setMarkdownContent("htmlViewer", currPage.content);
+         
+
+          that.setViewMode("preview");
         });
       },
 
       onDeletePage: function (oEvent) {
+
+        this._oPopover.close();
+
         var oRestModel = new RestModel();
         var currPage = this.getView()
           .getModel("currPage")
@@ -124,7 +190,6 @@ sap.ui.define(
                   .getModel("tree")
                   .setProperty("/", data);
 
-                that.onSwitchMode(oEvent);
               });
             }
           }
@@ -137,6 +202,7 @@ sap.ui.define(
       },
 
       onShowEdit: function (oEvent) {
+        this._oPopover.close();
         this._loadSideContentView("lifebook.view.main.detail.edit.Edit");
       },
 
@@ -145,10 +211,12 @@ sap.ui.define(
       },
 
       onShowCopy: function (oEvent) {
+        this._oPopover.close();
         this._loadSideContentView("lifebook.view.main.detail.copy.Copy");
       },
 
       onShowMove: function (oEvent) {
+        this._oPopover.close();
         this._loadSideContentView("lifebook.view.main.detail.move.Move");
       },
 

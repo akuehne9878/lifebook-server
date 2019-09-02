@@ -63,24 +63,14 @@ app.post("/api/movePage", Lifebook.movePage);
 
 app.post("/api/deleteFile", Lifebook.deleteFile);
 
-app.post("*/upload", function(req, res) {
-  //console.log(decodeURIComponent(req.path));
-  //console.log(req.files); // the uploaded file object
+app.post("*/upload", Lifebook.uploadFile);
 
-  var path = decodeURIComponent(req.path)
-    .replace("upload", "")
-    .substring(1);
+app.get("/api/downloadFile", Lifebook.downloadFile);
 
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-  let uploadFile = req.files.uploadFile;
+app.post("/api/renameFile", Lifebook.renameFile);
 
-  // Use the mv() method to place the file somewhere on your server
-  uploadFile.mv(path + req.files.uploadFile.name, function(err) {
-    if (err) return res.status(500).send(err);
+app.get("/api/resize", Lifebook.resizeImage);
 
-    res.status(200).send("200");
-  });
-});
 
 const port = 8080;
 app.listen(port, () => {

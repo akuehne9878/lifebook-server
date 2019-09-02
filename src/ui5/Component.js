@@ -1,7 +1,7 @@
 sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JSONModel", "sap/ui/model/resource/ResourceModel"], function (Device, UIComponent, JSONModel, ResourceModel) {
   return UIComponent.extend("lifebook.Component", {
     metadata: {
-      "includes": ["css/style.css"], //custom css file path
+      "includes": ["css/style.css", "css/gfm.css"], //custom css file path
     },
 
     init: function () {

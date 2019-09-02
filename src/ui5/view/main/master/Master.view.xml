@@ -3,7 +3,7 @@
    	<customHeader>
 			<Bar>
             <contentMiddle>
-               <Title text="Lifebook" />
+               <Title text="FriendFace" />
             </contentMiddle>
 				<contentRight>
 				   <Button type="Transparent" icon="sap-icon://decline"  press="onClose" visible="{=(${device>/system/tablet} &amp;&amp; ${device>/orientation/portrait}) || ${device>/system/phone}}" />

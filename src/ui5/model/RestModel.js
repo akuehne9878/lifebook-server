@@ -1,72 +1,76 @@
-sap.ui.define(["jquery.sap.global", "sap/ui/model/json/JSONModel", "sap/ui/model/resource/ResourceModel"], function(jquery, JSONModel, ResourceModel) {
+sap.ui.define(["jquery.sap.global", "sap/ui/model/json/JSONModel", "sap/ui/model/resource/ResourceModel"], function (jquery, JSONModel, ResourceModel) {
   return JSONModel.extend("lifebook.model.RestModel", {
-    tree: function() {
+    tree: function () {
       return this._get("/api/tree");
     },
 
-    createPage: function(data) {
+    createPage: function (data) {
       return this._post("/api/createPage", data);
     },
 
-    loadPage: function(data) {
+    loadPage: function (data) {
       return this._post("/api/loadPage", data);
     },
 
-    savePage: function(data) {
+    savePage: function (data) {
       return this._post("/api/savePage", data);
     },
 
-    deletePage: function(data) {
+    deletePage: function (data) {
       return this._post("/api/deletePage", data);
     },
 
-    renamePage: function(data) {
+    renamePage: function (data) {
       return this._post("/api/renamePage", data);
     },
 
-    copyPage: function(data) {
+    copyPage: function (data) {
       return this._post("/api/copyPage", data);
     },
 
-    movePage: function(data) {
+    movePage: function (data) {
       return this._post("/api/movePage", data);
     },
 
-    deleteFile: function(data) {
+    deleteFile: function (data) {
       return this._post("/api/deleteFile", data);
     },
 
-    _get: function(url) {
+    renameFile: function (data) {
+      return this._post("/api/renameFile", data);
+    },
+
+    _get: function (url) {
       return this._ajax(url, "GET");
     },
 
-    _post: function(url, data) {
+    _post: function (url, data) {
       return this._ajax(url, "POST", data);
     },
 
-    _put: function(url) {
+    _put: function (url) {
       return this._ajax(url, "PUT");
     },
 
-    _delete: function(url) {
+    _delete: function (url) {
       return this._ajax(url, "DELETE");
     },
 
-    _ajax: function(url, method, data) {
+    _ajax: function (url, method, data) {
       var that = this;
-      var promise = new Promise(function(resolve, reject) {
+      var promise = new Promise(function (resolve, reject) {
         jquery.ajax({
           url: url,
           method: method,
           dataType: "json",
           data: JSON.stringify(data),
           contentType: "application/json",
-          success: function(result) {
+          success: function (result) {
             that.setProperty("/", result);
             resolve(result);
           },
-          error: function(err) {
-            reject();
+          error: function (err) {
+            reject(err);
           },
           timeout: 10000
         });

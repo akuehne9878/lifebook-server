@@ -34,7 +34,7 @@
 
           <Text text="{currPage>/title} wird nach {currTarget>/title} verschoben"  class="sapUiSmallMargin" />
 
-          <Button type="Emphasized" text="Kopieren" icon="sap-icon://save"  press="onSave"  />
+          <Button type="Emphasized" text="Verschieben" icon="sap-icon://save"  press="onSave"  />
         </VBox>
       </VBox>
     </content>

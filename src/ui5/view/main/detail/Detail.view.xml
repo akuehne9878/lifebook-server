@@ -1,20 +1,37 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.Detail">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" 
+   xmlns="sap.m" 
+   xmlns:codeeditor="sap.ui.codeeditor" 
+   xmlns:core="sap.ui.core" 
+   xmlns:layout="sap.ui.layout" 
+   xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.Detail">
    <Page enableScrolling="false" showHeader="false">
-      <content>    
-         <FlexBox height="100%" width="100%" renderType="Bare" >
-            <IconTabBar expanded="true" expandable="false" select="onSelectTab" stretchContentHeight="true" class="whiteBackground">
+      <content>
+         <FlexBox height="100%" width="100%" renderType="Bare">
+            <IconTabBar expanded="true" expandable="false" select="onSelectTab" stretchContentHeight="true">
                <items>
-                  <IconTabFilter text="Vorschau" key="preview" class="whiteBackground">
-                     <core:HTML content="{currPage>/html}" sanitizeContent="true" />
+                  <IconTabFilter text="Seite" key="preview">
+                     <Page enableScrolling="true" showHeader="false" class="whiteBackground">
+                        <VBox renderType="Bare" id="htmlViewer" class="markdown-body" />
+                     </Page>
                   </IconTabFilter>
-                  <IconTabFilter text="Editor" key="edit" class="sapUiNoContentPadding" >                     
-                     <VBox height="100%" renderType="Bare">                        
-                        <codeeditor:CodeEditor  height="100%" width="100%"  type="markdown" value="{currPage>/content}"/>
-                     </VBox>
+                  <IconTabFilter text="Editor" key="edit">
+                     <Page enableScrolling="true" showHeader="false" class="whiteBackground">
+                        <HBox height="100%" renderType="Bare">
+                           <codeeditor:CodeEditor height="100%" width="50%" type="markdown" value="{currPage>/content}" liveChange="onLiveChange" />
+
+                           <VBox width="50%" height="100%" renderType="Bare">
+                              <Page enableScrolling="true" showHeader="false" class="whiteBackground">
+                                 <VBox renderType="Bare" id="editorPreview" class="markdown-body" />
+                              </Page>
+                           </VBox>
+                        </HBox>
+                     </Page>
                   </IconTabFilter>
                   <IconTabFilter text="Attachments" key="attachments">
-                     <mvc:XMLView viewName="lifebook.view.main.detail.attachments.Attachments"/>
-                  </IconTabFilter>                                
+                     <Page enableScrolling="true" showHeader="false" class="whiteBackground">
+                        <mvc:XMLView viewName="lifebook.view.main.detail.attachments.Attachments"/>
+                     </Page>
+                  </IconTabFilter>
                </items>
             </IconTabBar>
          </FlexBox>

@@ -7,10 +7,14 @@
     "start": "nodemon src/index.js localhost 8080"
   },
   "dependencies": {
+    "dateformat": "^3.0.3",
     "express": "4.17.1",
     "express-fileupload": "1.1.5",
+    "force": "0.0.3",
     "fs-extra": "^8.1.0",
-    "rimraf": "2.6.3"
+    "gfm.css": "^1.1.2",
+    "rimraf": "2.6.3",
+    "sharp": "^0.23.0"
   },
   "devDependencies": {
     "nodemon": "1.18.4"

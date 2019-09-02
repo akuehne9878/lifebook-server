@@ -4,6 +4,20 @@
     background-color: white !important;
 }
 
+.sapMITBContent {
+    background-color: white !important; 
+}
+
 .pageHeight * {
     height: 100% !important
+}
+
+.tile {
+    border-width: thin;
+    border-style: solid;
+    border-color: lightgray;
+}
+
+.noBorderBottom {
+    border-bottom: none
 }
