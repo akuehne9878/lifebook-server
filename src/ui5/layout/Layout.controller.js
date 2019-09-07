@@ -29,7 +29,7 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "lifebook/model/RestModel", "lifeb
                     that.setDetailHeaderView(oDetailHeaderFragment);
 
                     if (that._path) {
-                        oDetailView.getController().reloadPage(that._path);
+                        oDetailView.getController().reloadPage(that._path);                       
                     }
 
                 });
@@ -45,10 +45,11 @@ sap.ui.define(["sap/ui/model/json/JSONModel", "lifebook/model/RestModel", "lifeb
 
         _handlePage: function (oEvent) {
             this._path = oEvent.getParameter("arguments").path;
-            var c = this.getOwnerComponent().getController("lifebook.view.main.detail.Detail");
-            if (c) {
-                c.reloadPage(this._path);
+            var d = this.getOwnerComponent().getController("lifebook.view.main.detail.Detail");
+            if (d) {
+                d.reloadPage(this._path);
             }
+
 
         }
 

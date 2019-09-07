@@ -25,6 +25,8 @@ sap.ui.define(
           that._prepareLifebookModel(data);
           oRestModel.setProperty("/", data);
           that.getModel("tree").setProperty("/", oRestModel.getData());
+
+          that.expandTreeItem(localStorage.getItem("lifebook.currPage.path"));
         });
       },
 
@@ -54,7 +56,6 @@ sap.ui.define(
         }
 
         if (oObj.type === "lifebook" || oObj.type === "page") {
-          this.getModel("currPage").setProperty("/path", oObj.path);
           this.reloadPage(oObj.path);
         }
       },
@@ -67,6 +68,8 @@ sap.ui.define(
       },
 
       reloadPage: function (sPath, options) {
+        this.getModel("currPage").setProperty("/path", sPath);
+        localStorage.setItem("lifebook.currPage.path", sPath)
         var that = this;
         if (options && options.reloadTree) {
           this.reloadLifebookTree().then(function () {
@@ -88,6 +91,9 @@ sap.ui.define(
         oRestModel.createPage({ title: oObj.title, path: oObj.path }).then(function (data) {
           that._prepareLifebookModel(data);
           that.getModel("tree").setProperty("/", data);
+
+          that.reloadPage(oObj.path + "\\" + oObj.title);
+
         });
       },
 
@@ -95,7 +101,44 @@ sap.ui.define(
         var oBindingContext = oEvent.getSource().getBindingContext("tree");
         oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/type", "add");
         oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/title", "Neue Seite");
+      },
+
+      expandTreeItem: function (sPath) {
+
+        if (!sPath) {
+          return;
+        }
+
+        var paths = [];
+        
+        var parts = sPath.split("\\");
+        
+        var temp = parts[0];
+        
+        for (var i = 1; i <= parts.length; i++) {
+          paths.push(temp);
+          
+          if (parts[i]){
+            temp += "\\" + parts[i];
+          }
+        }
+        
+        var that = this;
+        paths.forEach(function (path) {
+          var items = that.getView().byId("lifebookTree").getItems();
+          items.forEach(function (item, index) {
+            if (path === item.getBindingContext("tree").getObject("path")) {
+              that.getView().byId("lifebookTree").expand(index);
+
+            }
+          })
+        });
+
+
+      
       }
+
+
     });
   }
 );

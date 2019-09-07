@@ -164,7 +164,7 @@ sap.ui.define(
          
           that._setMarkdownContent("htmlViewer", currPage.content);
          
-
+          that.getView().byId("itb").setSelectedKey("preview");
           that.setViewMode("preview");
         });
       },
@@ -266,6 +266,16 @@ sap.ui.define(
         pView.then(function (oView) {
           that.getController("lifebook.layout.Layout").setSideContentView(oView);
         });
+      },
+
+
+      pageTitleFormatter: function (path) {
+
+        if (path) {
+          return path.split("\\").join(" / ");
+        }
+        return "";
+
       }
 
 

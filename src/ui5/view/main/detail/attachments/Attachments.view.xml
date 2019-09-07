@@ -8,11 +8,18 @@
 
 	<HBox items="{currPage>/files}" wrap="Wrap" width="70rem" renderType="Bare">
 		<CustomListItem type="Active" press="onShowLightBox" class="sapUiSmallMarginEnd sapUiSmallMarginTop tile">
-			<VBox height="22rem" renderType="Bare">
-				<Image src="{currPage>thumbnail}" class="sapUiNoMargin" mode="Background" height="15rem" width="15rem" backgroundSize="15rem 15rem" backgroundPosition="center top">
+			<VBox height="22rem" renderType="Bare" width="15rem">
+
+				<VBox visible="{=${currPage>thumbnail} !== undefined }" width="15rem" height="15rem" renderType="Bare">
+					<Image src="{currPage>thumbnail}" class="sapUiNoMargin" mode="Background" height="15rem" width="15rem" backgroundSize="15rem 15rem" backgroundPosition="center top">
+					</Image>
+				</VBox>
 
 
-				</Image>
+				<VBox visible="{=${currPage>thumbnail} === undefined }" width="15rem" height="15rem" renderType="Bare">
+					<!-- <core:Icon src="sap-icon://attachment" size="3rem" /> -->
+				</VBox>
+
 				<VBox justifyContent="SpaceBetween">
 					<VBox class="sapUiTinyMargin">
 						<Title text="{currPage>name}" wrapping="true"/>

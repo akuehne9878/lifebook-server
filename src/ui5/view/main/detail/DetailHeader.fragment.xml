@@ -2,7 +2,7 @@
   xmlns:core="sap.ui.core">
   <OverflowToolbar>
     <Button type="Transparent" icon="sap-icon://menu" press="onShowMaster" visible="{=(${device>/system/tablet} &amp;&amp; ${device>/orientation/portrait}) || ${device>/system/phone}}" />
-    <Title text="{currPage>/title}" />
+    <Title text="{path: 'currPage>/path',	formatter: '.pageTitleFormatter'}" />
     <ToolbarSpacer />
 
     <!-- <Button type="Transparent" icon="sap-icon://syntax" text="Editor" press="onShowNew" visible="{detailHeader>/newButton}" /> -->

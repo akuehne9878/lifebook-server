@@ -53,7 +53,7 @@ var Lifebook = {
           obj.type = dirent.name.split(".").pop().toUpperCase();
 
           if (dirent.name.toUpperCase().endsWith("JPG")) {
-            obj.thumbnail = encodeURI("/api/resize?path=" + req.body.path + "&name=" + dirent.name + "&size=300");
+            obj.thumbnail = encodeURI("/api/resize?path=" + req.body.path + "&name=" + dirent.name + "&size=240");
             obj.original = encodeURI("/api/resize?path=" + req.body.path + "&name=" + dirent.name);
           }
 

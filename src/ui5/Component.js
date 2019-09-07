@@ -42,7 +42,7 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
       var promise = new Promise(function (resolve, reject) {
         sap.ui.core.Fragment.load({
           type: "XML",
-          controller: options.parentView.getController(),
+          controller : options.parentView.getController(),
           name: options.namespace
         }).then(function (oFragment) {
 
