@@ -19,8 +19,10 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
 
       this.setModel(new JSONModel(), "currPage");
       this.setModel(new JSONModel(), "tree");
+      this.setModel(new JSONModel(), "targetTree");
       this.setModel(new JSONModel(), "detailHeader");
-
+      
+      this.setModel(new JSONModel(), "currAttachment");
     },
 
     isPhone: function () {
@@ -61,7 +63,7 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
         that.runAsOwner(function () {
           sap.ui
             .view({
-              viewName: options.namespace,
+              viewName: options.viewName,
               type: sap.ui.core.mvc.ViewType.XML,
               async: true
             })

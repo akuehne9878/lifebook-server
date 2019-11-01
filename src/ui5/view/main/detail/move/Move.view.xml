@@ -1,9 +1,9 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.move.Move">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.move.Move" height="100%">
   <Page>
     <customHeader>
       <Bar>
         <contentMiddle>
-          <Title text="Seite verschieben" />
+          <Title text="{currPage>/title} verschieben" />
         </contentMiddle>
         <contentRight>
           <Button type="Transparent" icon="sap-icon://decline"  press="onClose"  />
@@ -31,10 +31,8 @@
          </Tree>
         </VBox> 
         <VBox justifyContent="End"  alignItems="End" alignContent="End"  class="sapUiSmallMarginEnd">
-
-          <Text text="{currPage>/title} wird nach {currTarget>/title} verschoben"  class="sapUiSmallMargin" />
-
-          <Button type="Emphasized" text="Verschieben" icon="sap-icon://save"  press="onSave"  />
+          <Text text="{currPage>/title} wird verschoben nach: {currTarget>/title}"  class="sapUiSmallMargin" />
+          <Button type="Emphasized" text="Verschieben" enabled="{=${currTarget>/title} !== undefined}" icon="sap-icon://save"  press="onSave"  />
         </VBox>
       </VBox>
     </content>

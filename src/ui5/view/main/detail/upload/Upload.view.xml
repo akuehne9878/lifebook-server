@@ -1,27 +1,22 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.upload.Upload">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.upload.Upload" height="100%">
   <Page>
     <customHeader>
       <Bar>
         <contentMiddle>
-          <Title text="Upload" />
+          <Title text="Upload"/>
         </contentMiddle>
         <contentRight>
-          <Button type="Transparent" icon="sap-icon://decline"  press="onClose"  />
+          <Button type="Transparent" icon="sap-icon://decline" press="onClose"/>
         </contentRight>
       </Bar>
     </customHeader>
     <content>
-      <layout:VerticalLayout>
-          <u:FileUploader
-            id="fileUploader"
-            name="uploadFile"
-            uploadUrl="{currPage>/path}/upload"
-            tooltip="Upload your file to the local server"
-            uploadComplete="handleUploadComplete">
-
-            </u:FileUploader>
-          <Button text="Upload File" press="handleUploadPress"/>
-      </layout:VerticalLayout>
+      <VBox class="sapUiSmallMarginTopBottom sapUiSmallMarginBeginEnd">
+        <VBox justifyContent="End" alignItems="End" alignContent="End">
+          <u:FileUploader id="fileUploader" multiple="true" name="uploadFile" uploadUrl="{currPage>/path}/upload" tooltip="Upload your file to the local server" uploadComplete="handleUploadComplete"></u:FileUploader>
+          <Button type="Emphasized" text="Upload" enabled="{=${currTarget>/title} !== undefined}" icon="sap-icon://save" press="handleUploadPress"/>
+        </VBox>
+      </VBox>
     </content>
   </Page>
 </mvc:View>

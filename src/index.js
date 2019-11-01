@@ -42,12 +42,13 @@ app.get("/ui5/*", function (req, res) {
 });
 
 app.get("/" + Constants.NAME + "/*", function (req, res) {
-  console.log("juhu");
   sendFile(path.join(Constants.PATH, decodeURIComponent(req.path)), res);
 });
 
 
 app.get("/api/tree", Lifebook.tree);
+
+/* Page */
 
 app.post("/api/createPage", Lifebook.createPage);
 
@@ -63,15 +64,29 @@ app.post("/api/copyPage", Lifebook.copyPage);
 
 app.post("/api/movePage", Lifebook.movePage);
 
+
+/* File */
+
+
 app.post("/api/deleteFile", Lifebook.deleteFile);
+
+app.post("/api/renameFile", Lifebook.renameFile);
+
+app.post("/api/copyFile", Lifebook.copyFile);
+
+app.post("/api/moveFile", Lifebook.moveFile);
 
 app.post("*/upload", Lifebook.uploadFile);
 
 app.get("/api/downloadFile", Lifebook.downloadFile);
 
-app.post("/api/renameFile", Lifebook.renameFile);
+app.get("/api/getFile", Lifebook.getFile);
+
+/* MISC */ 
 
 app.get("/api/resize", Lifebook.resizeImage);
+
+app.get("/api/thumbnail", Lifebook.thumbnail);
 
 
 const port = 8080;

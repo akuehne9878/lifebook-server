@@ -17,7 +17,7 @@ sap.ui.define(
       },
 
       onClose: function (oEvent) {
-        this.getController("lifebook.layout.Layout").closeSideContent();
+        this.getController("lifebook.view.baseLayout.BaseLayout").hideSideContent();
       },
 
       onPress: function (oEvent) {

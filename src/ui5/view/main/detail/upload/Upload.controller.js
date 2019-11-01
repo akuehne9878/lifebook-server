@@ -15,7 +15,7 @@ sap.ui.define(
       onInit: function(oEvent) {},
 
       onClose: function(oEvent) {
-        this.getController("lifebook.layout.Layout").closeSideContent();
+        this.getController("lifebook.view.baseLayout.BaseLayout").hideSideContent();
       },
 
       handleUploadPress: function(oEvent) {
@@ -24,10 +24,12 @@ sap.ui.define(
           MessageToast.show("Choose a file first");
           return;
         }
+        sap.ui.core.BusyIndicator.show();
         oFileUploader.upload();
       },
 
       handleUploadComplete: function(oEvent) {
+        sap.ui.core.BusyIndicator.hide();
         var sResponse = oEvent.getParameter("response");
         var sMsg = "Upload Error";
         if (sResponse) {

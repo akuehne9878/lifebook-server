@@ -17,11 +17,11 @@ sap.ui.define(
       },
 
       onClose: function (oEvent) {
-        this.getController("lifebook.layout.Layout").closeSideContent();
+        this.getController("lifebook.view.baseLayout.BaseLayout").hideSideContent();
       },
 
       onPress: function (oEvent) {
-        var oBindingContext = oEvent.getSource().getBindingContext("tree");
+        var oBindingContext = oEvent.getSource().getBindingContext("targetTree");
 
         var oObj = oBindingContext.getObject();
         this.getModel("currTarget").setProperty("/path", oObj.path);

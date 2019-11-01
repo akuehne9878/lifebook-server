@@ -20,7 +20,7 @@
   },
   "sap.ui5": {
     "rootView": {
-      "viewName": "lifebook.layout.App",
+      "viewName": "lifebook.view.App",
       "type": "XML",
       "async": true
     },
@@ -52,7 +52,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "lifebook.layout",
+        "viewPath": "lifebook.view",
         "controlId": "app",
         "controlAggregation": "pages",
         "async": true
@@ -60,21 +60,22 @@
       "routes": [
         {
           "pattern": "",
-          "target": "home"
+          "name": "main",
+          "target": "main"
         },
         {
-          "pattern": "/{path}",
+          "pattern": "/{path}/:tabKey:",
           "name": "page",
           "target": "page"
         }
       ],
       "targets": {
-        "home": {
-          "viewName": "BaseLayout",
+        "main": {
+          "viewName": "main.Main",
           "viewLevel": 1
         },
         "page": {
-          "viewName": "BaseLayout",
+          "viewName": "main.Main",
           "viewLevel": 1
         }
       }

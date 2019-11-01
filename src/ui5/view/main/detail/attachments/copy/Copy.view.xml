@@ -1,0 +1,31 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.attachments.copy.Copy" height="100%">
+  <Page>
+    <customHeader>
+      <Bar>
+        <contentMiddle>
+          <Title text="{currAttachment>/name} kopieren"/>
+        </contentMiddle>
+        <contentRight>
+          <Button type="Transparent" icon="sap-icon://decline" press="onClose"/>
+        </contentRight>
+      </Bar>
+    </customHeader>
+    <content>
+      <VBox class="sapUiSmallMarginTopBottom">
+        <VBox class="sapUiSmallMarginBeginEnd">
+          <Tree items="{path: 'targetTree>/items'}">
+            <CustomTreeItem type="Active" press="onPress" highlight="{= (${targetTree>path} === ${currTarget>/path} &amp;&amp; (${targetTree>type} === 'page' || ${targetTree>type} === 'lifebook') )  ? 'Information': 'None' }">
+              <HBox>
+                <Text text="{targetTree>title}"/>
+              </HBox>
+            </CustomTreeItem>
+          </Tree>
+        </VBox>
+        <VBox justifyContent="End" alignItems="End" alignContent="End" class="sapUiSmallMarginEnd">
+          <Text text="{currAttachment>/name} wird kopiert nach: {currTarget>/title}" class="sapUiSmallMargin"/>
+          <Button type="Emphasized" enabled="{=${currTarget>/title} !== undefined}" text="Kopieren" icon="sap-icon://save" press="onSave"/>
+        </VBox>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

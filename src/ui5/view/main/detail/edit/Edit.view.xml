@@ -3,12 +3,12 @@
   xmlns:core="sap.ui.core" 
   xmlns:layout="sap.ui.layout" 
   xmlns:uxap="sap.uxap" 
-  xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.edit.Edit">
+  xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.edit.Edit" height="100%">
   <Page>
     <customHeader>
       <Bar>
         <contentMiddle>
-          <Title text="Seite umbenennen" />
+          <Title text="{currPage>/title} umbenennen" />
         </contentMiddle>
         <contentRight>
           <Button type="Transparent" icon="sap-icon://decline" press="onClose" />
@@ -18,7 +18,7 @@
     <content>
       <VBox class="sapUiSmallMarginTopBottom">
         <VBox class="sapUiSmallMarginBeginEnd">
-          <Input type="Text" value="{/title}" width="100%" class="sapUiSmallMarginEnd" />
+          <Input type="Text" value="{/title}" width="100%" submit="onSave" class="sapUiSmallMarginEnd" />
         </VBox>
         <VBox justifyContent="End" alignItems="End" alignContent="End" class="sapUiSmallMarginEnd">
           <Button type="Emphasized" text="Umbenennen" icon="sap-icon://save" press="onSave" />

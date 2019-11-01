@@ -13,11 +13,11 @@ sap.ui.define(
   function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
     return BaseController.extend("lifebook.view.main.detail.new.New", {
       onInit: function (oEvent) {
-        this.getView().setModel(new JSONModel({ title: this.getOwnerComponent().getModel("currPage").getProperty("/title") }))
+        this.getView().setModel(new JSONModel({ title: "Neue Seite" }))
       },
 
       onClose: function (oEvent) {
-        this.getController("lifebook.layout.Layout").closeSideContent();
+        this.getController("lifebook.view.baseLayout.BaseLayout").hideSideContent();
       },
 
       onSave: function (oEvent) {

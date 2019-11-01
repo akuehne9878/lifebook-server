@@ -1,25 +1,26 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.master.Master">
-   <Page showHeader="true" >
-   	<customHeader>
-			<Toolbar>
-               <SearchField />
-				   <Button type="Transparent" icon="sap-icon://decline"  press="onClose" visible="{=(${device>/system/tablet} &amp;&amp; ${device>/orientation/portrait}) || ${device>/system/phone}}" />
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.master.Master" height="100%">
+   <Page showHeader="true">
+      <customHeader>
+         <Toolbar>
+            <SearchField search="onFilter" liveChange="onFilter"/>
+            <Button type="Transparent" icon="sap-icon://expand-all" press="onExpandAll" />
+            <Button type="Transparent" icon="sap-icon://collapse-all" press="onCollapseAll" />
          </Toolbar>
-		</customHeader>
+      </customHeader>
       <content>
-         <Tree id="lifebookTree" items="{path: 'tree>/items'}" showUnread="true">
-            <CustomTreeItem type="Active" press="onPress" unread="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? true : false }" highlight="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? 'Information': 'None' }">
+         <Tree id="lifebookTree" items="{path: 'tree>/items'}" showUnread="true" mode="SingleSelectMaster" selectionChange ="onSelectionChange">
+            <CustomTreeItem type="Active"  unread="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? true : false }" selected="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? true : false }" highlight="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? 'Information': 'None' }">
                <HBox visible="{=${tree>type} === 'page' || ${tree>type} === 'lifebook' }">
-                  <Text text="{tree>title}" />
+                  <Text text="{tree>title}"/>
                </HBox>
                <HBox visible="{=${tree>type} === 'add' }">
-                  <core:Icon src="sap-icon://add" class="sapUiSmallMarginEnd" />
-                  <Text text="{tree>title}" />
+                  <core:Icon src="sap-icon://add" class="sapUiSmallMarginEnd"/>
+                  <Text text="{tree>title}"/>
                </HBox>
                <HBox visible="{=${tree>type} === 'addConfirm'}">
-                  <Input type="Text" value="{tree>title}" submit="" />
-                  <Button icon="sap-icon://accept" type="Transparent" press="onCreatePage" />
-                  <Button icon="sap-icon://decline" type="Transparent" press="onCancelCreatePage" />
+                  <Input type="Text" value="{tree>title}" submit=""/>
+                  <Button icon="sap-icon://accept" type="Transparent" press="onCreatePage"/>
+                  <Button icon="sap-icon://decline" type="Transparent" press="onCancelCreatePage"/>
                </HBox>
             </CustomTreeItem>
          </Tree>

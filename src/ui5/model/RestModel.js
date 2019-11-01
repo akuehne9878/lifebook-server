@@ -40,6 +40,14 @@ sap.ui.define(["jquery.sap.global", "sap/ui/model/json/JSONModel", "sap/ui/model
       return this._post("/api/renameFile", data);
     },
 
+    copyFile: function (data) {
+      return this._post("/api/copyFile", data);
+    },
+
+    moveFile: function (data) {
+      return this._post("/api/moveFile", data);
+    },
+
     _get: function (url) {
       return this._ajax(url, "GET");
     },

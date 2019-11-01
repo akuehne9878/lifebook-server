@@ -3,8 +3,8 @@
     <Popover placement="Bottom" showHeader="false">
         <List class="sapUiTinyMarginTopBottom" showSeparators="None">
             <items>
-                <StandardListItem type="Active" icon="sap-icon://edit" title="Umbenennen" press="onShowEdit" />
-                <StandardListItem type="Active" icon="sap-icon://copy" title="Kopieren" press="onShowCopy" />
+                <StandardListItem type="Active" icon="sap-icon://edit" title="Neues Lifebook" press="onShowEdit" />
+                <StandardListItem type="Active" icon="sap-icon://copy" title="Lifebook importieren" press="onShowCopy" />
                 <StandardListItem type="Active" icon="sap-icon://action" title="Verschieben" press="onShowMove" />
                 <StandardListItem type="Active" icon="sap-icon://delete" title="Löschen" press="onDeletePage" />
             </items>

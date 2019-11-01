@@ -1,4 +1,4 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.new.New">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.new.New" height="100%">
   <Page>
     <customHeader>
       <Bar>
@@ -13,7 +13,7 @@
     <content>
       <VBox class="sapUiSmallMarginTopBottom">
         <VBox class="sapUiSmallMarginBeginEnd">
-          <Input type="Text" value="{/title}" width="100%" class="sapUiSmallMarginEnd" />
+          <Input type="Text" value="{/title}" width="100%" submit="onSave" class="sapUiSmallMarginEnd" />
         </VBox> 
         <VBox justifyContent="End"  alignItems="End" alignContent="End"  class="sapUiSmallMarginEnd">
           <Button type="Emphasized" text="Neue Seite erstellen" icon="sap-icon://save"  press="onSave"  />

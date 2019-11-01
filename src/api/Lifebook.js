@@ -52,8 +52,9 @@ var Lifebook = {
 
           obj.type = dirent.name.split(".").pop().toUpperCase();
 
+
           if (dirent.name.toUpperCase().endsWith("JPG")) {
-            obj.thumbnail = encodeURI("/api/resize?path=" + req.body.path + "&name=" + dirent.name + "&size=240");
+            obj.thumbnail = encodeURI("/api/thumbnail?path=" + req.body.path + "&name=" + dirent.name);
             obj.original = encodeURI("/api/resize?path=" + req.body.path + "&name=" + dirent.name);
           }
 
@@ -65,8 +66,6 @@ var Lifebook = {
 
     //var fullMetaPath = path.join(fullPath,"metainfo.json");
     // var metaInfo = JSON.parse(fs.readFileSync(fullMetaPath));
-
-
 
     var title = fullPath.split(path.sep).pop();
     buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files }));
@@ -247,11 +246,38 @@ var Lifebook = {
 
     var absolutePath = path.join(LIFEBOOK_PATH, req.query.path, req.query.name);
 
-    if (req.query.size) {
-      sharp(absolutePath).resize(parseInt(req.query.size, 10)).pipe(res);
-    } else{
+    if (req.query.height && req.query.width) {
+      sharp(absolutePath)
+        .resize({ height: parseInt(req.query.height, 10), width: parseInt(req.query.width, 10) })
+        .pipe(res);
+
+    } else if (req.query.percentage) {
+
+      var s = sharp(absolutePath);
+
+      s.metadata(function (err, info) {
+
+        var percentage = parseInt(req.query.percentage, 10);
+        console.log("asdf: " + info.height * (percentage / 100));
+        s.resize({ height: parseInt(info.height * (percentage / 100), 10), width: parseInt(info.width * (percentage / 100), 10) })
+          .pipe(res);
+      })
+
+    } else {
       sharp(absolutePath).pipe(res);
     }
+
+  },
+
+
+  thumbnail: function (req, res) {
+
+    var absolutePath = path.join(LIFEBOOK_PATH, req.query.path, req.query.name);
+
+    sharp(absolutePath)
+      .rotate()
+      .resize({ height: 300, width: 300 })
+      .pipe(res);
 
   },
 
@@ -260,27 +286,49 @@ var Lifebook = {
     var sPath = decodeURIComponent(req.path).replace("upload", "").substring(1);
 
     // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-    let uploadFile = req.files.uploadFile;
+    var uploadFile = req.files["uploadFile[]"];
 
-    var absolutePath = path.join(LIFEBOOK_PATH, sPath, req.files.uploadFile.name)
+    var files = [];
+    if (Array.isArray(uploadFile)) {
+      files = uploadFile;
+    } else {
+      files.push(uploadFile);
+    }
 
-    var absolutePathThumb = path.join(LIFEBOOK_PATH, sPath, "thumb_" + req.files.uploadFile.name);
 
+    var errMsg = null;
+    files.forEach(function (file) {
 
-    // Use the mv() method to place the file somewhere on your server
-    uploadFile.mv(absolutePath, function (err) {
+      var absolutePath = path.join(LIFEBOOK_PATH, sPath, file.name)
+      var absolutePathThumb = path.join(LIFEBOOK_PATH, sPath, "thumb_" + file.name);
 
+      // Use the mv() method to place the file somewhere on your server
+      file.mv(absolutePath, function (err) {
+        if (err) {
+          errMsg += err + "\n";
+        }
+      });
+    })
 
-      if (err) return res.status(500).send(err);
-
+    if (errMsg) {
+      res.status(500).send(errMsg);
+    } else {
       res.status(200).send("200");
-    });
+
+    }
+
   },
 
   downloadFile: function (req, res) {
     console.log(req.query);
     var fullPath = path.join(LIFEBOOK_PATH, req.query.path, req.query.name);
     res.download(fullPath);
+  },
+
+
+  getFile: function (req, res) {
+    var fullPath = path.join(LIFEBOOK_PATH, req.query.path, req.query.name);
+    res.sendFile(fullPath);
   },
 
   renameFile: function (req, res) {
@@ -295,6 +343,39 @@ var Lifebook = {
     fsExtra.moveSync(fullPath, newPath);
 
     buildResult(res, JSON.stringify({}));
+  },
+
+
+  /**
+ * copyFile
+ * @param {*} req 
+ * @param {*} res 
+ */
+  copyFile: function (req, res) {
+    console.log(req.body);
+
+    var src = path.join(LIFEBOOK_PATH, req.body.src, req.body.fileName);
+    var dst = path.join(LIFEBOOK_PATH, req.body.dst, req.body.fileName);
+
+    fsExtra.copySync(src, dst);
+
+    Lifebook.tree(req, res);
+  },
+
+  /**
+ * moveFile
+ * @param {*} req 
+ * @param {*} res 
+ */
+  moveFile: function (req, res) {
+    console.log(req.body);
+
+    var src = path.join(LIFEBOOK_PATH, req.body.src, req.body.fileName);
+    var dst = path.join(LIFEBOOK_PATH, req.body.dst, req.body.fileName);
+
+    fsExtra.moveSync(src, dst);
+
+    Lifebook.tree(req, res);
   },
 
 

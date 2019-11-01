@@ -30,16 +30,18 @@ sap.ui.define(
         return this._converter;
       },
 
-      onAfterRendering: function (oEvent) {
-      },
 
-      onShowMaster() {
-        this.getController("lifebook.layout.Layout").showMaster();
-      },
 
       onSelectTab: function (oEvent) {
         var key = oEvent.getParameter("selectedKey");
         this.setViewMode(key);
+
+        if (key === "edit") {
+          this._setMarkdownContent("editorPreview", this.getModel("currPage").getProperty("/content"));
+        } else if (key === "preview") {
+          this._setMarkdownContent("htmlViewer", this.getModel("currPage").getProperty("/content"));
+        }
+
       },
 
       onOpenDialog: function () {
@@ -84,7 +86,7 @@ sap.ui.define(
         }
       },
 
-      reloadPage: function (sPath) {
+      reloadPage: function (sPath,sTabKey) {
 
         var model = new RestModel();
 
@@ -93,22 +95,26 @@ sap.ui.define(
           that.getModel("currPage").setProperty("/", data);
 
           that._setMarkdownContent("htmlViewer", data.content);
+          if (sTabKey) {
+            that.setViewMode(sTabKey);
+          } else {
+            that.setViewMode("preview");
+          }
         });
       },
 
-      _setMarkdownContent: function(sId, sMarkdownContent) {
+      _setMarkdownContent: function (sId, sMarkdownContent) {
 
         var currPage = this.getModel("currPage").getData();
         var lifebookName = this.getModel("tree").getData().name;
 
-        var html = this.getShowdownConverter().makeHtml(sMarkdownContent);
-        html = html.split("./").join("/" + lifebookName + "/" + currPage.path + "/");
+        var htmlStr = this.getShowdownConverter().makeHtml(sMarkdownContent);
+        htmlStr = htmlStr.split("./").join("/" + lifebookName + "/" + currPage.path + "/");
+
+        this.getModel("currPage").setProperty("/html", htmlStr);
 
         var htmlViewer = this.getView().byId(sId);
-        htmlViewer.removeAllItems();
-
-        var control = new sap.ui.core.HTML({ content: html });
-        htmlViewer.addItem(control);
+        $("#" + htmlViewer.getId()).html(htmlStr);
       },
 
 
@@ -132,7 +138,7 @@ sap.ui.define(
       },
 
 
-      onLiveChange: function(oEvent) {
+      onLiveChange: function (oEvent) {
         this._setMarkdownContent("editorPreview", oEvent.getParameter("value"));
       },
 
@@ -161,68 +167,17 @@ sap.ui.define(
           .getData();
         var that = this;
         oRestModel.savePage({ path: currPage.path, title: currPage.title, content: currPage.content }).then(function (data) {
-         
+
           that._setMarkdownContent("htmlViewer", currPage.content);
-         
-          that.getView().byId("itb").setSelectedKey("preview");
+
           that.setViewMode("preview");
         });
       },
 
-      onDeletePage: function (oEvent) {
-
-        this._oPopover.close();
-
-        var oRestModel = new RestModel();
-        var currPage = this.getView()
-          .getModel("currPage")
-          .getData();
-
-        var that = this;
-        MessageBox.confirm(currPage.title + " löschen?", {
-          actions: [sap.m.MessageBox.Action.NO, sap.m.MessageBox.Action.DELETE],
-          title: "Seite löschen",
-          onClose: function (sAction) {
-            if (sAction === sap.m.MessageBox.Action.DELETE) {
-              oRestModel.deletePage({ path: currPage.path }).then(function (data) {
-                that.getController("lifebook.view.main.master.Master")._prepareLifebookModel(data);
-                that
-                  .getView()
-                  .getModel("tree")
-                  .setProperty("/", data);
-
-              });
-            }
-          }
-        });
-      },
-
-
-      onShowUpload: function (oEvent) {
-        this._loadSideContentView("lifebook.view.main.detail.upload.Upload");
-      },
-
-      onShowEdit: function (oEvent) {
-        this._oPopover.close();
-        this._loadSideContentView("lifebook.view.main.detail.edit.Edit");
-      },
-
-      onShowNew: function (oEvent) {
-        this._loadSideContentView("lifebook.view.main.detail.new.New");
-      },
-
-      onShowCopy: function (oEvent) {
-        this._oPopover.close();
-        this._loadSideContentView("lifebook.view.main.detail.copy.Copy");
-      },
-
-      onShowMove: function (oEvent) {
-        this._oPopover.close();
-        this._loadSideContentView("lifebook.view.main.detail.move.Move");
-      },
-
+ 
       setViewMode: function (sViewMode) {
         var model = this.getOwnerComponent().getModel("detailHeader");
+        this.getView().byId("itb").setSelectedKey(sViewMode);
 
         if (sViewMode === "preview") {
           model.setProperty("/newButton", true);
@@ -257,26 +212,61 @@ sap.ui.define(
       },
 
 
-      _loadSideContentView: function (sView) {
-        var pView = this.getOwnerComponent().loadView({ namespace: sView, parentView: this.getView() });
+      onDeletePage: function (oEvent) {
 
+        // this._oPopover.close();
 
+        var oRestModel = new RestModel();
+        var currPage = this.getView()
+          .getModel("currPage")
+          .getData();
 
         var that = this;
-        pView.then(function (oView) {
-          that.getController("lifebook.layout.Layout").setSideContentView(oView);
+        MessageBox.confirm(currPage.title + " löschen?", {
+          actions: [sap.m.MessageBox.Action.NO, sap.m.MessageBox.Action.DELETE],
+          title: "Seite löschen",
+          onClose: function (sAction) {
+            if (sAction === sap.m.MessageBox.Action.DELETE) {
+              oRestModel.deletePage({ path: currPage.path }).then(function (data) {
+                that
+                  .getView()
+                  .getModel("tree")
+                  .setProperty("/", data);
+
+              });
+            }
+          }
         });
       },
 
 
-      pageTitleFormatter: function (path) {
 
-        if (path) {
-          return path.split("\\").join(" / ");
-        }
-        return "";
+      onShowEdit: function (oEvent) {
+        this._loadSideContentView("lifebook.view.main.detail.edit.Edit", "Umbenennen");
+      },
 
-      }
+      onShowNew: function (oEvent) {
+        this._loadSideContentView("lifebook.view.main.detail.new.New", "Neue Seite");
+      },
+
+      onShowCopy: function (oEvent) {
+        this._loadSideContentView("lifebook.view.main.detail.copy.Copy", "Seite kopieren");
+      },
+
+      onShowMove: function (oEvent) {
+        this._loadSideContentView("lifebook.view.main.detail.move.Move", "Seite verschieben");
+      },
+
+
+
+      _loadSideContentView: function (sView, sTitle) {
+        var pView = this.getOwnerComponent().loadView({ viewName: sView, parentView: this.getView() });
+
+        var that = this;
+        pView.then(function (oView) {
+          that.getController("lifebook.view.baseLayout.BaseLayout").setSideContentPage(oView, sTitle);
+        });
+      },
 
 
 

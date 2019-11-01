@@ -7,24 +7,25 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator",
     "sap/base/Log"
   ],
-  function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Log) {
+  function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Filter, FilterOperator, Log) {
     return BaseController.extend("lifebook.view.main.master.Master", {
       onInit: function (oEvent) {
         this.reloadLifebookTree();
-      },
-
-      onAfterRendering: function (oEvent) {
       },
 
       reloadLifebookTree: function () {
         var that = this;
         var oRestModel = new RestModel();
         return oRestModel.tree().then(function (data) {
-          that._prepareLifebookModel(data);
+          that.getModel("targetTree").setProperty("/", data);
+
+         // that._prepareLifebookModel(data);
           oRestModel.setProperty("/", data);
-          that.getModel("tree").setProperty("/", oRestModel.getData());
+          that.getModel("tree").setProperty("/", data);
 
           that.expandTreeItem(localStorage.getItem("lifebook.currPage.path"));
         });
@@ -43,11 +44,14 @@ sap.ui.define(
       },
 
       onClose: function (oEvent) {
-        this.getController("lifebook.base.Base").hideMaster();
+        this.getController("lifebook.view.baseLayout.BaseLayout").hideMasterPage();
       },
 
-      onPress: function (oEvent) {
-        var oBindingContext = oEvent.getSource().getBindingContext("tree");
+      onSelectionChange: function (oEvent) {
+
+
+
+        var oBindingContext = oEvent.getParameter("listItem").getBindingContext("tree");
 
         var oObj = oBindingContext.getObject();
 
@@ -57,6 +61,7 @@ sap.ui.define(
 
         if (oObj.type === "lifebook" || oObj.type === "page") {
           this.reloadPage(oObj.path);
+          this.onClose();
         }
       },
 
@@ -136,6 +141,39 @@ sap.ui.define(
 
 
       
+      },
+
+      onFilter : function (oEvent) {
+
+        // build filter array
+        var aFilter = [];
+        var sQuery = oEvent.getParameter("query");
+
+        if (!sQuery) {
+          sQuery = oEvent.getParameter("newValue");
+        }
+
+        if (sQuery) {
+          aFilter.push(new Filter("title", FilterOperator.Contains, sQuery));
+        }
+  
+        // filter binding
+        var oList = this.getView().byId("lifebookTree");
+        var oBinding = oList.getBinding("items");
+        oBinding.filter(aFilter);
+        oBinding.expand(0);
+      },
+
+      onExpandAll: function(oEvent) {
+        var oTree = this.getView().byId("lifebookTree");
+        oTree.expandToLevel(10);
+
+      },
+
+      onCollapseAll: function(oEvent) {
+        var oTree = this.getView().byId("lifebookTree");
+        oTree.collapseAll();
+
       }
 
 
