@@ -5,8 +5,22 @@ sap.ui.define([
 
 	return Controller.extend("lifebook.view.App", {
 		onInit: function(oEvent) {
-			//this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+			this.getView().setModel(new JSONModel({
+				showSideContent: false,
+				currentSideContentViewName: "lifebook.view.main.detail.copy.Copy"
+			}),"metaInfo")
+		},
+
+		onShowNewPage: function(oEvent) {
+			this.getView().getModel("metaInfo").setProperty("/currentSideContentViewName", "lifebook.view.main.detail.new.New");
+			this.getView().getModel("metaInfo").setProperty("/showSideContent", true);
+		},
+
+		onShowRenamePage: function(oEvent) {
+			this.getView().getModel("metaInfo").setProperty("/currentSideContentViewName", "lifebook.view.main.detail.edit.Edit");
+			this.getView().getModel("metaInfo").setProperty("/showSideContent", true);
 		}
+
 	});
 
 });

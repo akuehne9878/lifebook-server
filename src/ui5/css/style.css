@@ -1,13 +1,23 @@
 
 
+.sideContentPageContainer {
+    border-left: 1px solid #d9d9d9;
+}
+
+.noBorderBottom {
+    border-bottom: none !important
+}
+
+.imageDisplayBlock {
+	display: block;
+}
+
+/**************************/
+/*
 .whiteBackground  {
     background-color: white !important;
 }
 
-.background {
-    /*background-image: url("background.jpg"); */
-   /* filter: brightness(200%); */
-}
 
 .sapMITBContent {
     background-color: white !important; 
@@ -39,4 +49,4 @@
 
 .iconSize {
     font-size: 3rem
-}
+} */

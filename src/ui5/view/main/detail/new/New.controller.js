@@ -16,10 +16,6 @@ sap.ui.define(
         this.getView().setModel(new JSONModel({ title: "Neue Seite" }))
       },
 
-      onClose: function (oEvent) {
-        this.getController("lifebook.view.baseLayout.BaseLayout").hideSideContent();
-      },
-
       onSave: function (oEvent) {
         var that = this;
         var path = this.getOwnerComponent().getModel("currPage").getProperty("/path");

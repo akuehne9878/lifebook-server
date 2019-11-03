@@ -14,6 +14,8 @@ sap.ui.define(
   function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Filter, FilterOperator, Log) {
     return BaseController.extend("lifebook.view.main.master.Master", {
       onInit: function (oEvent) {
+        this.getOwnerComponent().registerController(this);
+
         this.reloadLifebookTree();
       },
 
@@ -21,38 +23,17 @@ sap.ui.define(
         var that = this;
         var oRestModel = new RestModel();
         return oRestModel.tree().then(function (data) {
-          that.getModel("targetTree").setProperty("/", data);
-
-         // that._prepareLifebookModel(data);
           oRestModel.setProperty("/", data);
+          
+          that.getModel("targetTree").setProperty("/", data);
           that.getModel("tree").setProperty("/", data);
 
           that.expandTreeItem(localStorage.getItem("lifebook.currPage.path"));
         });
       },
 
-      _prepareLifebookModel: function (obj) {
-        if (!obj.items) {
-          obj.items = [];
-        }
-        var that = this;
-        obj.items.forEach(function (item) {
-          that._prepareLifebookModel(item);
-        });
-
-        obj.items.push({ type: "add", title: "Neue Seite", path: obj.path });
-      },
-
-      onClose: function (oEvent) {
-        this.getController("lifebook.view.baseLayout.BaseLayout").hideMasterPage();
-      },
-
       onSelectionChange: function (oEvent) {
-
-
-
         var oBindingContext = oEvent.getParameter("listItem").getBindingContext("tree");
-
         var oObj = oBindingContext.getObject();
 
         if (oObj.type === "add") {
@@ -61,11 +42,12 @@ sap.ui.define(
 
         if (oObj.type === "lifebook" || oObj.type === "page") {
           this.reloadPage(oObj.path);
-          this.onClose();
+          this.getModel("mdsPage").setProperty("/showSideContent", false);
         }
       },
 
       _navToPage: function (sPath) {
+        debugger;
         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
         oRouter.navTo("page", {
           path: sPath

@@ -21,8 +21,15 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
       this.setModel(new JSONModel(), "tree");
       this.setModel(new JSONModel(), "targetTree");
       this.setModel(new JSONModel(), "detailHeader");
-      
+
       this.setModel(new JSONModel(), "currAttachment");
+
+      this.setModel(new JSONModel({
+        sideContentViewName: "",
+        sideContentTitle: "",
+        showSideContentSpace: true,
+        showSideContent: false
+      }), "mdsPage");
     },
 
     isPhone: function () {
@@ -44,7 +51,7 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
       var promise = new Promise(function (resolve, reject) {
         sap.ui.core.Fragment.load({
           type: "XML",
-          controller : options.parentView.getController(),
+          controller: options.parentView.getController(),
           name: options.namespace
         }).then(function (oFragment) {
 

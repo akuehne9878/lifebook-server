@@ -13,11 +13,12 @@ sap.ui.define(
   function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
     return BaseController.extend("lifebook.view.main.detail.attachments.edit.Edit", {
       onInit: function (oEvent) {
-        this.getView().setModel(new JSONModel({ title: this.getOwnerComponent().getModel("currAttachment").getProperty("/name") }))
+        this.getOwnerComponent().registerController(this);
       },
 
-      onClose: function (oEvent) {
-        this.getController("lifebook.view.baseLayout.BaseLayout").hideSideContent();
+
+      setup: function () {
+        this.getView().setModel(new JSONModel({ title: this.getOwnerComponent().getModel("currAttachment").getProperty("/name") }))
       },
 
       onSave: function (oEvent) {

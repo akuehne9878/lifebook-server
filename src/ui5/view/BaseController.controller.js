@@ -11,6 +11,14 @@ sap.ui.define(["jquery.sap.global", "sap/m/MessageBox", "sap/ui/model/json/JSONM
 
     },
 
+    getResourceBundle: function () {
+      return this.getOwnerComponent().getModel("i18n").getResourceBundle();
+    },
+
+    getConfig: function () {
+      return this.getOwnerComponent().getMetadata().getConfig();
+    },
+
     getModel: function (sModelName) {
       return this.getView().getModel(sModelName);
     },

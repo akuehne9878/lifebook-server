@@ -4,17 +4,7 @@
   xmlns:layout="sap.ui.layout" 
   xmlns:uxap="sap.uxap" 
   xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.attachments.edit.Edit" height="100%">
-  <Page>
-    <customHeader>
-      <Bar>
-        <contentMiddle>
-          <Title text="{currAttachment>/name} umbenennen" />
-        </contentMiddle>
-        <contentRight>
-          <Button type="Transparent" icon="sap-icon://decline" press="onClose" />
-        </contentRight>
-      </Bar>
-    </customHeader>
+  <Page showHeader="false">
     <content>
       <VBox class="sapUiSmallMarginTopBottom">
         <VBox class="sapUiSmallMarginBeginEnd">

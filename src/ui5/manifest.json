@@ -61,21 +61,17 @@
         {
           "pattern": "",
           "name": "main",
-          "target": "main"
+          "target": "app"
         },
         {
           "pattern": "/{path}/:tabKey:",
           "name": "page",
-          "target": "page"
+          "target": "app"
         }
       ],
       "targets": {
-        "main": {
-          "viewName": "main.Main",
-          "viewLevel": 1
-        },
-        "page": {
-          "viewName": "main.Main",
+        "app": {
+          "viewName": "App",
           "viewLevel": 1
         }
       }

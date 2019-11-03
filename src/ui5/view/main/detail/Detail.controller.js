@@ -12,94 +12,36 @@ sap.ui.define(
   ],
   function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
     return BaseController.extend("lifebook.view.main.detail.Detail", {
+
+
+
       onInit: function (oEvent) {
         this.getView().setModel(new JSONModel({ newLifebook: false, viewMode: true }), "meta");
 
         this.setModel(new JSONModel({ html: "" }), "showdown");
 
-
-        this.setViewMode("preview");
-
         var converter = new showdown.Converter();
         converter.setOption("tables", true);
         this._converter = converter;
 
+        this.getOwnerComponent().registerController(this);
       },
 
       getShowdownConverter: function () {
         return this._converter;
       },
 
-
-
-      onSelectTab: function (oEvent) {
-        var key = oEvent.getParameter("selectedKey");
-        this.setViewMode(key);
-
-        if (key === "edit") {
-          this._setMarkdownContent("editorPreview", this.getModel("currPage").getProperty("/content"));
-        } else if (key === "preview") {
-          this._setMarkdownContent("htmlViewer", this.getModel("currPage").getProperty("/content"));
-        }
-
-      },
-
-      onOpenDialog: function () {
-        var oView = this.getView();
-
-        var that = this;
-        // create dialog lazily
-        if (!that._fileUploadDialog) {
-          // load asynchronous XML fragment
-          Fragment.load({
-            name: "lifebook.view.FileUpload",
-            controller: this
-          }).then(function (oDialog) {
-            that._fileUploadDialog = oDialog;
-
-            // connect dialog to the root view of this component (models, lifecycle)
-            oView.addDependent(oDialog);
-            oDialog.open();
-          });
-        } else {
-          that._fileUploadDialog.open();
-        }
-      },
-
-      onCloseDialog: function () {
-        this._fileUploadDialog.close();
-      },
-
-      handleUploadComplete: function (oEvent) {
-        var sResponse = oEvent.getParameter("response");
-        if (sResponse) {
-          var sMsg = "";
-          var m = /^\[(\d\d\d)\]:(.*)$/.exec(sResponse);
-          if (m[1] == "200") {
-            sMsg = "Return Code: " + m[1] + "\n" + m[2] + "(Upload Success)";
-            oEvent.getSource().setValue("");
-          } else {
-            sMsg = "Return Code: " + m[1] + "\n" + m[2] + "(Upload Error)";
-          }
-
-          MessageToast.show(sMsg);
-        }
-      },
-
-      reloadPage: function (sPath,sTabKey) {
-
+      reloadPage: function (sPath) {
         var model = new RestModel();
-
         var that = this;
         model.loadPage({ path: sPath }).then(function (data) {
-          that.getModel("currPage").setProperty("/", data);
 
+          data.files.forEach(function (item) {
+            item.selected = false;
+          });
+
+          that.getModel("currPage").setProperty("/", data);
           that._setMarkdownContent("htmlViewer", data.content);
-          if (sTabKey) {
-            that.setViewMode(sTabKey);
-          } else {
-            that.setViewMode("preview");
-          }
         });
       },
 
@@ -118,35 +60,10 @@ sap.ui.define(
       },
 
 
-      onShowEditMenu: function (oEvent) {
-
-        var oButton = oEvent.getSource();
-
-        // create popover
-        if (!this._oPopover) {
-          Fragment.load({
-            name: "lifebook.view.main.detail.EditMenu",
-            controller: this
-          }).then(function (pPopover) {
-            this._oPopover = pPopover;
-            this.getView().addDependent(this._oPopover);
-            this._oPopover.openBy(oButton);
-          }.bind(this));
-        } else {
-          this._oPopover.openBy(oButton);
-        }
-      },
-
-
       onLiveChange: function (oEvent) {
-        this._setMarkdownContent("editorPreview", oEvent.getParameter("value"));
+        this._setMarkdownContent("htmlViewer", oEvent.getParameter("value"));
       },
 
-
-      onUploadPress: function (oEvent) {
-        var oFileUploader = sap.ui.getCore().byId("fileUploader");
-        oFileUploader.upload();
-      },
 
       onDownloadAttachment: function (oEvent) {
         var that = this;
@@ -161,114 +78,82 @@ sap.ui.define(
         window.open(path + "/" + oObj.name, "_blank");
       },
 
-      onSavePage: function (oEvent) {
-        var oRestModel = new RestModel();
-        var currPage = this.getModel("currPage")
-          .getData();
-        var that = this;
-        oRestModel.savePage({ path: currPage.path, title: currPage.title, content: currPage.content }).then(function (data) {
+      onPress: function (oEvent) {
 
-          that._setMarkdownContent("htmlViewer", currPage.content);
+        this.unselectAllAttachments();
+        var oBindingContext = oEvent.getSource().getBindingContext("currPage");
+        oBindingContext.getModel().setProperty(oBindingContext.getPath() + "/selected", true);
 
-          that.setViewMode("preview");
-        });
-      },
+        var currObject = oBindingContext.getObject();
+        this.getOwnerComponent().getModel("currAttachment").setProperty("/", currObject);
 
- 
-      setViewMode: function (sViewMode) {
-        var model = this.getOwnerComponent().getModel("detailHeader");
-        this.getView().byId("itb").setSelectedKey(sViewMode);
+        var sideContent = "lifebook.view.main.detail.attachment.AttachmentDefault";
 
-        if (sViewMode === "preview") {
-          model.setProperty("/newButton", true);
-          model.setProperty("/editButton", true);
-          model.setProperty("/uploadButton", false);
-          model.setProperty("/copyButton", true);
-          model.setProperty("/moveButton", true);
-          model.setProperty("/deleteButton", true);
-          model.setProperty("/saveButton", false);
-
-        } else if (sViewMode === "edit") {
-          model.setProperty("/newButton", false);
-          model.setProperty("/editButton", false);
-          model.setProperty("/uploadButton", false);
-          model.setProperty("/copyButton", false);
-          model.setProperty("/moveButton", false);
-          model.setProperty("/deleteButton", false);
-          model.setProperty("/saveButton", true);
-
-        } else if (sViewMode === "attachments") {
-          model.setProperty("/newButton", false);
-          model.setProperty("/editButton", false);
-          model.setProperty("/uploadButton", true);
-          model.setProperty("/copyButton", false);
-          model.setProperty("/moveButton", false);
-          model.setProperty("/deleteButton", false);
-          model.setProperty("/saveButton", false);
+        if (currObject.type === "PDF") {
+          sideContent = "lifebook.view.main.detail.attachment.AttachmentPdf";
+        } else if (currObject.type === "JPG") {
+          sideContent = "lifebook.view.main.detail.attachment.AttachmentImage";
         }
 
-        model.refresh();
+        var mainController = this.getController("lifebook.view.main.Main");
+        mainController.setViewMode("singleAttachment");
+        mainController._changeSideContent(sideContent, currObject.name);
 
       },
 
+      
 
-      onDeletePage: function (oEvent) {
+      onSelectionChange: function(oEvent) {
 
-        // this._oPopover.close();
+        var mainController = this.getController("lifebook.view.main.Main");
 
-        var oRestModel = new RestModel();
-        var currPage = this.getView()
-          .getModel("currPage")
-          .getData();
+        var selectedAttachments = this.getSelectedAttachments();
+        if (selectedAttachments.length === 0) {
+          // close
+          this.getModel("mdsPage").setProperty("/showSideContent", false);
+          this.getOwnerComponent().getModel("currAttachment").setProperty("/", null);
 
-        var that = this;
-        MessageBox.confirm(currPage.title + " löschen?", {
-          actions: [sap.m.MessageBox.Action.NO, sap.m.MessageBox.Action.DELETE],
-          title: "Seite löschen",
-          onClose: function (sAction) {
-            if (sAction === sap.m.MessageBox.Action.DELETE) {
-              oRestModel.deletePage({ path: currPage.path }).then(function (data) {
-                that
-                  .getView()
-                  .getModel("tree")
-                  .setProperty("/", data);
+          mainController.setViewMode("view");
+        } else if (selectedAttachments.length === 1) {
+          // load single
 
-              });
-            }
+          var currObject = selectedAttachments[0];
+          this.getOwnerComponent().getModel("currAttachment").setProperty("/", currObject);
+
+          var sideContent = "lifebook.view.main.detail.attachment.AttachmentDefault";
+
+          if (currObject.type === "PDF") {
+            sideContent = "lifebook.view.main.detail.attachment.AttachmentPdf";
+          } else if (currObject.type === "JPG") {
+            sideContent = "lifebook.view.main.detail.attachment.AttachmentImage";
           }
+  
+          mainController.setViewMode("singleAttachment");
+          mainController._changeSideContent(sideContent, currObject.name);
+        } else {
+          // load multiple
+          mainController.setViewMode("selection");
+          mainController._changeSideContent("lifebook.view.main.detail.attachment.AttachmentMultiple", "");
+        }
+
+      },
+
+
+      getSelectedAttachments: function() {
+        var data = this.getModel("currPage").getData();
+        return data.files.filter(function(item){
+          return item.selected === true;
         });
       },
 
 
-
-      onShowEdit: function (oEvent) {
-        this._loadSideContentView("lifebook.view.main.detail.edit.Edit", "Umbenennen");
-      },
-
-      onShowNew: function (oEvent) {
-        this._loadSideContentView("lifebook.view.main.detail.new.New", "Neue Seite");
-      },
-
-      onShowCopy: function (oEvent) {
-        this._loadSideContentView("lifebook.view.main.detail.copy.Copy", "Seite kopieren");
-      },
-
-      onShowMove: function (oEvent) {
-        this._loadSideContentView("lifebook.view.main.detail.move.Move", "Seite verschieben");
-      },
-
-
-
-      _loadSideContentView: function (sView, sTitle) {
-        var pView = this.getOwnerComponent().loadView({ viewName: sView, parentView: this.getView() });
-
-        var that = this;
-        pView.then(function (oView) {
-          that.getController("lifebook.view.baseLayout.BaseLayout").setSideContentPage(oView, sTitle);
-        });
-      },
-
-
+      unselectAllAttachments() {
+        var data = this.getModel("currPage").getData();
+        data.files.forEach(function(item){
+          item.selected = false;
+        })
+        this.getModel("currPage").setProperty("/", data);
+      }
 
     });
   }

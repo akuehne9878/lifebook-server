@@ -29,7 +29,6 @@ var Lifebook = {
     console.log(req.body);
 
     var fullIndexPath = path.join(LIFEBOOK_PATH, req.body.path, "index.md");
-
     var fullPath = path.join(LIFEBOOK_PATH, req.body.path);
 
     var content = "";
@@ -39,23 +38,39 @@ var Lifebook = {
 
     var files = [];
 
+    var promises = [];
+
     fs.readdirSync(fullPath, { withFileTypes: true }).forEach(function (dirent) {
       if (dirent.isFile()) {
         if (dirent.name !== "metainfo.json" && dirent.name !== "index.md") {
           const stats = fs.statSync(fullPath + path.sep + dirent.name);
 
-
-
           var day = dateFormat(stats.birthtime, "dd.mm.yyyy HH:MM");
 
-          var obj = { name: dirent.name, date: day }
+          var obj = {
+            name: dirent.name,
+            date: day,
+            size: stats.size
+          }
 
           obj.type = dirent.name.split(".").pop().toUpperCase();
 
 
           if (dirent.name.toUpperCase().endsWith("JPG")) {
-            obj.thumbnail = encodeURI("/api/thumbnail?path=" + req.body.path + "&name=" + dirent.name);
-            obj.original = encodeURI("/api/resize?path=" + req.body.path + "&name=" + dirent.name);
+            promises.push(new Promise(function(resolve, reject){
+              obj.thumbnail = encodeURI("/api/thumbnail?path=" + req.body.path + "&name=" + dirent.name);
+              obj.original = encodeURI("/api/resize?path=" + req.body.path + "&name=" + dirent.name);
+  
+              var absolutePath = path.join(LIFEBOOK_PATH, req.body.path, dirent.name);
+  
+              var s = sharp(absolutePath);
+              s.metadata(function (err, info) {
+                obj.height = info.height;
+                obj.width = info.width;
+  
+                resolve();
+              })
+            }));
           }
 
 
@@ -64,11 +79,18 @@ var Lifebook = {
       }
     });
 
-    //var fullMetaPath = path.join(fullPath,"metainfo.json");
-    // var metaInfo = JSON.parse(fs.readFileSync(fullMetaPath));
 
-    var title = fullPath.split(path.sep).pop();
-    buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files }));
+    if (promises.length > 0) {
+      Promise.all(promises).then(function() {
+        var title = fullPath.split(path.sep).pop();
+        buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files }));
+       });
+    } else {
+      var title = fullPath.split(path.sep).pop();
+      buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files }));
+
+    }
+
   },
 
   /**

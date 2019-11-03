@@ -10,15 +10,11 @@ sap.ui.define(
     "sap/ui/core/mvc/Controller",
     "sap/base/Log"
   ],
-  function(BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
+  function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
     return BaseController.extend("lifebook.view.main.detail.upload.Upload", {
-      onInit: function(oEvent) {},
+      onInit: function (oEvent) { },
 
-      onClose: function(oEvent) {
-        this.getController("lifebook.view.baseLayout.BaseLayout").hideSideContent();
-      },
-
-      handleUploadPress: function(oEvent) {
+      handleUploadPress: function (oEvent) {
         var oFileUploader = this.byId("fileUploader");
         if (!oFileUploader.getValue()) {
           MessageToast.show("Choose a file first");
@@ -28,7 +24,7 @@ sap.ui.define(
         oFileUploader.upload();
       },
 
-      handleUploadComplete: function(oEvent) {
+      handleUploadComplete: function (oEvent) {
         sap.ui.core.BusyIndicator.hide();
         var sResponse = oEvent.getParameter("response");
         var sMsg = "Upload Error";
@@ -38,7 +34,7 @@ sap.ui.define(
 
             var that = this;
             var oRestModel = new RestModel();
-            oRestModel.loadPage({ path: this.getModel("currPage").getProperty("/path") }).then(function(data) {
+            oRestModel.loadPage({ path: this.getModel("currPage").getProperty("/path") }).then(function (data) {
               that.getModel("currPage").setProperty("/", oRestModel.getData());
             });
           } else {

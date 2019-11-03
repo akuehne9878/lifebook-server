@@ -16,10 +16,6 @@ sap.ui.define(
         this.getView().setModel(new JSONModel({}), "currTarget");        
       },
 
-      onClose: function (oEvent) {
-        this.getController("lifebook.view.baseLayout.BaseLayout").hideSideContent();
-      },
-
       onPress: function (oEvent) {
         var oBindingContext = oEvent.getSource().getBindingContext("tree");
 

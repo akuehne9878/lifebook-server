@@ -1,48 +1,47 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.Detail" xmlns:html="http://www.w3.org/1999/xhtml" height="100%">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:grid="sap.ui.layout.cssgrid" xmlns:f="sap.f" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.Detail" xmlns:html="http://www.w3.org/1999/xhtml" height="100%">
    <Page enableScrolling="false" showHeader="false">
       <content>
-         <FlexBox height="100%" width="100%" renderType="Bare">
-            <IconTabBar id="itb" expanded="true" expandable="false" select="onSelectTab" stretchContentHeight="true" class="myClass">
-               <items>
-                  <IconTabFilter text="Seite" key="preview">
-                     <Page enableScrolling="true" showHeader="true" class="whiteBackground background">
-                        <customHeader>
-                           <OverflowToolbar>
-                              <ToolbarSpacer/>
-                              <Button type="Transparent" icon="sap-icon://add-document" text="Neue Seite" press="onShowNew"/>
-                              <Button type="Transparent" icon="sap-icon://edit" text="Umbenennen" press="onShowEdit"/>
-                              <Button type="Transparent" icon="sap-icon://copy" text="Kopieren" press="onShowCopy"/>
-                              <Button type="Transparent" icon="sap-icon://action" text="Verschieben" press="onShowMove"/>
-                              <Button type="Transparent" icon="sap-icon://delete" text="Löschen" press="onDeletePage"/>
-                           </OverflowToolbar>
-                        </customHeader>
-                        <html:div renderType="Bare" id="htmlViewer" class="markdown-body sapUiSmallMargin"/>
-                     </Page>
-                  </IconTabFilter>
-                  <IconTabFilter text="Editor" key="edit">
-                     <Page enableScrolling="true" showHeader="true" class="whiteBackground">
-                        <customHeader>
-                           <OverflowToolbar>
-                              <ToolbarSpacer/>
-                              <Button type="Transparent" icon="sap-icon://save" text="Speichern" press="onSavePage"/>
-                           </OverflowToolbar>
-                        </customHeader>
-                        <HBox height="100%" renderType="Bare">
-                           <codeeditor:CodeEditor height="100%" width="{=${device>/system/phone} ? '100%' : '50%' }" type="markdown" value="{currPage>/content}" liveChange="onLiveChange"/>
-                           <VBox width="{=${device>/system/phone} ? '0%' : '50%' }" height="100%" renderType="Bare" class="sapUiSmallMarginBegin">
-                              <Page enableScrolling="true" showHeader="false" class="whiteBackground">
-                                 <html:div renderType="Bare" id="editorPreview" class="markdown-body"/>
-                              </Page>
+         <List showSeparators="None">
+            <CustomListItem>
+               <Panel expandable="false" expanded="true" width="100%" class="sapUiResponsiveMargin">
+                  <content>
+                     <HBox height="100%" renderType="Bare">
+                        <codeeditor:CodeEditor height="auto" width="{=${device>/system/phone} ? '100%' : '50%' }" type="markdown" visible="{toolbar>/savePage}" value="{currPage>/content}" liveChange="onLiveChange"/>
+                        <VBox width="{=${device>/system/phone} ? '0%' : '50%' }" height="100%" renderType="Bare">
+                           <html:div renderType="Bare" id="htmlViewer" class="markdown-body sapUiSmallMargin"/>
+                        </VBox>
+                     </HBox>
+                  </content>
+               </Panel>
+            </CustomListItem>
+            <CustomListItem>
+               <Panel expandable="true" expanded="true" width="100%" class="sapUiResponsiveMargin">
+                  <headerToolbar>
+                     <OverflowToolbar height="3rem" style="Clear">
+                        <Title text="Attachments"/>
+                     </OverflowToolbar>
+                  </headerToolbar>
+                  <content>
+                     <f:GridList id="gridList" showUnread="true" items="{path: 'currPage>/files'}" selectionChange="onSelectionChange"  growing="true" growingThreshold="25" mode="MultiSelect">
+                        <f:customLayout>
+                           <grid:GridBasicLayout gridTemplateColumns="repeat(auto-fit, minmax(16rem, 1fr))" gridGap="0.5rem"/>
+                        </f:customLayout>
+                        <f:GridListItem type="Active" selected="{currPage>selected}" unread="{currPage>selected}" class="noBorderBottom" press="onPress" >
+                           <VBox height="100%">
+                              <Image src="{currPage>thumbnail}" width="100%" visible="{= ${currPage>type} === 'JPG' }" class="imageDisplayBlock"/>
+                              <HBox height="100%" class="sapUiSmallMargin" alignItems="Center" visible="{= ${currPage>type} !== 'JPG' }">
+                                 <VBox>
+                                    <Label text="{currPage>name}" wrapping="true"/>
+                                    <Label text="{currPage>date}" wrapping="true"/>
+                                 </VBox>
+                              </HBox>
                            </VBox>
-                        </HBox>
-                     </Page>
-                  </IconTabFilter>
-                  <IconTabFilter text="Attachments" key="attachments">
-                     <mvc:XMLView viewName="lifebook.view.main.detail.attachments.Attachments"/>
-                  </IconTabFilter>
-               </items>
-            </IconTabBar>
-         </FlexBox>
+                        </f:GridListItem>
+                     </f:GridList>
+                  </content>
+               </Panel>
+            </CustomListItem>
+         </List>
       </content>
    </Page>
 </mvc:View>
