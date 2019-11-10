@@ -23,7 +23,7 @@ sap.ui.define(
 
         this.setModel(new JSONModel(arr), "images");
 
-        this.setModel(new JSONModel({ path: options.imageArray[options.currIndex].original }), "currentImage");
+        this.setModel(new JSONModel({ path: options.imageArray[options.currIndex].file }), "currentImage");
 
 
       },

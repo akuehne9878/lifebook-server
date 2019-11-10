@@ -1,4 +1,4 @@
-sap.ui.define(['sap/ui/core/XMLComposite'], function (XMLComposite) {
+sap.ui.define(["sap/ui/Device", 'sap/ui/core/XMLComposite'], function (Device, XMLComposite) {
     "use strict";
 
 
@@ -11,6 +11,8 @@ sap.ui.define(['sap/ui/core/XMLComposite'], function (XMLComposite) {
                 showSideContent: { type: "boolean", defaultValue: true },
                 showMainContent: { type: "boolean", defaultValue: true },
                 showSideContentSpace: { type: "boolean", defaultValue: true },
+                showMaster: {type: "boolean", defaultValue: true},
+                showDetail: {type: "boolean", defaultValue: true},
                 sideContentTitle: { type: "string", defaultValue: "" },
                 sideContentViewName: { type: "string", defaultValue: "" }
             },
@@ -88,21 +90,28 @@ sap.ui.define(['sap/ui/core/XMLComposite'], function (XMLComposite) {
 
         fragment: "lifebook.components.MDSPage",
 
-        // setCurrentSideContentPage: function (sViewName, sTitle) {
-        //     var navContainer = this.byId("sideContentNavContainer");
-        //     var page = this.getSideContentPage(sViewName);
-        //     navContainer.to(page.getId(), "show");
-
-        //     this.setSideContentTitle(sTitle);
-        //     this.setShowSideContent(true);
-        // },
-
         setSideContentViewName: function (sViewName) {
             var navContainer = this.byId("sideContentNavContainer");
             var page = this.getSideContentPage(sViewName);
             if (page) {
                 navContainer.to(page.getId(), "show");
             }
+        },
+
+        setShowMaster: function(bValue) {
+            if (bValue === false) {
+                this.byId("splitContainer").toDetail(this.byId("splitContainer").getDetailPages()[0])
+            } else {
+                this.byId("splitContainer").backMaster(this.byId("splitContainer").getMasterPages()[0])
+            }
+        },
+
+        setShowSideContent: function(bValue) {
+            if (Device.system.phone) {
+                this.setShowSideContentSpace(bValue);
+            }
+            this.setProperty("showSideContent", bValue)
+            //this.showSideContent = bValue;
         },
 
         getMasterPage: function () {

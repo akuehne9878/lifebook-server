@@ -12,6 +12,19 @@
 	display: block;
 }
 
+.sapFGLIToolbar {
+    display: none !important
+}
+
+.noPaddingLeft {
+    padding-left: 0px !important;
+}
+
+.noContentPadding {
+    padding: 0px !important;
+}
+
+
 /**************************/
 /*
 .whiteBackground  {

@@ -13,8 +13,13 @@ sap.ui.define(
   function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
     return BaseController.extend("lifebook.view.main.detail.new.New", {
       onInit: function (oEvent) {
+        this.getOwnerComponent().registerController(this);
+      },
+
+      setup: function() {
         this.getView().setModel(new JSONModel({ title: "Neue Seite" }))
       },
+
 
       onSave: function (oEvent) {
         var that = this;
@@ -26,7 +31,7 @@ sap.ui.define(
         var oRestModel = new RestModel();
         oRestModel.createPage({ title: title, path: path }).then(function(data) {
           that.getController("lifebook.view.main.master.Master").reloadPage(newPath, { reloadTree: true });
-          that.onClose();
+          that.getModel("mdsPage").setProperty("/showSideContent", false);
         });
       }
 

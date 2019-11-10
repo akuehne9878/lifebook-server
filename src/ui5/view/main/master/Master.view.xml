@@ -5,6 +5,7 @@
             <SearchField search="onFilter" liveChange="onFilter"/>
             <Button type="Transparent" icon="sap-icon://expand-all" press="onExpandAll" />
             <Button type="Transparent" icon="sap-icon://collapse-all" press="onCollapseAll" />
+            <Button type="Transparent" icon="sap-icon://decline" press="onClose" />
          </Toolbar>
       </customHeader>
       <content>

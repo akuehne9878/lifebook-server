@@ -34,7 +34,7 @@ sap.ui.define(
         var oRestModel = new RestModel();
         oRestModel.renameFile({ path: path, newTitle: newTitle }).then(function (data) {
           that.getController("lifebook.view.main.detail.Detail").reloadPage(pagePath, "attachments");
-          that.onClose();
+          that.getModel("mdsPage").setProperty("/showSideContent", false);
         });
       }
     });

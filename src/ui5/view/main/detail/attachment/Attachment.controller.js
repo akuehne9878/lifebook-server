@@ -26,15 +26,12 @@ sap.ui.define(
 
       onDownload: function (oEvent) {
         var obj = this.getOwnerComponent().getModel("currAttachment").getData();
+        window.location.href = obj.file + "?download=true";
+      },
 
-        var currPage = this.getView()
-          .getModel("currPage")
-          .getData();
-
-        var that = this;
-
-        window.location.href = "/api/downloadFile?path=" + currPage.path + "&" + "name=" + obj.name;
-
+      onViewInBrowser: function (oEvent) {
+        var obj = this.getOwnerComponent().getModel("currAttachment").getData();
+        window.open(obj.file, "_blank");
       },
 
 
@@ -50,6 +47,15 @@ sap.ui.define(
         this._pdfViewer.setTitle(obj.name);
         this._pdfViewer.setShowDownloadButton(false);
         this._pdfViewer.open();
+
+      },
+
+      onGallery: function (oEvent) {
+        var obj = this.getOwnerComponent().getModel("currAttachment").getData();
+
+        var app = this.getController("lifebook.view.App").getView().byId("app");
+        app.to(app.getPages()[1]);
+
 
       },
 

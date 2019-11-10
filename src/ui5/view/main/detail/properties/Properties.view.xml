@@ -1,0 +1,14 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.properties.Properties" height="100%">
+  <Page showHeader="false">
+    <VBox class="sapUiSmallMarginTopBottom">
+      <VBox class="sapUiSmallMarginBeginEnd">
+        <VBox height="100%">
+          <codeeditor:CodeEditor height="200px" width="100%" type="json"  value="{currPage>/content}" />
+        </VBox>
+      </VBox>
+      <VBox justifyContent="End" alignItems="End" alignContent="End" class="sapUiSmallMarginEnd">
+        <Button type="Emphasized" text="Speichern" icon="sap-icon://save" press="onSave"/>
+      </VBox>
+    </VBox>
+  </Page>
+</mvc:View>

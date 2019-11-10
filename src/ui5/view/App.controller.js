@@ -9,17 +9,22 @@ sap.ui.define([
 				showSideContent: false,
 				currentSideContentViewName: "lifebook.view.main.detail.copy.Copy"
 			}),"metaInfo")
+
+			this.getOwnerComponent().registerController(this);
+
+
 		},
 
-		onShowNewPage: function(oEvent) {
-			this.getView().getModel("metaInfo").setProperty("/currentSideContentViewName", "lifebook.view.main.detail.new.New");
-			this.getView().getModel("metaInfo").setProperty("/showSideContent", true);
-		},
 
-		onShowRenamePage: function(oEvent) {
-			this.getView().getModel("metaInfo").setProperty("/currentSideContentViewName", "lifebook.view.main.detail.edit.Edit");
-			this.getView().getModel("metaInfo").setProperty("/showSideContent", true);
-		}
+		// onShowNewPage: function(oEvent) {
+		// 	this.getView().getModel("metaInfo").setProperty("/currentSideContentViewName", "lifebook.view.main.detail.new.New");
+		// 	this.getView().getModel("metaInfo").setProperty("/showSideContent", true);
+		// },
+
+		// onShowRenamePage: function(oEvent) {
+		// 	this.getView().getModel("metaInfo").setProperty("/currentSideContentViewName", "lifebook.view.main.detail.edit.Edit");
+		// 	this.getView().getModel("metaInfo").setProperty("/showSideContent", true);
+		// }
 
 	});
 

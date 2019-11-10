@@ -78,9 +78,7 @@ app.post("/api/moveFile", Lifebook.moveFile);
 
 app.post("*/upload", Lifebook.uploadFile);
 
-app.get("/api/downloadFile", Lifebook.downloadFile);
-
-app.get("/api/getFile", Lifebook.getFile);
+app.get("/api/file/*",  Lifebook.getFile);
 
 /* MISC */ 
 

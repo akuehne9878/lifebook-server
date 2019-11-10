@@ -31,10 +31,15 @@ sap.ui.define(
         var srcPath = this.getModel("currPage").getProperty("/path");
         var dstPath = this.getModel("currTarget").getProperty("/path");
 
+        var fileNames = this.getOwnerComponent().getModel("selectedAttachments").getData().map(function (item) {
+          return item.name;
+        })
+
+
         var that = this;
-        oRestModel.moveFile({ src: srcPath, dst: dstPath, fileName: this.getOwnerComponent().getModel("currAttachment").getProperty("/name") }).then(function (data) {
+        oRestModel.moveFile({ src: srcPath, dst: dstPath, fileNames: fileNames }).then(function (data) {
           that.getController("lifebook.view.main.detail.Detail").reloadPage(srcPath, "attachments");
-          that.onClose();
+          that.getModel("mdsPage").setProperty("/showSideContent", false);
         });
       }
     });

@@ -2,39 +2,50 @@
    <Page enableScrolling="false" showHeader="false">
       <content>
          <List showSeparators="None">
-            <CustomListItem>
-               <Panel expandable="false" expanded="true" width="100%" class="sapUiResponsiveMargin">
+            <CustomListItem >
+               <Panel expandable="false" expanded="true" width="auto" class="sapUiResponsiveMargin">
                   <content>
-                     <HBox height="100%" renderType="Bare">
-                        <codeeditor:CodeEditor height="auto" width="{=${device>/system/phone} ? '100%' : '50%' }" type="markdown" visible="{toolbar>/savePage}" value="{currPage>/content}" liveChange="onLiveChange"/>
-                        <VBox width="{=${device>/system/phone} ? '0%' : '50%' }" height="100%" renderType="Bare">
+                     <VBox height="100%" renderType="Bare">
+                        <Title titleStyle="H3"  text="{currPage>/title}" />
+                        <VBox height="100%" >
+                           <codeeditor:CodeEditor height="200px" width="100%" type="markdown" visible="{toolbar>/savePage}" value="{currPage>/content}" liveChange="onLiveChange"/>
+                        </VBox>
+                        <VBox width="100%" visible="{=${toolbar>/savePage} ? false : true}" height="100%" renderType="Bare">
                            <html:div renderType="Bare" id="htmlViewer" class="markdown-body sapUiSmallMargin"/>
                         </VBox>
-                     </HBox>
+                        <List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }" >
+                           <StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage" />
+                        </List>
+                     </VBox>
                   </content>
                </Panel>
             </CustomListItem>
             <CustomListItem>
-               <Panel expandable="true" expanded="true" width="100%" class="sapUiResponsiveMargin">
+               <Panel expandable="true" expanded="true" width="auto" class="sapUiResponsiveMargin" visible="{= ${currPage>/files}.length > 0 }">
                   <headerToolbar>
                      <OverflowToolbar height="3rem" style="Clear">
                         <Title text="Attachments"/>
                      </OverflowToolbar>
                   </headerToolbar>
                   <content>
-                     <f:GridList id="gridList" showUnread="true" items="{path: 'currPage>/files'}" selectionChange="onSelectionChange"  growing="true" growingThreshold="25" mode="MultiSelect">
+                     <f:GridList id="gridList" showUnread="true" items="{path: 'currPage>/files'}" selectionChange="onSelectionChange" growing="true" growingThreshold="25" mode="MultiSelect">
                         <f:customLayout>
-                           <grid:GridBasicLayout gridTemplateColumns="repeat(auto-fit, minmax(16rem, 1fr))" gridGap="0.5rem"/>
+                           <grid:GridBasicLayout gridTemplateColumns="repeat(auto-fit, minmax(300px, 0fr))" gridGap="1rem"/>
                         </f:customLayout>
-                        <f:GridListItem type="Active" selected="{currPage>selected}" unread="{currPage>selected}" class="noBorderBottom" press="onPress" >
-                           <VBox height="100%">
-                              <Image src="{currPage>thumbnail}" width="100%" visible="{= ${currPage>type} === 'JPG' }" class="imageDisplayBlock"/>
+                        <f:GridListItem type="Active" selected="{currPage>selected}" unread="{currPage>selected}" class="noBorderBottom noContentPadding" press="onPress">
+                           <VBox height="100%" >
+                              <HBox class="">
+                                 <OverflowToolbar class="noBorderBottom noPaddingLeft">
+                                    <Checkbox selected="{currPage>selected}" select="onSelectionChange"/>
+                                    <Label text="{currPage>name}"/>
+                                 </OverflowToolbar>
+                              </HBox>
                               <HBox height="100%" class="sapUiSmallMargin" alignItems="Center" visible="{= ${currPage>type} !== 'JPG' }">
                                  <VBox>
-                                    <Label text="{currPage>name}" wrapping="true"/>
                                     <Label text="{currPage>date}" wrapping="true"/>
                                  </VBox>
                               </HBox>
+                              <Image src="{currPage>thumbnail}" width="100%" visible="{= ${currPage>type} === 'JPG' }"/>
                            </VBox>
                         </f:GridListItem>
                      </f:GridList>

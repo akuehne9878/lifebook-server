@@ -1,0 +1,9 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.gallery.Gallery" height="100%">
+  <Page showHeader="true" title="{currAttachment>/name}" showNavButton="true" navButtonPress="onNavButtonPress">
+    <content>
+      <Carousel id="carousel" pages="{currPage>/files}">
+        <Image src="{currPage>file}"/>
+      </Carousel>
+    </content>
+  </Page>
+</mvc:View>

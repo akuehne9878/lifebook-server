@@ -12,7 +12,7 @@
         </customHeader>
         <content>
         <Carousel id="carousel" pages="{images>/}" pageChanged="onPageChanged">
-            <Image id="image" src="{images>original}&amp;percentage=25" class="sapUiNoMargin"></Image>
+            <Image id="image" src="{images>file}&amp;percentage=25" class="sapUiNoMargin"></Image>
             </Carousel>
         </content>
         <buttons>

@@ -36,6 +36,7 @@ sap.ui.define(
             var oRestModel = new RestModel();
             oRestModel.loadPage({ path: this.getModel("currPage").getProperty("/path") }).then(function (data) {
               that.getModel("currPage").setProperty("/", oRestModel.getData());
+              that.getModel("mdsPage").setProperty("/showSideContent", false);
             });
           } else {
             sMsg = "Return Code: " + sResponse + " (Upload Error)";

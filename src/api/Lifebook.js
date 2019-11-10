@@ -40,34 +40,37 @@ var Lifebook = {
 
     var promises = [];
 
+    var children = []
+
     fs.readdirSync(fullPath, { withFileTypes: true }).forEach(function (dirent) {
+
+      var obj = {};
+
       if (dirent.isFile()) {
         if (dirent.name !== "metainfo.json" && dirent.name !== "index.md") {
           const stats = fs.statSync(fullPath + path.sep + dirent.name);
 
           var day = dateFormat(stats.birthtime, "dd.mm.yyyy HH:MM");
 
-          var obj = {
-            name: dirent.name,
-            date: day,
-            size: stats.size
-          }
+          obj.name = dirent.name;
+          obj.date = dirent.day;
+          obj.size = stats.size;
 
           obj.type = dirent.name.split(".").pop().toUpperCase();
 
+          obj.file = "/api/file/" + req.body.path + "/" + dirent.name;
 
           if (dirent.name.toUpperCase().endsWith("JPG")) {
-            promises.push(new Promise(function(resolve, reject){
+            promises.push(new Promise(function (resolve, reject) {
               obj.thumbnail = encodeURI("/api/thumbnail?path=" + req.body.path + "&name=" + dirent.name);
-              obj.original = encodeURI("/api/resize?path=" + req.body.path + "&name=" + dirent.name);
-  
+
               var absolutePath = path.join(LIFEBOOK_PATH, req.body.path, dirent.name);
-  
+
               var s = sharp(absolutePath);
               s.metadata(function (err, info) {
                 obj.height = info.height;
                 obj.width = info.width;
-  
+
                 resolve();
               })
             }));
@@ -76,18 +79,20 @@ var Lifebook = {
 
           files.push(obj);
         }
+      } else {
+        children.push({ name: dirent.name });
       }
     });
 
 
     if (promises.length > 0) {
-      Promise.all(promises).then(function() {
+      Promise.all(promises).then(function () {
         var title = fullPath.split(path.sep).pop();
-        buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files }));
-       });
+        buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files, children: children }));
+      });
     } else {
       var title = fullPath.split(path.sep).pop();
-      buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files }));
+      buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files, children: children }));
 
     }
 
@@ -257,9 +262,10 @@ var Lifebook = {
   deleteFile: function (req, res) {
     console.log(req.body);
 
-    var absolutePath = path.join(LIFEBOOK_PATH, req.body.path, req.body.name);
-
-    rimraf.sync(absolutePath);
+    req.body.fileNames.forEach(function (fileName) {
+      var absolutePath = path.join(LIFEBOOK_PATH, req.body.path, fileName);
+      rimraf.sync(absolutePath);
+    });
 
     Lifebook.loadPage(req, res);
   },
@@ -270,6 +276,7 @@ var Lifebook = {
 
     if (req.query.height && req.query.width) {
       sharp(absolutePath)
+        .rotate()
         .resize({ height: parseInt(req.query.height, 10), width: parseInt(req.query.width, 10) })
         .pipe(res);
 
@@ -280,8 +287,8 @@ var Lifebook = {
       s.metadata(function (err, info) {
 
         var percentage = parseInt(req.query.percentage, 10);
-        console.log("asdf: " + info.height * (percentage / 100));
-        s.resize({ height: parseInt(info.height * (percentage / 100), 10), width: parseInt(info.width * (percentage / 100), 10) })
+
+        s.rotate().resize({ height: parseInt(info.height * (percentage / 100), 10), width: parseInt(info.width * (percentage / 100), 10) })
           .pipe(res);
       })
 
@@ -341,16 +348,19 @@ var Lifebook = {
 
   },
 
-  downloadFile: function (req, res) {
-    console.log(req.query);
-    var fullPath = path.join(LIFEBOOK_PATH, req.query.path, req.query.name);
-    res.download(fullPath);
-  },
-
 
   getFile: function (req, res) {
-    var fullPath = path.join(LIFEBOOK_PATH, req.query.path, req.query.name);
-    res.sendFile(fullPath);
+
+    var input = decodeURIComponent(req.path);
+
+    var fullPath = path.join(LIFEBOOK_PATH, input.replace("/api/file/", ""));
+
+    if (req.query.download) {
+      res.download(fullPath);
+    } else {
+      res.sendFile(fullPath);
+    }
+
   },
 
   renameFile: function (req, res) {
@@ -376,10 +386,14 @@ var Lifebook = {
   copyFile: function (req, res) {
     console.log(req.body);
 
-    var src = path.join(LIFEBOOK_PATH, req.body.src, req.body.fileName);
-    var dst = path.join(LIFEBOOK_PATH, req.body.dst, req.body.fileName);
 
-    fsExtra.copySync(src, dst);
+    req.body.fileNames.forEach(function (fileName) {
+      var src = path.join(LIFEBOOK_PATH, req.body.src, fileName);
+      var dst = path.join(LIFEBOOK_PATH, req.body.dst, fileName);
+      fsExtra.copySync(src, dst);
+    });
+
+
 
     Lifebook.tree(req, res);
   },
@@ -392,10 +406,12 @@ var Lifebook = {
   moveFile: function (req, res) {
     console.log(req.body);
 
-    var src = path.join(LIFEBOOK_PATH, req.body.src, req.body.fileName);
-    var dst = path.join(LIFEBOOK_PATH, req.body.dst, req.body.fileName);
 
-    fsExtra.moveSync(src, dst);
+    req.body.fileNames.forEach(function (fileName) {
+      var src = path.join(LIFEBOOK_PATH, req.body.src, fileName);
+      var dst = path.join(LIFEBOOK_PATH, req.body.dst, fileName);
+      fsExtra.moveSync(src, dst);
+    })
 
     Lifebook.tree(req, res);
   },

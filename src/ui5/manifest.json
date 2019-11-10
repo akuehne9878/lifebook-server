@@ -64,7 +64,7 @@
           "target": "app"
         },
         {
-          "pattern": "/{path}/:tabKey:",
+          "pattern": "/{path}",
           "name": "page",
           "target": "app"
         }

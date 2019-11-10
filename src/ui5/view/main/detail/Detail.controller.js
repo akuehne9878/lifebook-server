@@ -22,9 +22,35 @@ sap.ui.define(
 
         var converter = new showdown.Converter();
         converter.setOption("tables", true);
+        converter.setOption("emoji", true);
+
+         
         this._converter = converter;
 
         this.getOwnerComponent().registerController(this);
+
+        this.getOwnerComponent().getRouter().getRoute("page").attachPatternMatched(this.handlePage, this);
+      },
+
+      handlePage: function () {
+
+        var path = null;
+        if (arguments.length > 0) {
+          path = arguments[0].getParameter("arguments").path;
+        }
+  
+        if (path) {
+          this.getController("lifebook.view.main.detail.Detail").reloadPage(path);
+        }
+      },
+
+      onNavigateToChildPage: function(oEvent) {
+        var object = oEvent.getSource().getBindingContext("currPage").getObject();
+
+        var currPath = this.getOwnerComponent().getModel("currPage").getData().path;
+
+        this.getController("lifebook.view.main.master.Master")._navToPage(currPath + "\\" + object.name);
+
       },
 
       getShowdownConverter: function () {
@@ -86,6 +112,7 @@ sap.ui.define(
 
         var currObject = oBindingContext.getObject();
         this.getOwnerComponent().getModel("currAttachment").setProperty("/", currObject);
+        this.getController("lifebook.view.gallery.Gallery").setStartIndex(parseInt(oBindingContext.getPath().replace("/files/",""),10));
 
         var sideContent = "lifebook.view.main.detail.attachment.AttachmentDefault";
 
@@ -93,6 +120,8 @@ sap.ui.define(
           sideContent = "lifebook.view.main.detail.attachment.AttachmentPdf";
         } else if (currObject.type === "JPG") {
           sideContent = "lifebook.view.main.detail.attachment.AttachmentImage";
+        } else if (currObject.type === "MP4") {
+          sideContent = "lifebook.view.main.detail.attachment.AttachmentVideo";
         }
 
         var mainController = this.getController("lifebook.view.main.Main");
@@ -108,6 +137,8 @@ sap.ui.define(
         var mainController = this.getController("lifebook.view.main.Main");
 
         var selectedAttachments = this.getSelectedAttachments();
+        this.getOwnerComponent().getModel("selectedAttachments").setProperty("/", selectedAttachments);
+
         if (selectedAttachments.length === 0) {
           // close
           this.getModel("mdsPage").setProperty("/showSideContent", false);
@@ -117,8 +148,11 @@ sap.ui.define(
         } else if (selectedAttachments.length === 1) {
           // load single
 
+          var oBindingContext = oEvent.getSource().getBindingContext("currPage");
+
           var currObject = selectedAttachments[0];
           this.getOwnerComponent().getModel("currAttachment").setProperty("/", currObject);
+          this.getController("lifebook.view.gallery.Gallery").setStartIndex(parseInt(oBindingContext.getPath().replace("/files/",""),10));
 
           var sideContent = "lifebook.view.main.detail.attachment.AttachmentDefault";
 
@@ -126,6 +160,8 @@ sap.ui.define(
             sideContent = "lifebook.view.main.detail.attachment.AttachmentPdf";
           } else if (currObject.type === "JPG") {
             sideContent = "lifebook.view.main.detail.attachment.AttachmentImage";
+          } else if (currObject.type === "MP4") {
+            sideContent = "lifebook.view.main.detail.attachment.AttachmentVideo";
           }
   
           mainController.setViewMode("singleAttachment");

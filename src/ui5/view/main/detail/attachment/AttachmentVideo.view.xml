@@ -1,10 +1,9 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.attachment.Attachment" height="100%">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:c="lifebook.components"  xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.attachment.Attachment" height="100%">
   <Page showHeader="false">
     <VBox class="sapUiSmallMargin">
-      <PDFViewer source="{currAttachment>/file}" showDownloadButton="false" height="40rem"></PDFViewer>
-      <VBox class="sapUiSmallMarginTop">
-        <Label text="Größe: {currAttachment>/size}"/>
-      </VBox>
+      <!-- <Image src="{currAttachment>/file}" width="90%"></Image> -->
+
+      <c:VideoPlayer src="{currAttachment>/file}" width="100%" />
       <HBox justifyContent="End" alignItems="End" alignContent="End" class="sapUiSmallMarginTop">
         <Button type="Transparent" text="Im Browser öffnen" icon="sap-icon://image-viewer" press="onViewInBrowser" class="sapUiSmallMarginEnd"/>
         <Button type="Emphasized" text="Download" icon="sap-icon://download" press="onDownload"/>

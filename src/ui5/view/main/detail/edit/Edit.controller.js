@@ -33,7 +33,7 @@ sap.ui.define(
 
         oRestModel.renamePage({ path: path, newTitle: newTitle }).then(function (data) {
           that.getController("lifebook.view.main.master.Master").reloadPage(newPath, { reloadTree: true });
-          that.onClose();
+          that.getModel("mdsPage").setProperty("/showSideContent", false);
         });
       }
     });

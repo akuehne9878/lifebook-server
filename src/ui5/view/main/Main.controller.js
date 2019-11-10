@@ -14,9 +14,9 @@ sap.ui.define([
 
             onInit: function (oEvent) {
                 this.getOwnerComponent().registerController(this);
-                this.getOwnerComponent().getRouter().getRoute("page").attachPatternMatched(this.handlePage, this);
-
+  
                 this.setModel(new JSONModel({
+                    menuButton: Device.system.phone,
                     newPage: true,
                     renamePage: true,
                     editor: true,
@@ -24,6 +24,7 @@ sap.ui.define([
                     movePage: true,
                     deletePage: true,
                     upload: true,
+                    properties: true,
                     savePage: false,
                     cancelEditor: false,
                     copyAttachment: false,
@@ -33,6 +34,7 @@ sap.ui.define([
                     copySelection: false,
                     moveSelection: false,
                     deleteSelection: false,
+
                 }), "toolbar");
             },
 
@@ -47,6 +49,7 @@ sap.ui.define([
                     model.setProperty("/movePage", true);
                     model.setProperty("/deletePage", true);
                     model.setProperty("/upload", true);
+                    model.setProperty("/properties", true);
                     model.setProperty("/savePage", false);
                     model.setProperty("/cancelEditor", false);
 
@@ -67,6 +70,7 @@ sap.ui.define([
                     model.setProperty("/movePage", false);
                     model.setProperty("/deletePage", false);
                     model.setProperty("/upload", false);
+                    model.setProperty("/properties", false);
                     model.setProperty("/savePage", true);
                     model.setProperty("/cancelEditor", true);
 
@@ -87,6 +91,7 @@ sap.ui.define([
                     model.setProperty("/movePage", false);
                     model.setProperty("/deletePage", false);
                     model.setProperty("/upload", false);
+                    model.setProperty("/properties", false);
                     model.setProperty("/savePage", false);
                     model.setProperty("/cancelEditor", false);
 
@@ -107,6 +112,7 @@ sap.ui.define([
                     model.setProperty("/movePage", false);
                     model.setProperty("/deletePage", false);
                     model.setProperty("/upload", false);
+                    model.setProperty("/properties", false);
                     model.setProperty("/savePage", false);
                     model.setProperty("/cancelEditor", false);
 
@@ -121,18 +127,6 @@ sap.ui.define([
                 }
             },
 
-            handlePage: function () {
-
-                var path = null;
-                if (arguments.length > 0) {
-                    path = arguments[0].getParameter("arguments").path;
-                }
-
-                if (path) {
-                    this.getController("lifebook.view.main.detail.Detail").reloadPage(path);
-                }
-            },
-
             _changeSideContent: function (sViewName, sTitle) {
                 this.getModel("mdsPage").setProperty("/sideContentViewName", sViewName);
                 this.getModel("mdsPage").setProperty("/sideContentTitle", sTitle);
@@ -141,6 +135,7 @@ sap.ui.define([
 
             onShowNewPage: function (oEvent) {
                 this._changeSideContent("lifebook.view.main.detail.new.New", "Neue Seite");
+                this.getController("lifebook.view.main.detail.new.New").setup();
             },
 
             onShowRenamePage: function (oEvent) {
@@ -154,11 +149,14 @@ sap.ui.define([
 
             onShowCopyPage: function (oEvent) {
                 this._changeSideContent("lifebook.view.main.detail.copy.Copy", "Seite kopieren");
-
             },
 
             onShowUpload: function (oEvent) {
                 this._changeSideContent("lifebook.view.main.detail.upload.Upload", "Upload");
+            },
+
+            onShowProperties: function(oEvent) {
+                this._changeSideContent("lifebook.view.main.detail.properties.Properties", "Eigenschaften");
             },
 
             onShowEditor: function (oEvent) {
@@ -219,6 +217,41 @@ sap.ui.define([
                 this._changeSideContent("lifebook.view.main.detail.attachments.copy.Copy", "Attachment kopieren");
             },
 
+            onShowMoveSelection: function (oEvent) {
+                this._changeSideContent("lifebook.view.main.detail.attachments.move.Move", "Auswahl verschieben");
+            },
+
+            onShowCopySelection: function (oEvent) {
+                this._changeSideContent("lifebook.view.main.detail.attachments.copy.Copy", "Auswahl kopieren");
+            },
+
+            onDeleteSelection: function (oEvent) {
+                var currPage = this.getView()
+                    .getModel("currPage")
+                    .getData();
+
+                var selectedAttachments = this.getOwnerComponent().getModel("selectedAttachments").getData();
+
+                var fileNames = selectedAttachments.map(function(item){
+                    return item.name;
+                })
+
+                var that = this;
+                MessageBox.confirm("Auswahl löschen?", {
+                    actions: [sap.m.MessageBox.Action.NO, sap.m.MessageBox.Action.DELETE],
+                    title: "Auswahl löschen",
+                    onClose: function (sAction) {
+                        if (sAction === sap.m.MessageBox.Action.DELETE) {
+                            var oRestModel = new RestModel();
+                            oRestModel.deleteFile({ path: currPage.path, fileNames: fileNames }).then(function (data) {
+                                that.getModel("currPage").setProperty("/", oRestModel.getData());
+                                that.getModel("mdsPage").setProperty("/showSideContent", false);
+                            });
+                        }
+                    }
+                });
+            },
+
             onDeleteAttachment: function (oEvent) {
                 var currPage = this.getView()
                     .getModel("currPage")
@@ -233,7 +266,7 @@ sap.ui.define([
                     onClose: function (sAction) {
                         if (sAction === sap.m.MessageBox.Action.DELETE) {
                             var oRestModel = new RestModel();
-                            oRestModel.deleteFile({ path: currPage.path, name: currAttachment.name }).then(function (data) {
+                            oRestModel.deleteFile({ path: currPage.path, fileNames: [currAttachment.name] }).then(function (data) {
                                 that.getModel("currPage").setProperty("/", oRestModel.getData());
                                 that.getModel("mdsPage").setProperty("/showSideContent", false);
                             });
@@ -248,7 +281,12 @@ sap.ui.define([
                 if (name.indexOf("lifebook.view.main.detail.attachment") === 0) {
                     this.getModel("currAttachment").setProperty("/", null);
                     this.getController("lifebook.view.main.detail.Detail").unselectAllAttachments();
+                    this.setViewMode("view");
                 }
+            },
+
+            onShowMenu: function(oEvent) {
+                this.getModel("mdsPage").setProperty("/showMaster", true);
             }
 
         });

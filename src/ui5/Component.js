@@ -23,11 +23,12 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
       this.setModel(new JSONModel(), "detailHeader");
 
       this.setModel(new JSONModel(), "currAttachment");
+      this.setModel(new JSONModel(), "selectedAttachments");
 
       this.setModel(new JSONModel({
         sideContentViewName: "",
         sideContentTitle: "",
-        showSideContentSpace: true,
+        showSideContentSpace: !Device.system.phone,
         showSideContent: false
       }), "mdsPage");
     },

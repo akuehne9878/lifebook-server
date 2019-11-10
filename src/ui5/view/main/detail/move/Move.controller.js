@@ -35,7 +35,7 @@ sap.ui.define(
         var that = this;
         oRestModel.movePage({ src: srcPath, dst: dstPath, title: title }).then(function (data) {  
           that.getController("lifebook.view.main.master.Master").reloadPage(srcPath, { reloadTree: true });
-          that.onClose();
+          that.getModel("mdsPage").setProperty("/showSideContent", false);
         });
       }
     });

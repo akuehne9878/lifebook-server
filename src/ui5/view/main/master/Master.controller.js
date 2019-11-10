@@ -47,11 +47,18 @@ sap.ui.define(
       },
 
       _navToPage: function (sPath) {
-        debugger;
         var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
         oRouter.navTo("page", {
           path: sPath
         });
+
+
+        var mainController = this.getController("lifebook.view.main.Main");
+        mainController.setViewMode("view");
+      },
+
+      onClose: function(oEvent) {
+        this.getModel("mdsPage").setProperty("/showMaster", false);
       },
 
       reloadPage: function (sPath, options) {
