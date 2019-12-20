@@ -14,17 +14,26 @@ sap.ui.define([
 
             onInit: function (oEvent) {
                 this.getOwnerComponent().registerController(this);
-  
+
                 this.setModel(new JSONModel({
-                    menuButton: Device.system.phone,
-                    newPage: true,
-                    renamePage: true,
-                    editor: true,
-                    copyPage: true,
-                    movePage: true,
-                    deletePage: true,
-                    upload: true,
-                    properties: true,
+                }), "toolbar");
+
+                this.resetViewMode();
+            },
+
+            resetViewMode: function () {
+                this.getModel("toolbar").setProperty("/", {
+                    menuButton: false,
+                    newPage: false,
+                    renamePage: false,
+                    editor: false,
+                    copyPage: false,
+                    movePage: false,
+                    deletePage: false,
+                    upload: false,
+                    properties: false,
+                    views: false,
+                    dataTable: false,
                     savePage: false,
                     cancelEditor: false,
                     copyAttachment: false,
@@ -33,12 +42,13 @@ sap.ui.define([
                     renameAttachment: false,
                     copySelection: false,
                     moveSelection: false,
-                    deleteSelection: false,
-
-                }), "toolbar");
+                    deleteSelection: false
+                });
             },
 
+
             setViewMode: function (sViewMode) {
+                this.resetViewMode();
                 var model = this.getModel("toolbar");
 
                 if (sViewMode === "view") {
@@ -50,77 +60,20 @@ sap.ui.define([
                     model.setProperty("/deletePage", true);
                     model.setProperty("/upload", true);
                     model.setProperty("/properties", true);
-                    model.setProperty("/savePage", false);
-                    model.setProperty("/cancelEditor", false);
-
-                    model.setProperty("/copyAttachment", false);
-                    model.setProperty("/moveAttachment", false);
-                    model.setProperty("/deleteAttachment", false);
-                    model.setProperty("/renameAttachment", false);
-
-                    model.setProperty("/copySelection", false);
-                    model.setProperty("/moveSelection", false);
-                    model.setProperty("/deleteSelection", false);
+                    model.setProperty("/views", true);
+                    model.setProperty("/dataTable", true);
 
                 } else if (sViewMode === "edit") {
-                    model.setProperty("/newPage", false);
-                    model.setProperty("/renamePage", false);
-                    model.setProperty("/editor", false);
-                    model.setProperty("/copyPage", false);
-                    model.setProperty("/movePage", false);
-                    model.setProperty("/deletePage", false);
-                    model.setProperty("/upload", false);
-                    model.setProperty("/properties", false);
                     model.setProperty("/savePage", true);
                     model.setProperty("/cancelEditor", true);
 
-                    model.setProperty("/copyAttachment", false);
-                    model.setProperty("/moveAttachment", false);
-                    model.setProperty("/deleteAttachment", false);
-                    model.setProperty("/renameAttachment", false);
-
-                    model.setProperty("/copySelection", false);
-                    model.setProperty("/moveSelection", false);
-                    model.setProperty("/deleteSelection", false);
-
                 } else if (sViewMode === "singleAttachment") {
-                    model.setProperty("/newPage", false);
-                    model.setProperty("/renamePage", false);
-                    model.setProperty("/editor", false);
-                    model.setProperty("/copyPage", false);
-                    model.setProperty("/movePage", false);
-                    model.setProperty("/deletePage", false);
-                    model.setProperty("/upload", false);
-                    model.setProperty("/properties", false);
-                    model.setProperty("/savePage", false);
-                    model.setProperty("/cancelEditor", false);
-
                     model.setProperty("/copyAttachment", true);
                     model.setProperty("/moveAttachment", true);
                     model.setProperty("/deleteAttachment", true);
                     model.setProperty("/renameAttachment", true);
 
-                    model.setProperty("/copySelection", false);
-                    model.setProperty("/moveSelection", false);
-                    model.setProperty("/deleteSelection", false);
-
                 } else if (sViewMode === "selection") {
-                    model.setProperty("/newPage", false);
-                    model.setProperty("/renamePage", false);
-                    model.setProperty("/editor", false);
-                    model.setProperty("/copyPage", false);
-                    model.setProperty("/movePage", false);
-                    model.setProperty("/deletePage", false);
-                    model.setProperty("/upload", false);
-                    model.setProperty("/properties", false);
-                    model.setProperty("/savePage", false);
-                    model.setProperty("/cancelEditor", false);
-
-                    model.setProperty("/copyAttachment", false);
-                    model.setProperty("/moveAttachment", false);
-                    model.setProperty("/deleteAttachment", false);
-                    model.setProperty("/renameAttachment", false);
-
                     model.setProperty("/copySelection", true);
                     model.setProperty("/moveSelection", true);
                     model.setProperty("/deleteSelection", true);
@@ -155,8 +108,19 @@ sap.ui.define([
                 this._changeSideContent("lifebook.view.main.detail.upload.Upload", "Upload");
             },
 
-            onShowProperties: function(oEvent) {
+            onShowProperties: function (oEvent) {
                 this._changeSideContent("lifebook.view.main.detail.properties.Properties", "Eigenschaften");
+                this.getController("lifebook.view.main.detail.properties.Properties").setup();
+            },
+
+            onShowViews: function (oEvent) {
+                this._changeSideContent("lifebook.view.main.detail.views.Views", "Views");
+                this.getController("lifebook.view.main.detail.views.Views").setup();
+            },
+
+            onShowDataTable: function (oEvent) {
+                this._changeSideContent("lifebook.view.main.detail.dataTable.DataTable", "Datenbank");
+                this.getController("lifebook.view.main.detail.dataTable.DataTable").setup();
             },
 
             onShowEditor: function (oEvent) {
@@ -232,7 +196,7 @@ sap.ui.define([
 
                 var selectedAttachments = this.getOwnerComponent().getModel("selectedAttachments").getData();
 
-                var fileNames = selectedAttachments.map(function(item){
+                var fileNames = selectedAttachments.map(function (item) {
                     return item.name;
                 })
 
@@ -285,7 +249,7 @@ sap.ui.define([
                 }
             },
 
-            onShowMenu: function(oEvent) {
+            onShowMenu: function (oEvent) {
                 this.getModel("mdsPage").setProperty("/showMaster", true);
             }
 

@@ -1,0 +1,14 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.views.Views" height="100%">
+  <Page showHeader="false">
+    <VBox class="sapUiSmallMarginTopBottom">
+      <VBox class="sapUiSmallMarginBeginEnd">
+        <List items="{ path:'currPage>/metainfo/views', factory: '.factory'}" showNoData="false">
+          <dependents>
+            <core:Fragment fragmentName="lifebook.view.main.detail.views.View" type="XML"/>
+          </dependents>
+        </List>
+        <Button type="Default" text="Hinzufügen" icon="sap-icon://add" press="onAdd" class="sapUiTinyMarginEnd" width="100%"/>
+      </VBox>
+    </VBox>
+  </Page>
+</mvc:View>

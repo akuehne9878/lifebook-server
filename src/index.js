@@ -3,6 +3,7 @@ const Lifebook = require("./api/Lifebook");
 const fileUpload = require("express-fileupload");
 const Constants = require("./Constants");
 
+
 var fs = require("fs");
 
 var path = require("path");
@@ -78,16 +79,54 @@ app.post("/api/moveFile", Lifebook.moveFile);
 
 app.post("*/upload", Lifebook.uploadFile);
 
-app.get("/api/file/*",  Lifebook.getFile);
+app.get("/api/file/*", Lifebook.getFile);
 
-/* MISC */ 
+
+/* METAINFO */
+
+app.post("/api/metaInfoTree", Lifebook.metaInfoTree);
+
+app.post("/api/loadMetainfo", Lifebook.loadMetainfo);
+
+app.post("/api/saveMetainfo", Lifebook.saveMetainfo);
+
+
+
+
+/* MISC */
 
 app.get("/api/resize", Lifebook.resizeImage);
 
 app.get("/api/thumbnail", Lifebook.thumbnail);
 
 
-const port = 8080;
-app.listen(port, () => {
-  console.log("Example app listening on port 8080");
+
+
+/* ALASQL */
+
+app.post("/api/executeStatement", Lifebook.executeStatement);
+
+app.post("/api/listTables", Lifebook.listTables);
+
+app.post("/api/createEntity", Lifebook.createEntity);
+
+app.post("/api/readEntity", Lifebook.readEntity);
+
+app.post("/api/updateEntity", Lifebook.updateEntity);
+
+app.post("/api/deleteEntity", Lifebook.deleteEntity);
+
+var lifebookInitialized = new Promise(function (resolve, reject) {
+  resolve();
+})
+
+lifebookInitialized.then(function () {
+  const port = 8080;
+  app.listen(port, () => {
+    console.log("Example app listening on port 8080");
+  });
 });
+
+
+
+

@@ -10,18 +10,9 @@
       </customHeader>
       <content>
          <Tree id="lifebookTree" items="{path: 'tree>/items'}" showUnread="true" mode="SingleSelectMaster" selectionChange ="onSelectionChange">
-            <CustomTreeItem type="Active"  unread="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? true : false }" selected="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? true : false }" highlight="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? 'Information': 'None' }">
+            <CustomTreeItem type="Active" class="noBorderBottom"  unread="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? true : false }" selected="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? true : false }" highlight="{= (${tree>path} === ${currPage>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? 'Information': 'None' }">
                <HBox visible="{=${tree>type} === 'page' || ${tree>type} === 'lifebook' }">
                   <Text text="{tree>title}"/>
-               </HBox>
-               <HBox visible="{=${tree>type} === 'add' }">
-                  <core:Icon src="sap-icon://add" class="sapUiSmallMarginEnd"/>
-                  <Text text="{tree>title}"/>
-               </HBox>
-               <HBox visible="{=${tree>type} === 'addConfirm'}">
-                  <Input type="Text" value="{tree>title}" submit=""/>
-                  <Button icon="sap-icon://accept" type="Transparent" press="onCreatePage"/>
-                  <Button icon="sap-icon://decline" type="Transparent" press="onCancelCreatePage"/>
                </HBox>
             </CustomTreeItem>
          </Tree>

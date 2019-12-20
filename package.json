@@ -14,7 +14,9 @@
     "fs-extra": "^8.1.0",
     "gfm.css": "^1.1.2",
     "rimraf": "2.6.3",
-    "sharp": "^0.23.0"
+    "sharp": "^0.23.4",
+    "sqlite-parser": "^1.0.1",
+    "sqlite3": "^4.1.1"
   },
   "devDependencies": {
     "nodemon": "1.18.4"

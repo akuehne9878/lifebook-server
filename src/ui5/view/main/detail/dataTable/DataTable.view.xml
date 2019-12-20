@@ -1,0 +1,28 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.detail.dataTable.DataTable" height="100%">
+  <Page showHeader="false">
+    <VBox class="sapUiSmallMarginTopBottom">
+      <VBox class="sapUiSmallMarginBeginEnd">
+        <Label text="Tabelle"/>
+        <ComboBox selectionChange="onSelectionChange" selectedKey="{tables>/selected}" width="100%" items="{
+					path: 'tables>/tables'
+				}">
+          <core:Item key="{tables>name}" text="{tables>name}"/>
+        </ComboBox>
+        <VBox visible="{=${tables>/selected} !== ''}">
+          <Label class="sapUiSmallMarginTop" text="Felder"/>
+          <List items="{ path:'entity>/properties'}" showNoData="false">
+            <CustomListItem class="sapUiSmallMarginTopBottom">
+              <VBox class="sapUiTinyMargin">
+                <Label text="{entity>name} ({entity>type})"/>
+                <Input type="Text" value="{entity>value}" change="onChange" enabled="{=${entity>isPrimaryKey}===false}" class="sapUiTinyMarginBottom"/>
+              </VBox>
+            </CustomListItem>
+          </List>
+          <Button type="Default" text="Hinzufügen" icon="sap-icon://add" press="onAdd" visible="{=${entity>/id} === undefined}" class="sapUiTinyMarginEnd" width="100%"/>
+          <Button type="Default" text="Speichern" icon="sap-icon://save" press="onUpdate" visible="{=${entity>/id} !== undefined}" class="sapUiTinyMarginEnd" width="100%"/>
+          <Button type="Default" text="Löschen" icon="sap-icon://delete" press="onDelete" visible="{=${entity>/id} !== undefined}" class="sapUiTinyMarginEnd" width="100%"/>
+        </VBox>
+      </VBox>
+    </VBox>
+  </Page>
+</mvc:View>

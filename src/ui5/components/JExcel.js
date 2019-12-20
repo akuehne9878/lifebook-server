@@ -6,7 +6,7 @@ sap.ui.define([
 
 ], function (Control, RatingIndicator, Label, Button) {
     "use strict";
-    return Control.extend("lifebook.components.VideoPlayer", {
+    return Control.extend("lifebook.components.JExcel", {
         metadata: {
             properties: {
                 src: { type: "string", defaultValue: "" },

@@ -7,29 +7,31 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
-	"sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
     "sap/base/Log"
   ],
   function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Filter, FilterOperator, Log) {
     return BaseController.extend("lifebook.view.main.master.Master", {
       onInit: function (oEvent) {
         this.getOwnerComponent().registerController(this);
-
-        this.reloadLifebookTree();
       },
 
       reloadLifebookTree: function () {
         var that = this;
-        var oRestModel = new RestModel();
-        return oRestModel.tree().then(function (data) {
-          oRestModel.setProperty("/", data);
-          
-          that.getModel("targetTree").setProperty("/", data);
-          that.getModel("tree").setProperty("/", data);
-
-          that.expandTreeItem(localStorage.getItem("lifebook.currPage.path"));
-        });
+        var p = new Promise(function(resolve, reject){
+          var oRestModel = new RestModel();
+          oRestModel.tree().then(function (data) {
+            oRestModel.setProperty("/", data);
+  
+            that.getModel("targetTree").setProperty("/", data);
+            that.getModel("tree").setProperty("/", data);
+  
+            that.expandTreeItem(localStorage.getItem("lifebook.currPage.path"));
+            resolve();
+          });
+        })
+        return p;
       },
 
       onSelectionChange: function (oEvent) {
@@ -57,7 +59,7 @@ sap.ui.define(
         mainController.setViewMode("view");
       },
 
-      onClose: function(oEvent) {
+      onClose: function (oEvent) {
         this.getModel("mdsPage").setProperty("/showMaster", false);
       },
 
@@ -104,19 +106,19 @@ sap.ui.define(
         }
 
         var paths = [];
-        
+
         var parts = sPath.split("\\");
-        
+
         var temp = parts[0];
-        
+
         for (var i = 1; i <= parts.length; i++) {
           paths.push(temp);
-          
-          if (parts[i]){
+
+          if (parts[i]) {
             temp += "\\" + parts[i];
           }
         }
-        
+
         var that = this;
         paths.forEach(function (path) {
           var items = that.getView().byId("lifebookTree").getItems();
@@ -129,10 +131,10 @@ sap.ui.define(
         });
 
 
-      
+
       },
 
-      onFilter : function (oEvent) {
+      onFilter: function (oEvent) {
 
         // build filter array
         var aFilter = [];
@@ -145,7 +147,7 @@ sap.ui.define(
         if (sQuery) {
           aFilter.push(new Filter("title", FilterOperator.Contains, sQuery));
         }
-  
+
         // filter binding
         var oList = this.getView().byId("lifebookTree");
         var oBinding = oList.getBinding("items");
@@ -153,13 +155,13 @@ sap.ui.define(
         oBinding.expand(0);
       },
 
-      onExpandAll: function(oEvent) {
+      onExpandAll: function (oEvent) {
         var oTree = this.getView().byId("lifebookTree");
         oTree.expandToLevel(10);
 
       },
 
-      onCollapseAll: function(oEvent) {
+      onCollapseAll: function (oEvent) {
         var oTree = this.getView().byId("lifebookTree");
         oTree.collapseAll();
 

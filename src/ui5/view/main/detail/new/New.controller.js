@@ -17,7 +17,7 @@ sap.ui.define(
       },
 
       setup: function() {
-        this.getView().setModel(new JSONModel({ title: "Neue Seite" }))
+        this.getView().setModel(new JSONModel({ placeholder: "Neue Seite", title:"" }))
       },
 
 

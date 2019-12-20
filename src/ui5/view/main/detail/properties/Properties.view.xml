@@ -2,12 +2,24 @@
   <Page showHeader="false">
     <VBox class="sapUiSmallMarginTopBottom">
       <VBox class="sapUiSmallMarginBeginEnd">
-        <VBox height="100%">
-          <codeeditor:CodeEditor height="200px" width="100%" type="json"  value="{currPage>/content}" />
+        <VBox>
+          <Label text="PageId"/>
+          <Input type="Text" value="{currPage>/metainfo/id}" class="sapUiTinyMarginBottom"/>
         </VBox>
-      </VBox>
-      <VBox justifyContent="End" alignItems="End" alignContent="End" class="sapUiSmallMarginEnd">
-        <Button type="Emphasized" text="Speichern" icon="sap-icon://save" press="onSave"/>
+
+        <VBox>
+          <Label text="PageTitle"/>
+          <Input type="Text" value="{currPage>/metainfo/title}" class="sapUiTinyMarginBottom"/>
+        </VBox>          
+        
+        <!-- <List items="{ path:'currPage>/metainfo/properties', factory: '.factory'}" showNoData="false">
+          <dependents>
+            <core:Fragment fragmentName="lifebook.view.main.detail.properties.Simple" type="XML"/>
+          </dependents>
+        </List> -->
+        <HBox justifyContent="End" alignItems="End" alignContent="End" class="sapUiSmallMarginTop">
+          <Button type="Emphasized" text="Speichern" icon="sap-icon://save" press="onSave"/>
+        </HBox>
       </VBox>
     </VBox>
   </Page>

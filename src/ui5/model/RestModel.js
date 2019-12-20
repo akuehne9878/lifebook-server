@@ -48,6 +48,48 @@ sap.ui.define(["jquery.sap.global", "sap/ui/model/json/JSONModel", "sap/ui/model
       return this._post("/api/moveFile", data);
     },
 
+    
+    loadMetainfo: function (data) {
+      return this._post("/api/loadMetainfo", data);
+    },
+
+    saveMetainfo: function (data) {
+      return this._post("/api/saveMetainfo", data);
+    },
+
+    
+    metaInfoTree: function () {
+      return this._post("/api/metaInfoTree");
+    },
+
+    executeStatement: function (data) {
+      return this._post("/api/executeStatement", data);
+    },
+
+    listTables: function () {
+      return this._post("/api/listTables");
+    },
+
+    tableStructure: function (data) {
+      return this._post("/api/tableStructure", data);
+    },
+
+    createEntity: function (data) {
+      return this._post("/api/createEntity", data);
+    },     
+
+    readEntity: function (data) {
+      return this._post("/api/readEntity", data);
+    },    
+
+    updateEntity: function (data) {
+      return this._post("/api/updateEntity", data);
+    }, 
+
+    deleteEntity: function (data) {
+      return this._post("/api/deleteEntity", data);
+    }, 
+
     _get: function (url) {
       return this._ajax(url, "GET");
     },

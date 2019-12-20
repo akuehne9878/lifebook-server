@@ -5,26 +5,33 @@ sap.ui.define([
 
 	return Controller.extend("lifebook.view.App", {
 		onInit: function(oEvent) {
-			this.getView().setModel(new JSONModel({
-				showSideContent: false,
-				currentSideContentViewName: "lifebook.view.main.detail.copy.Copy"
-			}),"metaInfo")
-
 			this.getOwnerComponent().registerController(this);
 
-
+			this.getOwnerComponent().getRouter().getRoute("page").attachPatternMatched(this.handlePage, this);
+			this.getOwnerComponent().getRouter().getRoute("main").attachPatternMatched(this.handleMain, this);
 		},
 
 
-		// onShowNewPage: function(oEvent) {
-		// 	this.getView().getModel("metaInfo").setProperty("/currentSideContentViewName", "lifebook.view.main.detail.new.New");
-		// 	this.getView().getModel("metaInfo").setProperty("/showSideContent", true);
-		// },
+		handleMain: function () {
+			this.getOwnerComponent().getController("lifebook.view.main.master.Master").reloadLifebookTree();			
+			this._masterLoaded = true;
+		},
 
-		// onShowRenamePage: function(oEvent) {
-		// 	this.getView().getModel("metaInfo").setProperty("/currentSideContentViewName", "lifebook.view.main.detail.edit.Edit");
-		// 	this.getView().getModel("metaInfo").setProperty("/showSideContent", true);
-		// }
+		handlePage: function () {
+
+			var path = null;
+			if (arguments.length > 0) {
+			  path = arguments[0].getParameter("arguments").path;
+			}
+
+			if (!this._masterLoaded) {
+				this.handleMain();
+			}
+
+			if (path) {
+			  this.getOwnerComponent().getController("lifebook.view.main.detail.Detail").reloadPage(path);
+			}
+		  },
 
 	});
 

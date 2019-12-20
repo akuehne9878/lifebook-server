@@ -5,6 +5,8 @@ var rimraf = require("rimraf");
 var sharp = require('sharp');
 var dateFormat = require('dateformat');
 const Constants = require("../Constants");
+const sqlite3 = require('sqlite3').verbose();
+var sqliteParser = require('sqlite-parser');
 
 function buildResult(res, data) {
   console.log(data);
@@ -40,13 +42,16 @@ var Lifebook = {
 
     var promises = [];
 
-    var children = []
+    var children = [];
+
+    var metainfo = JSON.parse(fs.readFileSync(path.join(LIFEBOOK_PATH, req.body.path, "metainfo.json"), "utf8"));
 
     fs.readdirSync(fullPath, { withFileTypes: true }).forEach(function (dirent) {
 
       var obj = {};
 
       if (dirent.isFile()) {
+
         if (dirent.name !== "metainfo.json" && dirent.name !== "index.md") {
           const stats = fs.statSync(fullPath + path.sep + dirent.name);
 
@@ -88,11 +93,11 @@ var Lifebook = {
     if (promises.length > 0) {
       Promise.all(promises).then(function () {
         var title = fullPath.split(path.sep).pop();
-        buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files, children: children }));
+        buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files, children: children, metainfo: metainfo }));
       });
     } else {
       var title = fullPath.split(path.sep).pop();
-      buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files, children: children }));
+      buildResult(res, JSON.stringify({ content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files, children: children, metainfo: metainfo }));
 
     }
 
@@ -232,22 +237,19 @@ var Lifebook = {
           children.push(child);
         } else {
           if (sPath.endsWith("metainfo.json") && item != null) {
-            // var metaInfo = JSON.parse(fs.readFileSync(dirFile));
-            // item.title = metaInfo.title;
-            // item.id = metaInfo.id;
-            // item.type = "page";
 
             item.title = path
               .dirname(sPath)
               .split(path.sep)
               .pop();
             item.type = "page";
-            //item.id = 0;
           }
         }
       }
       return children;
     };
+
+
 
     var directoryStructure = walkSync(LIFEBOOK_PATH);
 
@@ -258,6 +260,43 @@ var Lifebook = {
 
     buildResult(res, JSON.stringify({ items: directoryStructure, name: NAME }));
   },
+
+
+
+  metaInfoTree: function (req, res) {
+
+    var arr = [];
+    const walkSync = (dir, item) => {
+      const files = fs.readdirSync(dir);
+      var children = [];
+      for (const file of files) {
+        const sPath = path.join(dir, file);
+        const dirent = fs.statSync(sPath);
+
+        if (dirent.isDirectory()) {
+          var child = {
+            path: sPath.replace(LIFEBOOK_PATH + path.sep, "")
+          };
+
+          child.items = walkSync(sPath, child);
+
+          children.push(child);
+
+        } else {
+          if (sPath.endsWith("metainfo.json") && item != null) {
+            // item.metaInfo = );
+            arr.push(JSON.parse(fs.readFileSync(sPath)));
+          }
+        }
+      }
+      return children;
+    };
+
+    // var directoryStructure = walkSync(LIFEBOOK_PATH);
+
+    buildResult(res, JSON.stringify({ items: arr }));
+  },
+
 
   deleteFile: function (req, res) {
     console.log(req.body);
@@ -406,7 +445,6 @@ var Lifebook = {
   moveFile: function (req, res) {
     console.log(req.body);
 
-
     req.body.fileNames.forEach(function (fileName) {
       var src = path.join(LIFEBOOK_PATH, req.body.src, fileName);
       var dst = path.join(LIFEBOOK_PATH, req.body.dst, fileName);
@@ -416,6 +454,297 @@ var Lifebook = {
     Lifebook.tree(req, res);
   },
 
+  loadMetainfo: function (req, res) {
+    console.log(req.body.path);
+
+    var metainfo = fs.readFileSync(path.join(LIFEBOOK_PATH, req.body.path, "metainfo.json"), "utf8");
+
+    buildResult(res, JSON.stringify({ content: metainfo }));
+  },
+
+
+  saveMetainfo: function (req, res) {
+    console.log(req.body.path);
+
+    var fullIndexPath = path.join(LIFEBOOK_PATH, req.body.path, "metainfo.json");
+    fs.writeFileSync(fullIndexPath, req.body.content);
+
+    buildResult(res, JSON.stringify({}));
+  },
+
+
+  executeStatement: function (req, res) {
+    var statement = req.body.statement;
+
+    var sql = statement;
+
+    if (sql === undefined || sql === "") {
+      buildResult(res, JSON.stringify({}));
+    } else {
+      Lifebook._run(sql).then(function (items) {
+        if (items) {
+          buildResult(res, JSON.stringify(items));
+        } else {
+          buildResult(res, JSON.stringify({}));
+        }
+      })
+    }
+
+  },
+
+  listTables: function (req, res) {
+    var sql = "SELECT name FROM sqlite_master WHERE type='table'"
+    Lifebook._run(sql).then(function (items) {
+      buildResult(res, JSON.stringify({ tables: items }));
+    })
+  },
+
+
+  _getTableStructure: function (table) {
+    var p = new Promise(function (resolve, reject) {
+      var sql = "SELECT sql FROM sqlite_master WHERE  name = ?";
+      var values = [table];
+      Lifebook._run(sql, values).then(function (items) {
+        resolve(sqliteParser(items[0].sql))
+      })
+    })
+    return p;
+  },
+
+
+  _run: function (sql, values) {
+
+    var p = new Promise(function (resolve, reject) {
+      console.log("EXECUTE STATEMENT:");
+      console.log("\t" + sql);
+      console.log("\t" + values);
+
+      let db = new sqlite3.Database(path.join(Constants.LIFEBOOK_DB_PATH, "lifebook.db"));
+      var stmt;
+      db.on("error", function (error) {
+        console.log("Getting an error : ", error);
+        stmt.finalize();
+        db.close();
+      });
+
+
+      stmt = db.prepare(sql, function (err) {
+        if (err) {
+          console.log("PREPARE ERR: " + err)
+          resolve({error: ""+ err});
+        } else {
+          if (sql.toUpperCase().indexOf("INSERT") === 0 || sql.toUpperCase().indexOf("UPDATE") === 0 || sql.toUpperCase().indexOf("DELETE") === 0) {
+            stmt.run(values, function (err) {
+              resolve(err);
+            });
+          } else {
+            stmt.all(values, function (err, rows) {
+              console.log(err);
+              resolve(rows);
+            })
+          }
+        }
+        stmt.finalize();
+        db.close()
+      });
+
+    });
+
+    return p;
+
+  },
+
+  createEntity: function (req, res) {
+    var entity = req.body.entity;
+
+
+
+    var properties = entity.properties.map(function (item) {
+      return item.name;
+    }).join(", ");
+
+    var values = entity.properties.map(function (item) {
+      return item.value;
+    })
+
+    var placeholders = entity.properties.map(function (item) {
+      return "?";
+    }).join(", ");
+
+
+    var sql = "INSERT INTO " + entity.name + " (" + properties + ") values (" + placeholders + ")";
+
+    Lifebook._run(sql, values).then(function () {
+      buildResult(res, JSON.stringify({}));
+    })
+
+  },
+
+
+  _handlePrimaryKey: function (ast) {
+
+    var constraints = ast.statement[0].definition.filter(function (a) {
+      return a.variant === "constraint";
+    })
+
+    var pk = null;
+    constraints.forEach(function (a) {
+      if (a.definition[0].variant === "primary key") {
+        pk = a.columns;
+      }
+    })
+
+    if (!pk) {
+      pk = ast.statement[0].definition.filter(function (item) {
+        return (item.definition.length > 0 && item.definition[0].variant === "primary key");
+      });
+    }
+
+    return pk
+  },
+
+  _handleForeignKey: function (ast) {
+
+    var constraints = ast.statement[0].definition.filter(function (a) {
+      return a.variant === "constraint";
+    })
+
+    console.log(JSON.stringify(ast));
+
+    var pk = null;
+    constraints.forEach(function (a) {
+      if (a.definition[0].variant === "foreign key") {
+        pk = a.columns;
+      }
+    })
+
+    // if (!pk) {
+    //   pk = ast.statement[0].definition.filter(function(item){
+    //     return (item.definition.length > 0 && item.definition[0].variant === "foreign key");
+    //   });
+    // }
+
+    return pk
+  },
+
+  _handleColumns: function (ast) {
+    var columns = ast.statement[0].definition.filter(function (a) {
+      return a.variant === "column";
+    })
+
+    var cols = columns.map(function (item) {
+      return item.name;
+    }).join(", ");
+
+    console.log("QQQQ: " + cols);
+
+    return cols;
+  },
+
+  _map: function (item, ast) {
+
+    var name = ast.statement[0].name.name;
+    var pk = Lifebook._handlePrimaryKey(ast);
+
+    var columns = ast.statement[0].definition.filter(function (a) {
+      return a.variant === "column";
+    })
+
+    var id = null;
+    var properties = columns.map(function (a) {
+      if (a.name === pk[0].name) {
+        id = item[a.name];
+      }
+      return {
+        name: a.name,
+        value: item[a.name],
+        type: a.datatype.variant,
+        affinity: a.datatype.affinity,
+        isPrimaryKey: a.name === pk[0].name
+      }
+    });
+
+    var entity = {
+      name: name,
+      id: id,
+      properties: properties
+    }
+    return entity;
+  },
+
+  readEntity: function (req, res) {
+
+    var entity = req.body.entity;
+
+    Lifebook._getTableStructure(entity.name).then(function (ast) {
+
+      var pk = Lifebook._handlePrimaryKey(ast);
+      var fk = Lifebook._handleForeignKey(ast);
+
+      console.log("FK: " + JSON.stringify(fk));
+
+      var cols = Lifebook._handleColumns(ast);
+
+      var sql = "SELECT " + cols + " FROM " + entity.name + " WHERE " + pk[0].name + " = ?";
+      var values = [entity.id];
+
+      Lifebook._run(sql, values).then(function (items) {
+
+        if (items.length === 0) {
+          buildResult(res, JSON.stringify(Lifebook._map({}, ast)));
+        } else {
+          var list = items.map(function (item) {
+            return Lifebook._map(item, ast);
+          });
+          buildResult(res, JSON.stringify(list[0]));
+        }
+
+      });
+
+    })
+
+  },
+
+  updateEntity: function (req, res) {
+    var entity = req.body.entity;
+    Lifebook._getTableStructure(entity.name).then(function (ast) {
+      var pk = Lifebook._handlePrimaryKey(ast);
+
+      var props2Update = entity.properties.filter(function (prop) {
+        return (prop.isPrimaryKey === false && prop.value !== null && prop.value !== undefined)
+      })
+
+      var cols = props2Update.map(function (item) {
+        return item.name + " = ?";
+      }).join(", ");
+
+      var values = props2Update.map(function (item) {
+        return item.value;
+      })
+
+      values.push(entity.id);
+
+
+      var sql = "UPDATE " + entity.name + " SET " + cols + " WHERE " + pk[0].name + " = ?"
+      Lifebook._run(sql, values).then(function () {
+        buildResult(res, JSON.stringify({}));
+      });
+    });
+
+  },
+
+  deleteEntity: function (req, res) {
+    var entity = req.body.entity;
+    Lifebook._getTableStructure(entity.name).then(function (ast) {
+      var pk = Lifebook._handlePrimaryKey(ast);
+
+      var sql = "DELETE FROM " + entity.name + " WHERE " + pk[0].name + " = ?";
+      var values = [entity.id]
+      Lifebook._run(sql, values).then(function () {
+        buildResult(res, JSON.stringify({}));
+      })
+    })
+  },
 
 
 };

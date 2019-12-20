@@ -2,24 +2,73 @@
    <Page enableScrolling="false" showHeader="false">
       <content>
          <List showSeparators="None">
-            <CustomListItem >
+            <CustomListItem>
                <Panel expandable="false" expanded="true" width="auto" class="sapUiResponsiveMargin">
                   <content>
                      <VBox height="100%" renderType="Bare">
-                        <Title titleStyle="H3"  text="{currPage>/title}" />
-                        <VBox height="100%" >
+                        <Title titleStyle="H3" text="{currPage>/title}"/>
+                        <VBox height="100%">
                            <codeeditor:CodeEditor height="200px" width="100%" type="markdown" visible="{toolbar>/savePage}" value="{currPage>/content}" liveChange="onLiveChange"/>
                         </VBox>
                         <VBox width="100%" visible="{=${toolbar>/savePage} ? false : true}" height="100%" renderType="Bare">
                            <html:div renderType="Bare" id="htmlViewer" class="markdown-body sapUiSmallMargin"/>
                         </VBox>
-                        <List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }" >
-                           <StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage" />
+                        <List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }">
+                           <StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage"/>
                         </List>
                      </VBox>
                   </content>
                </Panel>
             </CustomListItem>
+            <CustomListItem visible="{=  ${currPage>/metainfo/properties} !== undefined &amp;&amp; ${currPage>/metainfo/properties}.length > 0 }">
+               <Panel expandable="true" expanded="true" width="auto">
+                  <headerToolbar>
+                     <OverflowToolbar height="3rem" style="Clear">
+                        <Title text="Eigenschaften"/>
+                     </OverflowToolbar>
+                  </headerToolbar>
+                  <List items="{currPage>/metainfo/properties}">
+                     <StandardListItem title="{currPage>label}" description="{currPage>value}"/>
+                  </List>
+               </Panel>
+            </CustomListItem>
+
+            <CustomListItem visible="{= ${currPage>/metainfo/views} !== undefined &amp;&amp; ${currPage>/metainfo/views}.length > 0 }">
+               <Panel expandable="true" expanded="true" width="auto">
+                  <headerToolbar>
+                     <OverflowToolbar height="3rem" style="Clear">
+                        <Title text="Views"/>
+                     </OverflowToolbar>
+                  </headerToolbar>
+                  <List items="{views>/}">
+                     <CustomListItem>
+                        <Panel expandable="true" expanded="true" width="auto">
+                           <headerToolbar>
+                              <OverflowToolbar height="3rem" style="Clear">
+                                 <Title text="{views>title}"/>
+                              </OverflowToolbar>
+                           </headerToolbar>
+                           <Table inset="false" items="{path: 'views>items'}" columns="{path: 'views>columns'}"  >
+                              <columns>
+                                 <Column>
+                                    <Text text="{views>name}" />
+                                 </Column>
+                              </columns>
+                                 <items>
+                                    <ColumnListItem cells="{views>cells}">
+                                       <cells>					
+                                          <Text	text="{views>value}" />
+                                       </cells>
+                                    </ColumnListItem>
+                                 </items>
+                           </Table>
+                        </Panel>
+                     </CustomListItem>
+                  </List>
+               </Panel>
+            </CustomListItem>
+
+
             <CustomListItem>
                <Panel expandable="true" expanded="true" width="auto" class="sapUiResponsiveMargin" visible="{= ${currPage>/files}.length > 0 }">
                   <headerToolbar>
@@ -33,7 +82,7 @@
                            <grid:GridBasicLayout gridTemplateColumns="repeat(auto-fit, minmax(300px, 0fr))" gridGap="1rem"/>
                         </f:customLayout>
                         <f:GridListItem type="Active" selected="{currPage>selected}" unread="{currPage>selected}" class="noBorderBottom noContentPadding" press="onPress">
-                           <VBox height="100%" >
+                           <VBox height="100%">
                               <HBox class="">
                                  <OverflowToolbar class="noBorderBottom noPaddingLeft">
                                     <Checkbox selected="{currPage>selected}" select="onSelectionChange"/>

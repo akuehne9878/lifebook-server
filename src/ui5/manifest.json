@@ -52,7 +52,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "viewType": "XML",
-        "viewPath": "lifebook.view",
+        "viewPath": "lifebook.view.App",
         "controlId": "app",
         "controlAggregation": "pages",
         "async": true
@@ -61,18 +61,31 @@
         {
           "pattern": "",
           "name": "main",
-          "target": "app"
+          "target": "main"
         },
         {
-          "pattern": "/{path}",
+          "pattern": "page/:path:",
           "name": "page",
-          "target": "app"
+          "target": "page"
+        },
+        {
+          "pattern": "gallery/:path:",
+          "name": "gallery",
+          "target": "gallery"
         }
       ],
       "targets": {
-        "app": {
-          "viewName": "App",
-          "viewLevel": 1
+        "main": {
+          "viewName": "Main",
+          "viewPath": "lifebook.view.main"
+        },
+        "page": {
+          "viewName": "Main",
+          "viewPath": "lifebook.view.main"
+        },
+        "gallery": {
+          "viewName": "Gallery",
+          "viewPath": "lifebook.view.gallery"
         }
       }
     }

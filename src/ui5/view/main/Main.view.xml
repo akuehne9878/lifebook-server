@@ -1,7 +1,11 @@
 <mvc:View height="100%" xmlns:c="lifebook.components" controllerName="lifebook.view.main.Main" xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns="sap.m">
     <c:MDSPage id="mdsPage" showMaster="{mdsPage>/showMaster}" showSecondaryHeader="false" showSideContentSpace="{mdsPage>/showSideContentSpace}" showSideContent="{mdsPage>/showSideContent}" sideContentViewName="{mdsPage>/sideContentViewName}" sideContentTitle="{mdsPage>/sideContentTitle}" afterCloseSideContent="onAfterCloseSideContent" height="100%">
         <c:primaryHeader>
-            <OverflowToolbar><Label text="{currPage>/title}" /></OverflowToolbar>
+            <OverflowToolbar>
+            <Label text="{currPage>/title}" />
+                <ToolbarSpacer />
+            </OverflowToolbar>
+         
         </c:primaryHeader>
         <c:detailHeader>
             <OverflowToolbar><!-- Page -->
@@ -15,6 +19,8 @@
                 <Button type="Transparent" icon="sap-icon://save" text="Speichern" press="onSavePage" visible="{toolbar>/savePage}"/>
                 <Button type="Transparent" icon="sap-icon://upload" text="Upload" press="onShowUpload" visible="{toolbar>/upload}"/>
                 <Button type="Transparent" icon="sap-icon://customize" text="Eigenschaften" press="onShowProperties" visible="{toolbar>/properties}"/>
+                <Button type="Transparent" icon="sap-icon://customize" text="Views" press="onShowViews" visible="{toolbar>/views}"/>
+                <Button type="Transparent" icon="sap-icon://database" text="Datenbank" press="onShowDataTable" visible="{toolbar>/dataTable}"/>
                 <Button type="Transparent" icon="sap-icon://decline" text="Abbrechen" press="onCancelEditor" visible="{toolbar>/cancelEditor}"/><!-- Single Attachment -->
                 <Button type="Transparent" icon="sap-icon://edit" text="Umbenennen" press="onShowRenameAttachment" visible="{toolbar>/renameAttachment}"/>
                 <Button type="Transparent" icon="sap-icon://copy" text="Kopieren" press="onShowCopyAttachment" visible="{toolbar>/copyAttachment}"/>
@@ -30,6 +36,7 @@
         </c:masterPage>
         <c:detailPage>
             <mvc:XMLView viewName="lifebook.view.main.detail.Detail"/>
+            <!-- <mvc:XMLView viewName="lifebook.view.main.detail.SinglePdfOnly"/> -->
         </c:detailPage>
         <c:sideContent>
             <mvc:XMLView viewName="lifebook.view.main.detail.new.New"/>
@@ -38,6 +45,8 @@
             <mvc:XMLView viewName="lifebook.view.main.detail.move.Move"/>
             <mvc:XMLView viewName="lifebook.view.main.detail.upload.Upload"/>
             <mvc:XMLView viewName="lifebook.view.main.detail.properties.Properties"/>
+            <mvc:XMLView viewName="lifebook.view.main.detail.views.Views"/>
+            <mvc:XMLView viewName="lifebook.view.main.detail.dataTable.DataTable"/>
             <mvc:XMLView viewName="lifebook.view.main.detail.attachment.AttachmentDefault"/>
             <mvc:XMLView viewName="lifebook.view.main.detail.attachment.AttachmentPdf"/>
             <mvc:XMLView viewName="lifebook.view.main.detail.attachment.AttachmentImage"/>
