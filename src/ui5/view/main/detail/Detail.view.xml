@@ -13,9 +13,11 @@
                         <VBox width="100%" visible="{=${toolbar>/savePage} ? false : true}" height="100%" renderType="Bare">
                            <html:div renderType="Bare" id="htmlViewer" class="markdown-body sapUiSmallMargin"/>
                         </VBox>
-                        <List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }">
-                           <StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage"/>
-                        </List>
+                        <VBox visible="{currPage>/metainfo/showOverview}">
+                           <List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }">
+                              <StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage"/>
+                           </List>
+                        </VBox>
                      </VBox>
                   </content>
                </Panel>
@@ -32,7 +34,6 @@
                   </List>
                </Panel>
             </CustomListItem>
-
             <CustomListItem visible="{= ${currPage>/metainfo/views} !== undefined &amp;&amp; ${currPage>/metainfo/views}.length > 0 }">
                <Panel expandable="true" expanded="true" width="auto">
                   <headerToolbar>
@@ -48,27 +49,30 @@
                                  <Title text="{views>title}"/>
                               </OverflowToolbar>
                            </headerToolbar>
-                           <Table inset="false" items="{path: 'views>items'}" columns="{path: 'views>columns'}"  >
+                           <Table inset="false" items="{path: 'views>items'}" columns="{path: 'views>columns'}">
                               <columns>
                                  <Column>
-                                    <Text text="{views>name}" />
+                                    <Toolbar width="100%">
+                                       <Text text="{views>name}"/>
+                                       <ToolbarSpacer />
+                                       <Button type="Transparent" visible="{= ${views>name} !== undefined }" icon="sap-icon://arrow-down" press="onShowColumnHeaderPopover">
+                                       </Button>
+                                    </Toolbar>
                                  </Column>
                               </columns>
-                                 <items>
-                                    <ColumnListItem cells="{views>cells}">
-                                       <cells>					
-                                          <Text	text="{views>value}" />
-                                       </cells>
-                                    </ColumnListItem>
-                                 </items>
+                              <items>
+                                 <ColumnListItem cells="{views>cells}">
+                                    <cells>
+                                        <Text text = "{ parts: [ 'views>value', 'views>type', 'views>formatOptions' ], formatter: '.dataFormatter' }" />
+                                    </cells>
+                                 </ColumnListItem>
+                              </items>
                            </Table>
                         </Panel>
                      </CustomListItem>
                   </List>
                </Panel>
             </CustomListItem>
-
-
             <CustomListItem>
                <Panel expandable="true" expanded="true" width="auto" class="sapUiResponsiveMargin" visible="{= ${currPage>/files}.length > 0 }">
                   <headerToolbar>

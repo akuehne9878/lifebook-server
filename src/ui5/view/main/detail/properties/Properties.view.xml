@@ -6,13 +6,13 @@
           <Label text="PageId"/>
           <Input type="Text" value="{currPage>/metainfo/id}" class="sapUiTinyMarginBottom"/>
         </VBox>
-
         <VBox>
           <Label text="PageTitle"/>
           <Input type="Text" value="{currPage>/metainfo/title}" class="sapUiTinyMarginBottom"/>
-        </VBox>          
-        
-        <!-- <List items="{ path:'currPage>/metainfo/properties', factory: '.factory'}" showNoData="false">
+        </VBox>
+        <VBox>
+          <CheckBox text="Automatische Übersicht" selected="{currPage>/metainfo/showOverview}" />
+        </VBox><!-- <List items="{ path:'currPage>/metainfo/properties', factory: '.factory'}" showNoData="false">
           <dependents>
             <core:Fragment fragmentName="lifebook.view.main.detail.properties.Simple" type="XML"/>
           </dependents>

@@ -8,9 +8,10 @@ sap.ui.define(
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
     "sap/ui/core/mvc/Controller",
-    "sap/base/Log"
+    "sap/base/Log",
+    "sap/ui/core/format/NumberFormat"
   ],
-  function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log) {
+  function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log, NumberFormat) {
     return BaseController.extend("lifebook.view.main.detail.Detail", {
 
 
@@ -61,9 +62,6 @@ sap.ui.define(
           that.setModel(new JSONModel(views), "views");
 
           if (data.metainfo.views && data.metainfo.views.length > 0) {
-
-
-
             data.metainfo.views.forEach(function (view) {
 
               var sqlModel = new RestModel();
@@ -83,15 +81,37 @@ sap.ui.define(
                     return { name: item };
                   })
 
+                  if (!view.settings || view.settings.columns.length !== obj.columns.length) {
+                    var columns = [];
+                    obj.columns.forEach(function (item) {
+                      columns.push({ formatting: "text", type: "sap.ui.model.type.String", formatOptions: {} });
+                    })
+                    view.settings = {
+                      columns: columns
+                    }
+
+                    new RestModel().saveMetainfo({
+                      path: that.getModel("currPage").getProperty("/path"),
+                      content: JSON.stringify(that.getModel("currPage").getProperty("/metainfo"))
+                    })
+                  }
+
+
                   var items = sqlModel.getProperty("/").map(function (item) {
                     var obj = {};
-                    obj.cells = keys.map(function (key) {
-                      return { value: item[key] };
+                    obj.cells = keys.map(function (key, index) {
+                      view.settings.columns[index]
+                      return { value: item[key], type: view.settings.columns[index].type, formatOptions: view.settings.columns[index].formatOptions  };
                     });
                     return obj;
                   });
                   obj.items = items;
                   obj.title = view.title;
+
+
+                  view.settings.columns.forEach(function (item, index) {
+                    obj.columns[index].formatting = item.formatting;
+                  });
 
                   views.push(obj);
                   that.setModel(new JSONModel(views), "views");
@@ -224,6 +244,33 @@ sap.ui.define(
           item.selected = false;
         })
         this.getModel("currPage").setProperty("/", data);
+      },
+
+      dataFormatter: function (value, type, formatOptions) {
+
+
+        if (type === "sap.ui.model.type.Float" && value) {
+
+          var oFormat = NumberFormat.getFloatInstance(formatOptions);
+            return oFormat.format(value);
+        } else {
+          return value;
+        }
+
+      },
+
+      onShowColumnHeaderPopover: function (oEvent) {
+        var oButton = oEvent.getSource();
+        var that = this;
+        // create popover
+        Fragment.load({
+          name: "lifebook.view.main.detail.ColumnHeaderPopover",
+          controller: this
+        }).then(function (oPopover) {
+          oPopover.setBindingContext(oButton.getBindingContext("views"), "views");
+          that.getView().addDependent(oPopover);
+          oPopover.openBy(oButton);
+        });
       }
 
     });
