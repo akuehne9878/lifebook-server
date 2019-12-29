@@ -1,111 +1,96 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:grid="sap.ui.layout.cssgrid" xmlns:f="sap.f" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.Detail" xmlns:html="http://www.w3.org/1999/xhtml" height="100%">
-   <Page enableScrolling="false" showHeader="false">
-      <content>
-         <List showSeparators="None">
-            <CustomListItem>
-               <Panel expandable="false" expanded="true" width="auto" class="sapUiResponsiveMargin">
-                  <content>
-                     <VBox height="100%" renderType="Bare">
-                        <Title titleStyle="H3" text="{currPage>/title}"/>
-                        <VBox height="100%">
-                           <codeeditor:CodeEditor height="200px" width="100%" type="markdown" visible="{toolbar>/savePage}" value="{currPage>/content}" liveChange="onLiveChange"/>
-                        </VBox>
-                        <VBox width="100%" visible="{=${toolbar>/savePage} ? false : true}" height="100%" renderType="Bare">
-                           <html:div renderType="Bare" id="htmlViewer" class="markdown-body sapUiSmallMargin"/>
-                        </VBox>
-                        <VBox visible="{currPage>/metainfo/showOverview}">
-                           <List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }">
-                              <StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage"/>
-                           </List>
-                        </VBox>
-                     </VBox>
-                  </content>
-               </Panel>
-            </CustomListItem>
-            <CustomListItem visible="{=  ${currPage>/metainfo/properties} !== undefined &amp;&amp; ${currPage>/metainfo/properties}.length > 0 }">
-               <Panel expandable="true" expanded="true" width="auto">
-                  <headerToolbar>
-                     <OverflowToolbar height="3rem" style="Clear">
-                        <Title text="Eigenschaften"/>
-                     </OverflowToolbar>
-                  </headerToolbar>
-                  <List items="{currPage>/metainfo/properties}">
-                     <StandardListItem title="{currPage>label}" description="{currPage>value}"/>
-                  </List>
-               </Panel>
-            </CustomListItem>
-            <CustomListItem visible="{= ${currPage>/metainfo/views} !== undefined &amp;&amp; ${currPage>/metainfo/views}.length > 0 }">
-               <Panel expandable="true" expanded="true" width="auto">
-                  <headerToolbar>
-                     <OverflowToolbar height="3rem" style="Clear">
-                        <Title text="Views"/>
-                     </OverflowToolbar>
-                  </headerToolbar>
-                  <List items="{views>/}">
-                     <CustomListItem>
-                        <Panel expandable="true" expanded="true" width="auto">
-                           <headerToolbar>
-                              <OverflowToolbar height="3rem" style="Clear">
-                                 <Title text="{views>title}"/>
-                              </OverflowToolbar>
-                           </headerToolbar>
-                           <Table inset="false" items="{path: 'views>items'}" columns="{path: 'views>columns'}">
-                              <columns>
-                                 <Column>
-                                    <Toolbar width="100%">
-                                       <Text text="{views>name}"/>
-                                       <ToolbarSpacer />
-                                       <Button type="Transparent" visible="{= ${views>name} !== undefined }" icon="sap-icon://arrow-down" press="onShowColumnHeaderPopover">
-                                       </Button>
-                                    </Toolbar>
-                                 </Column>
-                              </columns>
-                              <items>
-                                 <ColumnListItem cells="{views>cells}">
-                                    <cells>
-                                        <Text text = "{ parts: [ 'views>value', 'views>type', 'views>formatOptions' ], formatter: '.dataFormatter' }" />
-                                    </cells>
-                                 </ColumnListItem>
-                              </items>
-                           </Table>
-                        </Panel>
-                     </CustomListItem>
-                  </List>
-               </Panel>
-            </CustomListItem>
-            <CustomListItem>
-               <Panel expandable="true" expanded="true" width="auto" class="sapUiResponsiveMargin" visible="{= ${currPage>/files}.length > 0 }">
-                  <headerToolbar>
-                     <OverflowToolbar height="3rem" style="Clear">
-                        <Title text="Attachments"/>
-                     </OverflowToolbar>
-                  </headerToolbar>
-                  <content>
-                     <f:GridList id="gridList" showUnread="true" items="{path: 'currPage>/files'}" selectionChange="onSelectionChange" growing="true" growingThreshold="25" mode="MultiSelect">
-                        <f:customLayout>
-                           <grid:GridBasicLayout gridTemplateColumns="repeat(auto-fit, minmax(300px, 0fr))" gridGap="1rem"/>
-                        </f:customLayout>
-                        <f:GridListItem type="Active" selected="{currPage>selected}" unread="{currPage>selected}" class="noBorderBottom noContentPadding" press="onPress">
-                           <VBox height="100%">
-                              <HBox class="">
-                                 <OverflowToolbar class="noBorderBottom noPaddingLeft">
-                                    <Checkbox selected="{currPage>selected}" select="onSelectionChange"/>
-                                    <Label text="{currPage>name}"/>
-                                 </OverflowToolbar>
-                              </HBox>
-                              <HBox height="100%" class="sapUiSmallMargin" alignItems="Center" visible="{= ${currPage>type} !== 'JPG' }">
-                                 <VBox>
-                                    <Label text="{currPage>date}" wrapping="true"/>
-                                 </VBox>
-                              </HBox>
-                              <Image src="{currPage>thumbnail}" width="100%" visible="{= ${currPage>type} === 'JPG' }"/>
-                           </VBox>
-                        </f:GridListItem>
-                     </f:GridList>
-                  </content>
-               </Panel>
-            </CustomListItem>
-         </List>
-      </content>
-   </Page>
+	<uxap:ObjectPageLayout showTitleInHeaderContent="false" showEditHeaderButton="false" editHeaderButtonPress="handleEditBtnPress">
+		<uxap:headerTitle>
+			<uxap:ObjectPageHeader objectTitle="{currPage>/title}">
+				<uxap:actions>
+					<uxap:ObjectPageHeaderActionButton text="Eigenschaften" hideIcon="true" hideText="false" press="toggleFooter"/>
+					<uxap:ObjectPageHeaderActionButton text="Views" hideIcon="true" hideText="false" press="toggleFooter"/>
+					<uxap:ObjectPageHeaderActionButton text="Tabelle" hideIcon="true" hideText="false" press="toggleFooter"/>
+				</uxap:actions>
+				<uxap:breadcrumbs>
+					<Breadcrumbs links="{breadcrumbs>/}">
+						<Link text="{breadcrumbs>name}" press="onLinkPress"/>
+					</Breadcrumbs>
+				</uxap:breadcrumbs>
+			</uxap:ObjectPageHeader>
+		</uxap:headerTitle>
+		<uxap:sections>
+			<uxap:ObjectPageSection title="Text">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+						<uxap:blocks>
+							<VBox height="100%" renderType="Bare">
+								<!-- <Title titleStyle="H3" text="{currPage>/title}"/> -->
+								<VBox height="100%">
+									<codeeditor:CodeEditor height="200px" width="100%" type="markdown" visible="{toolbar>/savePage}" value="{currPage>/content}" liveChange="onLiveChange"/>
+								</VBox>
+								<VBox width="100%" visible="{=${toolbar>/savePage} ? false : true}" height="100%" renderType="Bare">
+									<html:div renderType="Bare" id="htmlViewer" class="markdown-body sapUiSmallMargin"/>
+								</VBox>
+								<VBox visible="{currPage>/metainfo/showOverview}">
+									<List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }">
+										<StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage"/>
+									</List>
+								</VBox>
+							</VBox>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+			<uxap:ObjectPageSection title="Views" subSections="{views>/}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection title="{views>title}">
+						<uxap:blocks>
+							<Table inset="false" items="{path: 'views>items'}" columns="{path: 'views>columns'}">
+								<columns>
+									<Column>
+										<Toolbar width="100%">
+											<Text text="{views>name}"/>
+											<ToolbarSpacer />
+											<Button type="Transparent" visible="{= ${views>name} !== undefined }" icon="sap-icon://arrow-down" press="onShowColumnHeaderPopover"></Button>
+										</Toolbar>
+									</Column>
+								</columns>
+								<items>
+									<ColumnListItem cells="{views>cells}">
+										<cells>
+											<Text text = "{ parts: [ 'views>value', 'views>type', 'views>formatOptions' ], formatter: '.dataFormatter' }" />
+										</cells>
+									</ColumnListItem>
+								</items>
+							</Table>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+			<uxap:ObjectPageSection title="Attachments">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+						<uxap:blocks>
+							<f:GridList id="gridList" showUnread="true" items="{path: 'currPage>/files'}" selectionChange="onSelectionChange" growing="true" growingThreshold="25" mode="MultiSelect">
+								<f:customLayout>
+									<grid:GridBasicLayout gridTemplateColumns="repeat(auto-fit, minmax(300px, 0fr))" gridGap="1rem"/>
+								</f:customLayout>
+								<f:GridListItem type="Active" selected="{currPage>selected}" unread="{currPage>selected}" class="noBorderBottom noContentPadding" press="onPress">
+									<VBox height="100%">
+										<HBox class="">
+											<Checkbox selected="{currPage>selected}" select="onSelectionChange"/>
+											<Label class="sapUiSmallMarginTop" text="{currPage>name}" wrapping="true"/>
+										</HBox>
+										<HBox height="100%" class="sapUiSmallMargin" alignItems="Center" visible="{= ${currPage>type} !== 'JPG' }">
+											<VBox>
+												<Label text="{currPage>date}" wrapping="true"/>
+											</VBox>
+										</HBox>
+										<Image src="{currPage>thumbnail}" width="100%" visible="{= ${currPage>type} === 'JPG' }"/>
+									</VBox>
+								</f:GridListItem>
+							</f:GridList>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+		</uxap:sections>
+	</uxap:ObjectPageLayout>
+	<!-- <Page enableScrolling="false" showHeader="false"><content><List showSeparators="None"><CustomListItem><Panel expandable="false" expanded="true" width="auto" class="sapUiResponsiveMargin"><content><VBox height="100%" renderType="Bare"><Title titleStyle="H3" text="{currPage>/title}"/><VBox height="100%"><codeeditor:CodeEditor height="200px" width="100%" type="markdown" visible="{toolbar>/savePage}" value="{currPage>/content}" liveChange="onLiveChange"/></VBox><VBox width="100%" visible="{=${toolbar>/savePage} ? false : true}" height="100%" renderType="Bare"><html:div renderType="Bare" id="htmlViewer" class="markdown-body sapUiSmallMargin"/></VBox><VBox visible="{currPage>/metainfo/showOverview}"><List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }"><StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage"/></List></VBox></VBox></content></Panel></CustomListItem><CustomListItem visible="{=  ${currPage>/metainfo/properties} !== undefined &amp;&amp; ${currPage>/metainfo/properties}.length > 0 }"><Panel expandable="true" expanded="true" width="auto"><headerToolbar><OverflowToolbar height="3rem" style="Clear"><Title text="Eigenschaften"/></OverflowToolbar></headerToolbar><List items="{currPage>/metainfo/properties}"><StandardListItem title="{currPage>label}" description="{currPage>value}"/></List></Panel></CustomListItem><CustomListItem visible="{= ${currPage>/metainfo/views} !== undefined &amp;&amp; ${currPage>/metainfo/views}.length > 0 }"><Panel expandable="true" expanded="true" width="auto"><headerToolbar><OverflowToolbar height="3rem" style="Clear"><Title text="Views"/></OverflowToolbar></headerToolbar><List items="{views>/}"><CustomListItem><Panel expandable="true" expanded="true" width="auto"><headerToolbar><OverflowToolbar height="3rem" style="Clear"><Title text="{views>title}"/></OverflowToolbar></headerToolbar><Table inset="false" items="{path: 'views>items'}" columns="{path: 'views>columns'}"><columns><Column><Toolbar width="100%"><Text text="{views>name}"/><ToolbarSpacer /><Button type="Transparent" visible="{= ${views>name} !== undefined }" icon="sap-icon://arrow-down" press="onShowColumnHeaderPopover"></Button></Toolbar></Column></columns><items><ColumnListItem cells="{views>cells}"><cells><Text text = "{ parts: [ 'views>value', 'views>type', 'views>formatOptions' ], formatter: '.dataFormatter' }" /></cells></ColumnListItem></items></Table></Panel></CustomListItem></List></Panel></CustomListItem><CustomListItem><Panel expandable="true" expanded="true" width="auto" class="sapUiResponsiveMargin" visible="{= ${currPage>/files}.length > 0 }"><headerToolbar><OverflowToolbar height="3rem" style="Clear"><Title text="Attachments"/></OverflowToolbar></headerToolbar><content><f:GridList id="gridList" showUnread="true" items="{path: 'currPage>/files'}" selectionChange="onSelectionChange" growing="true" growingThreshold="25" mode="MultiSelect"><f:customLayout><grid:GridBasicLayout gridTemplateColumns="repeat(auto-fit, minmax(300px, 0fr))" gridGap="1rem"/></f:customLayout><f:GridListItem type="Active" selected="{currPage>selected}" unread="{currPage>selected}" class="noBorderBottom noContentPadding" press="onPress"><VBox height="100%"><HBox class=""><OverflowToolbar class="noBorderBottom noPaddingLeft"><Checkbox selected="{currPage>selected}" select="onSelectionChange"/><Label text="{currPage>name}"/></OverflowToolbar></HBox><HBox height="100%" class="sapUiSmallMargin" alignItems="Center" visible="{= ${currPage>type} !== 'JPG' }"><VBox><Label text="{currPage>date}" wrapping="true"/></VBox></HBox><Image src="{currPage>thumbnail}" width="100%" visible="{= ${currPage>type} === 'JPG' }"/></VBox></f:GridListItem></f:GridList></content></Panel></CustomListItem></List></content></Page> -->
 </mvc:View>

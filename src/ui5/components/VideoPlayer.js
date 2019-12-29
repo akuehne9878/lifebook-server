@@ -1,10 +1,6 @@
 sap.ui.define([
-    "sap/ui/core/Control",
-    "sap/m/RatingIndicator",
-    "sap/m/Label",
-    "sap/m/Button"
-
-], function (Control, RatingIndicator, Label, Button) {
+    "sap/ui/core/Control"
+], function (Control) {
     "use strict";
     return Control.extend("lifebook.components.VideoPlayer", {
         metadata: {

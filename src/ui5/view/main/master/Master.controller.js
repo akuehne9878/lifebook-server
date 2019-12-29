@@ -19,14 +19,14 @@ sap.ui.define(
 
       reloadLifebookTree: function () {
         var that = this;
-        var p = new Promise(function(resolve, reject){
+        var p = new Promise(function (resolve, reject) {
           var oRestModel = new RestModel();
           oRestModel.tree().then(function (data) {
             oRestModel.setProperty("/", data);
-  
+
             that.getModel("targetTree").setProperty("/", data);
             that.getModel("tree").setProperty("/", data);
-  
+
             that.expandTreeItem(localStorage.getItem("lifebook.currPage.path"));
             resolve();
           });
@@ -106,18 +106,23 @@ sap.ui.define(
         }
 
         var paths = [];
-
         var parts = sPath.split("\\");
+        var temp = ""
 
-        var temp = parts[0];
+        var breadcrumbs = [];
 
-        for (var i = 1; i <= parts.length; i++) {
-          paths.push(temp);
 
-          if (parts[i]) {
-            temp += "\\" + parts[i];
+        for (var i = 0; i < parts.length; i++) {
+          if (i == 0) {
+            temp += parts[i];
+          } else {
+            temp += "\\" + parts[i]
           }
+          paths.push(temp);
+          breadcrumbs.push({name: parts[i], path: temp});
         }
+
+        breadcrumbs.pop();  // remove last element
 
         var that = this;
         paths.forEach(function (path) {
@@ -125,12 +130,11 @@ sap.ui.define(
           items.forEach(function (item, index) {
             if (path === item.getBindingContext("tree").getObject("path")) {
               that.getView().byId("lifebookTree").expand(index);
-
             }
           })
         });
 
-
+        this.getModel("breadcrumbs").setData(breadcrumbs);
 
       },
 

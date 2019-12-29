@@ -18,6 +18,8 @@ sap.ui.define([
                 this.setModel(new JSONModel({
                 }), "toolbar");
 
+                this.setModel(new JSONModel({}), "breadcrumbs")
+
                 this.resetViewMode();
             },
 
