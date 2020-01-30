@@ -112,16 +112,7 @@ var ORM = {
                 var values = [entity.id];
 
                 ORM._run(sql, values).then(function (items) {
-
-                    // if (items.length === 0) {
-                    //     resolve(ORM._map({}, ast));
-                    // } else {
-                    //     var list = items.map(function (item) {
-                    //         return ORM._map(item, ast);
-                    //     });
-                        resolve(items[0]);
-                    // }
-
+                    resolve(items[0]);
                 });
 
             });
@@ -182,7 +173,7 @@ var ORM = {
         return p;
     },
 
-    duplicateEntity: function(entity) {
+    duplicateEntity: function (entity) {
         var p = new Promise(function (resolve, reject) {
             ORM._getTableStructure(entity.name).then(function (ast) {
                 var pk = ORM._handlePrimaryKey(ast);
@@ -208,7 +199,7 @@ var ORM = {
 
         var pk = [];
         columns.forEach(function (column) {
-            column.definition.forEach(function(definition){
+            column.definition.forEach(function (definition) {
                 if (definition.variant === "primary key") {
                     pk.push(column);
                 };

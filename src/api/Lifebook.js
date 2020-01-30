@@ -103,7 +103,7 @@ var Lifebook = {
       var obj = { content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files, children: children, metainfo: metainfo };
 
       ORM._run("Select * FROM page where page_id = ?", [metainfo.pageid]).then(function (data) {
-       
+
         var page = data[0];
         obj.type = page.type;
 
@@ -232,13 +232,13 @@ var Lifebook = {
 
     var absolutePath = path.join(LIFEBOOK_PATH, req.body.path);
 
-    Lifebook._create(req.body.title, absolutePath, res).then(function (data) {
+    Lifebook._create(req.body.title, absolutePath, req.body.type, res).then(function (data) {
       buildResult(res, JSON.stringify(data));
     });
 
   },
 
-  _create: function (title, sPath, res) {
+  _create: function (title, sPath, type, res) {
     var fullPath = path.join(sPath, title);
     if (fs.existsSync(fullPath)) {
       res.status(500);
@@ -248,14 +248,13 @@ var Lifebook = {
 
     var p = new Promise(function (resolve, reject) {
 
-      ORM.createEntity({ name: "page", properties: [{ name: "title", value: title }] }).then(function (entity) {
-
+      ORM.createEntity({ name: "page", properties: [{ name: "title", value: title }, { name: "type", value: type }] }).then(function (page) {
         var metainfo = {
-          pageid: entity.id
+          pageid: page.page_id
         };
 
         fs.writeFileSync(path.join(fullPath, "metainfo.json"), JSON.stringify(metainfo));
-        resolve(entity);
+        resolve(page);
       })
     });
 

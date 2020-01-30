@@ -18,7 +18,7 @@ sap.ui.define(
 
       setup: function (oOptions) {
         this.setModel(new JSONModel(oOptions), "options")
-        this.setModel(new JSONModel({ placeholder: "Neue Seite", title: "" }))
+        this.setModel(new JSONModel({ placeholder: "Neue Seite", title: "", type: "standard" }))
       },
 
 
@@ -27,10 +27,11 @@ sap.ui.define(
         var path = this.getOwnerComponent().getModel("currPage").getProperty("/path");
 
         var title = this.getModel().getProperty("/title");
+        var type = this.getModel().getProperty("/type");
         var newPath = path + "\\" + title;
 
         var oRestModel = new RestModel();
-        oRestModel.createPage({ title: title, path: path }).then(function (data) {
+        oRestModel.createPage({ title: title, path: path, type: type }).then(function (data) {
           that.getController("lifebook.view.main.master.Master").reloadPage(newPath, { reloadTree: true });
           that.getModel("mdsPage").setProperty("/showSideContent", false);
         });
