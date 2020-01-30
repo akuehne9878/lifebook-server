@@ -21,7 +21,7 @@
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
-			<uxap:ObjectPageSection title="Drawing Board">
+			<!-- <uxap:ObjectPageSection title="Drawing Board">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >
 						<uxap:blocks>
@@ -29,7 +29,7 @@
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>
-			</uxap:ObjectPageSection>
+			</uxap:ObjectPageSection> -->
 			<uxap:ObjectPageSection title="Attachments">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >

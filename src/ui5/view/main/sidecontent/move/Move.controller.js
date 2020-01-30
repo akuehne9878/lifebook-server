@@ -59,7 +59,13 @@ sap.ui.define(
         var dstPath = this.getModel("currTarget").getProperty("/path");
 
 
-        var fileNames = this.getOwnerComponent().getModel("selectedAttachments").getData().map(function (item) {
+        var arr = this.getOwnerComponent().getModel("selectedAttachments").getData();
+        if (arr === {}) {
+          arr = [];
+          arr.push(this.getOwnerComponent().getModel("currAttachment").getProperty("/"));
+        };
+
+        var fileNames = arr.map(function (item) {
           return item.name;
         })
 
@@ -67,6 +73,8 @@ sap.ui.define(
         oRestModel.moveFile({ src: srcPath, dst: dstPath, fileNames: fileNames }).then(function (data) {
           that.getController("lifebook.view.main.detail.AbstractPage").reloadPage(srcPath, "attachments");
           that.getModel("mdsPage").setProperty("/showSideContent", false);
+
+          that.getOwnerComponent().getModel("selectedAttachments").setProperty("/", null);
         });
       },
 

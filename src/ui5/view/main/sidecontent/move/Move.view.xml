@@ -3,17 +3,17 @@
     <content>
       <VBox class="sapUiSmallMarginTopBottom">
         <VBox class="sapUiSmallMarginBeginEnd">
-          <Tree items="{path: 'tree>/items'}">
-            <CustomTreeItem type="Active" press="onPress" highlight="{= (${tree>path} === ${currTarget>/path} &amp;&amp; (${tree>type} === 'page' || ${tree>type} === 'lifebook') )  ? 'Information': 'None' }">
-              <HBox visible="{=${tree>type} === 'page' || ${tree>type} === 'lifebook' }">
-                <Text text="{tree>title}"/>
+          <Tree items="{path: 'targetTree>/items'}">
+            <CustomTreeItem type="Active" press="onPress" highlight="{= (${targetTree>path} === ${currTarget>/path} &amp;&amp; (${targetTree>type} === 'page' || ${targetTree>type} === 'lifebook') )  ? 'Information': 'None' }">
+              <HBox visible="{=${targetTree>type} === 'page' || ${targetTree>type} === 'lifebook' }">
+                <Text text="{targetTree>title}"/>
               </HBox>
               <HBox visible="false">
                 <core:Icon src="sap-icon://add" class="sapUiSmallMarginEnd"/>
-                <Text text="{tree>title}"/>
+                <Text text="{targetTree>title}"/>
               </HBox>
               <HBox visible="false">
-                <Input type="Text" value="{tree>title}" submit=""/>
+                <Input type="Text" value="{targetTree>title}" submit=""/>
                 <Button icon="sap-icon://accept" type="Transparent" press="onCreatePage"/>
                 <Button icon="sap-icon://decline" type="Transparent" press="onCancelCreatePage"/>
               </HBox>
