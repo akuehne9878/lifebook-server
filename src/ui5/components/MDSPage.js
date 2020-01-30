@@ -58,19 +58,19 @@ sap.ui.define(["sap/ui/Device", 'sap/ui/core/XMLComposite'], function (Device, X
 
                 masterPage: {
                     type: "sap.ui.core.Control",
-                    multiple: false,
+                    multiple: true,
                     forwarding: {
                         idSuffix: "--masterPageContainer",
-                        aggregation: "content"
+                        aggregation: "pages"
                     }
                 },
 
                 detailPage: {
                     type: "sap.ui.core.Control",
-                    multiple: false,
+                    multiple: true,
                     forwarding: {
                         idSuffix: "--detailPageContainer",
-                        aggregation: "content"
+                        aggregation: "pages"
                     }
                 },
 

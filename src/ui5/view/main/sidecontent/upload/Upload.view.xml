@@ -1,0 +1,12 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" xmlns:u="sap.ui.unified" controllerName="lifebook.view.main.sidecontent.upload.Upload" height="100%">
+  <Page showHeader="false">
+    <content>
+      <VBox class="sapUiSmallMarginTopBottom sapUiSmallMarginBeginEnd">
+        <VBox justifyContent="End" alignItems="End" alignContent="End">
+          <u:FileUploader id="fileUploader" multiple="true" name="uploadFile" uploadUrl="{currPage>/path}/upload" uploadComplete="handleUploadComplete"></u:FileUploader>
+          <Button type="Emphasized" text="Upload" enabled="{=${currTarget>/title} !== undefined}" icon="sap-icon://save" press="handleUploadPress"/>
+        </VBox>
+      </VBox>
+    </content>
+  </Page>
+</mvc:View>

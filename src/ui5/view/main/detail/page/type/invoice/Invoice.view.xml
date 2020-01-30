@@ -1,0 +1,46 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:c="lifebook.components" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:grid="sap.ui.layout.cssgrid" xmlns:f="sap.f" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.page.type.invoice.Invoice" xmlns:html="http://www.w3.org/1999/xhtml" height="100%">
+	<uxap:ObjectPageLayout showTitleInHeaderContent="true" showEditHeaderButton="false" editHeaderButtonPress="handleEditBtnPress">
+		<uxap:headerTitle>
+			<uxap:ObjectPageHeader objectImageShape="Circle" objectTitle="{currPage>/title}" isObjectTitleAlwaysVisible="false" showPlaceholder="true" objectImageBackgroundColor="Random">
+				<uxap:actions>
+					<uxap:ObjectPageHeaderActionButton text="Bearbeiten" hideIcon="true" hideText="false" press="toggleFooter"/> 
+				</uxap:actions>
+				<uxap:breadcrumbs>
+					<Breadcrumbs links="{breadcrumbs>/}">
+						<Link text="{breadcrumbs>name}" press="onLinkPress"/>
+					</Breadcrumbs>
+				</uxap:breadcrumbs>
+			</uxap:ObjectPageHeader>
+		</uxap:headerTitle>
+		<uxap:headerContent>
+			<layout:VerticalLayout >
+				<ObjectStatus title="Rechnungsname" text="{currPage>/linked_entity/invoice/name}"/>
+				<ObjectStatus title="Rechnungs-Nummer" text="{currPage>/linked_entity/invoice/invoice_number}"/>
+				<ObjectStatus title="Rechnungs-Datum" text="{currPage>/linked_entity/invoice/invoice_date}"/>
+				<ObjectStatus title="Zahlungs-Datum" text="{currPage>/linked_entity/invoice/payment_date}"/>
+				<ObjectStatus title="Gezahlt von" text="{currPage>/linked_entity/invoice/payed_by}"/>
+				<ObjectStatus title="Gesamtbetrag" text="{currPage>/linked_entity/invoice/total}"/>
+			</layout:VerticalLayout>
+		</uxap:headerContent>
+		<uxap:sections>
+			<uxap:ObjectPageSection title="Text">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+						<uxap:blocks>
+							<mvc:XMLView viewName="lifebook.view.main.detail.page.section.markdown.Markdown"/>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+			<uxap:ObjectPageSection title="Attachments">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection >
+						<uxap:blocks>
+							<mvc:XMLView viewName="lifebook.view.main.detail.page.section.attachments.Attachments"/>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+		</uxap:sections>
+	</uxap:ObjectPageLayout>
+</mvc:View>

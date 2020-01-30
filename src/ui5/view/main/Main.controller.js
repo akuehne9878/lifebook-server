@@ -34,8 +34,6 @@ sap.ui.define([
                     deletePage: false,
                     upload: false,
                     properties: false,
-                    views: false,
-                    dataTable: false,
                     savePage: false,
                     cancelEditor: false,
                     copyAttachment: false,
@@ -62,8 +60,6 @@ sap.ui.define([
                     model.setProperty("/deletePage", true);
                     model.setProperty("/upload", true);
                     model.setProperty("/properties", true);
-                    model.setProperty("/views", true);
-                    model.setProperty("/dataTable", true);
 
                 } else if (sViewMode === "edit") {
                     model.setProperty("/savePage", true);
@@ -88,41 +84,34 @@ sap.ui.define([
                 this.getModel("mdsPage").setProperty("/showSideContent", true);
             },
 
+            _loadSideContent: function (sSideContentViewName, sTitle, oSetupOptions) {
+                this._changeSideContent(sSideContentViewName, sTitle);
+                var oController = this.getController(sSideContentViewName);
+                oController.setup(oSetupOptions)
+            },
+
             onShowNewPage: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.new.New", "Neue Seite");
-                this.getController("lifebook.view.main.detail.new.New").setup();
+                this._loadSideContent("lifebook.view.main.sidecontent.new.New", "Neue Seite")
             },
 
             onShowRenamePage: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.edit.Edit", "Seite umbenennen");
-                this.getController("lifebook.view.main.detail.edit.Edit").setup();
+                this._loadSideContent("lifebook.view.main.sidecontent.edit.Edit", "Seite umbenennen", { mode: "page" });
             },
 
             onShowMovePage: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.move.Move", "Seite verschieben");
+                this._loadSideContent("lifebook.view.main.sidecontent.move.Move", "Seite verschieben", { mode: "page" });
             },
 
             onShowCopyPage: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.copy.Copy", "Seite kopieren");
+                this._loadSideContent("lifebook.view.main.sidecontent.copy.Copy", "Seite kopieren", { mode: "page" });
             },
 
             onShowUpload: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.upload.Upload", "Upload");
+                this._loadSideContent("lifebook.view.main.sidecontent.upload.Upload", "Upload");
             },
 
             onShowProperties: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.properties.Properties", "Eigenschaften");
-                this.getController("lifebook.view.main.detail.properties.Properties").setup();
-            },
-
-            onShowViews: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.views.Views", "Views");
-                this.getController("lifebook.view.main.detail.views.Views").setup();
-            },
-
-            onShowDataTable: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.dataTable.DataTable", "Datenbank");
-                this.getController("lifebook.view.main.detail.dataTable.DataTable").setup();
+                this._loadSideContent("lifebook.view.main.detail.properties.Properties", "Eigenschaften");
             },
 
             onShowEditor: function (oEvent) {
@@ -167,28 +156,24 @@ sap.ui.define([
             },
 
 
-
-
-
             onShowRenameAttachment: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.attachments.edit.Edit", "Attachment umbenennen");
-                this.getController("lifebook.view.main.detail.attachments.edit.Edit").setup();
+                this._loadSideContent("lifebook.view.main.sidecontent.edit.Edit", "Attachment umbenennen", { mode: "attachment" });
             },
 
             onShowMoveAttachment: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.attachments.move.Move", "Attachment verschieben");
+                this._loadSideContent("lifebook.view.main.sidecontent.move.Move", "Attachment verschieben", { mode: "attachment" });
             },
 
             onShowCopyAttachment: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.attachments.copy.Copy", "Attachment kopieren");
+                this._loadSideContent("lifebook.view.main.sidecontent.copy.Copy", "Attachment kopieren", { mode: "attachment" });
             },
 
             onShowMoveSelection: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.attachments.move.Move", "Auswahl verschieben");
+                this._loadSideContent("lifebook.view.main.sidecontent.move.Move", "Auswahl verschieben", { mode: "selection" });
             },
 
             onShowCopySelection: function (oEvent) {
-                this._changeSideContent("lifebook.view.main.detail.attachments.copy.Copy", "Auswahl kopieren");
+                this._loadSideContent("lifebook.view.main.sidecontent.copy.Copy", "Auswahl kopieren", { mode: "attachment" });
             },
 
             onDeleteSelection: function (oEvent) {
@@ -246,7 +231,7 @@ sap.ui.define([
 
                 if (name.indexOf("lifebook.view.main.detail.attachment") === 0) {
                     this.getModel("currAttachment").setProperty("/", null);
-                    this.getController("lifebook.view.main.detail.Detail").unselectAllAttachments();
+                    this.getController("lifebook.view.main.detail.AbstractPage").unselectAllAttachments();
                     this.setViewMode("view");
                 }
             },

@@ -29,7 +29,7 @@ sap.ui.define([
 			}
 
 			if (path) {
-			  this.getOwnerComponent().getController("lifebook.view.main.detail.Detail").reloadPage(path);
+			  this.getOwnerComponent().getController("lifebook.view.main.detail.AbstractPage").reloadPage(path);
 			}
 		  },
 

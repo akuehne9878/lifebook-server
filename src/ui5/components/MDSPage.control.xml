@@ -1,42 +1,48 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
-    <Page id="primaryPage" enableScrolling="false" showFooter="false" showHeader="{$this>showPrimaryHeader}">
-        <customHeader><!--PRIMARY HEADER --></customHeader>
-        <content>
-            <Page id="secondaryPage" enableScrolling="false" showFooter="false" showHeader="{$this>showSecondaryHeader}">
-                <customHeader><!--SECONDARY HEADER --></customHeader>
-                <SplitContainer id="splitContainer" mode="ShowHideMode">
-                    <masterPages>
-                        <Page id="masterPageContainer" showHeader="false"></Page>
-                    </masterPages>
-                    <detailPages>
-                        <Page id="detailContainer" showHeader="{$this>showDetailHeader}" showNavButton="false">
-                            <customHeader><!--DETAIL HEADER --></customHeader>
-                            <Page id="detailPage" showHeader="false">
-                                <l:DynamicSideContent id="dsc" showSideContent="{$this>showSideContentSpace}" showMainContent="{$this>showMainContent}">
-                                    <l:mainContent>
-                                        <Page id="detailPageContainer" showHeader="false" visible="{$this>showMainContent}"></Page>
-                                    </l:mainContent>
-                                    <l:sideContent>
-                                        <Page id="sideContentPageContainer" class="sideContentPageContainer" showHeader="{$this>showSideContent}">
-                                            <customHeader>
-                                                <Bar>
-                                                    <contentMiddle>
-                                                        <Title text="{$this>sideContentTitle}"/>
-                                                    </contentMiddle>
-                                                    <contentRight>
-                                                        <Button type="Transparent" icon="sap-icon://decline" press="onCloseSideContent"/>
-                                                    </contentRight>
-                                                </Bar>
-                                            </customHeader>
-                                            <NavContainer id="sideContentNavContainer" visible="{$this>showSideContent}"></NavContainer>
-                                        </Page>
-                                    </l:sideContent>
-                                </l:DynamicSideContent>
-                            </Page>
-                        </Page>
-                    </detailPages>
-                </SplitContainer>
-            </Page>
-        </content>
-    </Page>
+	<Page id="primaryPage" enableScrolling="false" showFooter="false" showHeader="{$this>showPrimaryHeader}">
+		<customHeader>
+			<!--PRIMARY HEADER -->
+		</customHeader>
+		<content>
+			<Page id="secondaryPage" enableScrolling="false" showFooter="false" showHeader="{$this>showSecondaryHeader}">
+				<customHeader>
+					<!--SECONDARY HEADER -->
+				</customHeader>
+				<SplitContainer id="splitContainer" mode="ShowHideMode">
+					<masterPages>
+                        <NavContainer id="masterPageContainer" ></NavContainer>
+					</masterPages>
+					<detailPages>
+						<Page id="detailContainer" showHeader="{$this>showDetailHeader}" showNavButton="false">
+							<customHeader>
+								<!--DETAIL HEADER -->
+							</customHeader>
+							<Page id="detailPage" showHeader="false">
+								<l:DynamicSideContent id="dsc" showSideContent="{$this>showSideContentSpace}" showMainContent="{$this>showMainContent}">
+									<l:mainContent>
+										<NavContainer id="detailPageContainer" visible="{$this>showMainContent}"></NavContainer>
+									</l:mainContent>
+									<l:sideContent>
+										<Page id="sideContentPageContainer" class="sideContentPageContainer" showHeader="{$this>showSideContent}">
+											<customHeader>
+												<Bar>
+													<contentMiddle>
+														<Title text="{$this>sideContentTitle}"/>
+													</contentMiddle>
+													<contentRight>
+														<Button type="Transparent" icon="sap-icon://decline" press="onCloseSideContent"/>
+													</contentRight>
+												</Bar>
+											</customHeader>
+											<NavContainer id="sideContentNavContainer" visible="{$this>showSideContent}"></NavContainer>
+										</Page>
+									</l:sideContent>
+								</l:DynamicSideContent>
+							</Page>
+						</Page>
+					</detailPages>
+				</SplitContainer>
+			</Page>
+		</content>
+	</Page>
 </core:FragmentDefinition>

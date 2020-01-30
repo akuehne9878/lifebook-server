@@ -1,0 +1,15 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:c="lifebook.components" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:grid="sap.ui.layout.cssgrid" xmlns:f="sap.f" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.page.section.markdown.Markdown" xmlns:html="http://www.w3.org/1999/xhtml" height="100%">
+	<VBox height="100%" renderType="Bare">
+		<VBox height="100%">
+			<codeeditor:CodeEditor height="200px" width="100%" type="markdown" visible="{toolbar>/savePage}" value="{currPage>/content}" liveChange="onLiveChange"/>
+		</VBox>
+		<VBox width="100%" visible="{=${toolbar>/savePage} ? false : true}" height="100%" renderType="Bare">
+			<html:div renderType="Bare" id="htmlViewer" class="markdown-body sapUiSmallMargin"/>
+		</VBox>
+		<VBox visible="{currPage>/metainfo/showOverview}">
+			<List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }">
+				<StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage"/>
+			</List>
+		</VBox>
+	</VBox>
+</mvc:View>

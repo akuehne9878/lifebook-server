@@ -102,7 +102,7 @@ app.get("/api/thumbnail", Lifebook.thumbnail);
 
 
 
-/* ALASQL */
+/* SQLITE */
 
 app.post("/api/executeStatement", Lifebook.executeStatement);
 

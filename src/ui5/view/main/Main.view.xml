@@ -19,8 +19,6 @@
 				<Button type="Transparent" icon="sap-icon://save" text="Speichern" press="onSavePage" visible="{toolbar>/savePage}"/>
 				<Button type="Transparent" icon="sap-icon://upload" text="Upload" press="onShowUpload" visible="{toolbar>/upload}"/>
 				<Button type="Transparent" icon="sap-icon://customize" text="Eigenschaften" press="onShowProperties" visible="{toolbar>/properties}"/>
-				<Button type="Transparent" icon="sap-icon://customize" text="Views" press="onShowViews" visible="{toolbar>/views}"/>
-				<Button type="Transparent" icon="sap-icon://database" text="Datenbank" press="onShowDataTable" visible="{toolbar>/dataTable}"/>
 				<Button type="Transparent" icon="sap-icon://decline" text="Abbrechen" press="onCancelEditor" visible="{toolbar>/cancelEditor}"/>
 				<!-- Single Attachment -->
 				<Button type="Transparent" icon="sap-icon://edit" text="Umbenennen" press="onShowRenameAttachment" visible="{toolbar>/renameAttachment}"/>
@@ -37,27 +35,21 @@
 			<mvc:XMLView viewName="lifebook.view.main.master.Master"/>
 		</c:masterPage>
 		<c:detailPage>
-			<mvc:XMLView viewName="lifebook.view.main.detail.Detail"/>
-			<!-- <mvc:XMLView viewName="lifebook.view.main.detail.SinglePdfOnly"/> -->
+			<mvc:XMLView viewName="lifebook.view.main.detail.AbstractPage"/>
 		</c:detailPage>
 		<c:sideContent>
-			<mvc:XMLView viewName="lifebook.view.main.detail.new.New"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.edit.Edit"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.copy.Copy"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.move.Move"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.upload.Upload"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.properties.Properties"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.views.Views"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.dataTable.DataTable"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.attachment.AttachmentDefault"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.attachment.AttachmentPdf"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.attachment.AttachmentImage"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.attachment.AttachmentVideo"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.attachment.AttachmentMultiple"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.attachment.AttachmentSTL"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.attachments.edit.Edit"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.attachments.copy.Copy"/>
-			<mvc:XMLView viewName="lifebook.view.main.detail.attachments.move.Move"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.new.New"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.edit.Edit"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.copy.Copy"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.move.Move"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.upload.Upload"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.properties.Properties"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.attachment.AttachmentDefault"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.attachment.AttachmentPdf"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.attachment.AttachmentImage"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.attachment.AttachmentVideo"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.attachment.AttachmentMultiple"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.attachment.AttachmentSTL"/>
 		</c:sideContent>
 	</c:MDSPage>
 </mvc:View>

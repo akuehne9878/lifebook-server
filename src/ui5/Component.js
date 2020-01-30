@@ -11,6 +11,8 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
       // create the views based on the url/hash
       this.getRouter().initialize();
 
+      sap.ui.getCore().getConfiguration().setLanguage( "de" );
+
 
       this.setModel(new JSONModel(Device), "device");
 
