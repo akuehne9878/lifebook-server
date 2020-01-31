@@ -42,7 +42,8 @@ sap.ui.define([
                     renameAttachment: false,
                     copySelection: false,
                     moveSelection: false,
-                    deleteSelection: false
+                    deleteSelection: false,
+                    editInvoice: false
                 });
             },
 
@@ -75,6 +76,12 @@ sap.ui.define([
                     model.setProperty("/copySelection", true);
                     model.setProperty("/moveSelection", true);
                     model.setProperty("/deleteSelection", true);
+                }
+
+                if (this.getModel("currPage").getProperty("/type") === "invoice") {
+                    model.setProperty("/editInvoice", true);
+                } else {
+                    model.setProperty("/editInvoice", false);
                 }
             },
 
@@ -224,6 +231,10 @@ sap.ui.define([
                         }
                     }
                 });
+            },
+
+            onShowEditInvoice: function (oEvent) {
+                this._loadSideContent("lifebook.view.main.sidecontent.invoice.Invoice", "Rechnung bearbeiten");
             },
 
             onAfterCloseSideContent: function (oEvent) {

@@ -103,7 +103,6 @@ var Lifebook = {
       var obj = { content: content, title: title, path: fullPath.replace(LIFEBOOK_PATH + path.sep, ""), files: files, children: children, metainfo: metainfo };
 
       ORM._run("Select * FROM page where page_id = ?", [metainfo.pageid]).then(function (data) {
-
         var page = data[0];
         obj.type = page.type;
 
@@ -164,10 +163,18 @@ var Lifebook = {
 
     var metainfo = JSON.parse(fs.readFileSync(path.join(fullPath, "metainfo.json"), "utf8"));
 
-    ORM.updateEntity({ name: "page", id: metainfo.pageid, properties: [{ name: "title", value: req.body.newTitle }] }).then(function (entity) {
-      fsExtra.moveSync(fullPath, newPath);
-      buildResult(res, JSON.stringify(entity));
-    })
+    ORM.updateEntity(
+      {
+        name: "page",
+        id: ["page_id"],
+        properties: [
+          { name: "page_id", value: metainfo.pageid },
+          { name: "title", value: req.body.newTitle }
+        ]
+      }).then(function (entity) {
+        fsExtra.moveSync(fullPath, newPath);
+        buildResult(res, JSON.stringify(entity));
+      })
 
 
   },
@@ -183,7 +190,15 @@ var Lifebook = {
     var absolutePath = path.join(LIFEBOOK_PATH, req.body.path);
 
     var metainfo = JSON.parse(fs.readFileSync(path.join(absolutePath, "metainfo.json"), "utf8"));
-    ORM.deleteEntity({ name: "page", id: metainfo.pageid }).then(function (data) {
+    ORM.deleteEntity(
+      {
+        name: "page",
+        id: ["page_id"],
+        properties: [
+          { name: "page_id", value: metainfo.pageid },
+        ]
+      }
+    ).then(function (data) {
       rimraf.sync(absolutePath);
       Lifebook.tree(req, res);
     })
@@ -248,13 +263,30 @@ var Lifebook = {
 
     var p = new Promise(function (resolve, reject) {
 
-      ORM.createEntity({ name: "page", properties: [{ name: "title", value: title }, { name: "type", value: type }] }).then(function (page) {
-        var metainfo = {
-          pageid: page.page_id
-        };
+      ORM.createEntity({
+        name: "page",
+        properties: [
+          { name: "title", value: title },
+          { name: "type", value: type }]
+      }).then(function (data) {
 
-        fs.writeFileSync(path.join(fullPath, "metainfo.json"), JSON.stringify(metainfo));
-        resolve(page);
+        var readEntity = {
+          name: "page",
+          id: ["page_id"],
+          properties: [
+            { name: "page_id", value: data[0].seq }
+          ]
+        };
+        ORM.readEntity(readEntity).then(function (page) {
+          var metainfo = {
+            pageid: page.page_id
+          };
+
+          fs.writeFileSync(path.join(fullPath, "metainfo.json"), JSON.stringify(metainfo));
+          resolve(page);
+
+        });
+
       })
     });
 
@@ -517,6 +549,98 @@ var Lifebook = {
 
     buildResult(res, JSON.stringify({}));
   },
+
+
+  createInvoice: function (req, res) {
+    console.log(req.body);
+    var pageid = req.params.pageid;
+
+    var entity = {
+      name: "invoice",
+      properties: [
+        { name: "page_id", value: pageid },
+        { name: "name", value: req.body.name },
+        { name: "total", value: req.body.total },
+        { name: "payed_by", value: req.body.payed_by },
+        { name: "invoice_date", value: req.body.invoice_date },
+        { name: "payment_date", value: req.body.payment_date },
+        { name: "invoice_number", value: req.body.invoice_number },
+      ]
+    }
+    ORM.createEntity(entity).then(function (data) {
+
+      var readEntity = {
+        name: "invoice",
+        id: ["invoice_id"],
+        properties: [
+          { name: "invoice_id", value: data[0].seq }
+        ]
+      };
+
+      return ORM.readEntity(readEntity). buildResult(res, JSON.stringify(data));
+    });
+
+  },
+
+  updateInvoice: function (req, res) {
+    console.log(req.body);
+    var pageid = req.params.pageid;
+
+    var entity = {
+      name: "invoice",
+      id: ["invoice_id"],
+      properties: [
+        { name: "page_id", value: pageid },
+        { name: "invoice_id", value: req.body.invoiceId },
+        { name: "name", value: req.body.invoiceName },
+        { name: "total", value: req.body.total },
+        { name: "payed_by", value: req.body.payedBy },
+        { name: "invoice_date", value: req.body.invoiceDate },
+        { name: "payment_date", value: req.body.paymentDate },
+        { name: "invoice_number", value: req.body.invoiceNumber },
+      ]
+    }
+    ORM.updateEntity(entity).then(function (data) {
+      buildResult(res, JSON.stringify(data));
+    });
+  },
+
+
+  loadInvoice: function (req, res) {
+    console.log(req.body);
+    var pageid = req.params.pageid;
+
+
+    var entity = {
+      name: "invoice",
+      properties: [
+        { name: "page_id", value: pageid }
+      ]
+    }
+
+    ORM.searchEntity(entity).then(function (data) {
+
+
+      data = data.map(function (item) {
+        return {
+          pageId: item.page_id,
+          invoiceId: item.invoice_id,
+          invoiceName: item.name,
+          total: item.total,
+          payedBy: item.payed_by,
+          invoiceDate: item.invoice_date,
+          paymentDate: item.payment_date,
+          invoiceNumber: item.invoice_number
+        }
+      })
+
+
+      buildResult(res, JSON.stringify(data));
+    });
+
+  },
+
+
 
 
   executeStatement: function (req, res) {

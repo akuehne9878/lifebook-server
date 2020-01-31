@@ -2,9 +2,6 @@
 	<uxap:ObjectPageLayout showTitleInHeaderContent="true" showEditHeaderButton="false" editHeaderButtonPress="handleEditBtnPress">
 		<uxap:headerTitle>
 			<uxap:ObjectPageHeader objectImageShape="Circle" objectTitle="{currPage>/title}" isObjectTitleAlwaysVisible="false" showPlaceholder="true" objectImageBackgroundColor="Random">
-				<uxap:actions>
-					<uxap:ObjectPageHeaderActionButton text="Bearbeiten" hideIcon="true" hideText="false" press="toggleFooter"/> 
-				</uxap:actions>
 				<uxap:breadcrumbs>
 					<Breadcrumbs links="{breadcrumbs>/}">
 						<Link text="{breadcrumbs>name}" press="onLinkPress"/>

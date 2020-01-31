@@ -90,6 +90,18 @@ sap.ui.define(["jquery.sap.global", "sap/ui/model/json/JSONModel", "sap/ui/model
       return this._post("/api/deleteEntity", data);
     }, 
 
+    createInvoice: function (pageid, data) {
+      return this._post("/api/page/" + pageid + "/createInvoice", data);
+    }, 
+
+    updateInvoice: function (pageid, data) {
+      return this._post("/api/page/" + pageid + "/updateInvoice", data);
+    }, 
+
+    loadInvoice: function (pageid) {
+      return this._post("/api/page/" + pageid + "/loadInvoice");
+    }, 
+
     _get: function (url) {
       return this._ajax(url, "GET");
     },

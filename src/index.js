@@ -102,6 +102,7 @@ app.get("/api/thumbnail", Lifebook.thumbnail);
 
 
 
+
 /* SQLITE */
 
 app.post("/api/executeStatement", Lifebook.executeStatement);
@@ -115,6 +116,17 @@ app.post("/api/readEntity", Lifebook.readEntity);
 app.post("/api/updateEntity", Lifebook.updateEntity);
 
 app.post("/api/deleteEntity", Lifebook.deleteEntity);
+
+app.post("/api/page/:pageid/createInvoice", Lifebook.createInvoice);
+
+app.post("/api/page/:pageid/updateInvoice", Lifebook.updateInvoice);
+
+app.post("/api/page/:pageid/loadInvoice", Lifebook.loadInvoice);
+
+
+
+
+
 
 var lifebookInitialized = new Promise(function (resolve, reject) {
   resolve();

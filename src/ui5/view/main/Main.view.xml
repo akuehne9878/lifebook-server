@@ -18,7 +18,7 @@
 				<Button type="Transparent" icon="sap-icon://delete" text="Löschen" press="onDeletePage" visible="{toolbar>/deletePage}"/>
 				<Button type="Transparent" icon="sap-icon://save" text="Speichern" press="onSavePage" visible="{toolbar>/savePage}"/>
 				<Button type="Transparent" icon="sap-icon://upload" text="Upload" press="onShowUpload" visible="{toolbar>/upload}"/>
-				<Button type="Transparent" icon="sap-icon://customize" text="Eigenschaften" press="onShowProperties" visible="{toolbar>/properties}"/>
+				<!-- <Button type="Transparent" icon="sap-icon://customize" text="Eigenschaften" press="onShowProperties" visible="{toolbar>/properties}"/> -->
 				<Button type="Transparent" icon="sap-icon://decline" text="Abbrechen" press="onCancelEditor" visible="{toolbar>/cancelEditor}"/>
 				<!-- Single Attachment -->
 				<Button type="Transparent" icon="sap-icon://edit" text="Umbenennen" press="onShowRenameAttachment" visible="{toolbar>/renameAttachment}"/>
@@ -29,6 +29,8 @@
 				<Button type="Transparent" icon="sap-icon://copy" text="Kopieren" press="onShowCopySelection" visible="{toolbar>/copySelection}"/>
 				<Button type="Transparent" icon="sap-icon://action" text="Verschieben" press="onShowMoveSelection" visible="{toolbar>/moveSelection}"/>
 				<Button type="Transparent" icon="sap-icon://delete" text="Löschen" press="onDeleteSelection" visible="{toolbar>/deleteSelection}"/>
+				<Button type="Transparent" icon="sap-icon://travel-expense-report" text="Rechnung bearbeiten" press="onShowEditInvoice" visible="{toolbar>/editInvoice}"/>
+
 			</OverflowToolbar>
 		</c:detailHeader>
 		<c:masterPage>
@@ -50,6 +52,7 @@
 			<mvc:XMLView viewName="lifebook.view.main.sidecontent.attachment.AttachmentVideo"/>
 			<mvc:XMLView viewName="lifebook.view.main.sidecontent.attachment.AttachmentMultiple"/>
 			<mvc:XMLView viewName="lifebook.view.main.sidecontent.attachment.AttachmentSTL"/>
+			<mvc:XMLView viewName="lifebook.view.main.sidecontent.invoice.Invoice"/>
 		</c:sideContent>
 	</c:MDSPage>
 </mvc:View>

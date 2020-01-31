@@ -20,7 +20,8 @@ sap.ui.define(
 
       setup: function() {
         this.getOwnerComponent().getController("lifebook.view.main.detail.page.section.markdown.Markdown").setup(this.getModel("currPage").getProperty("/content"));
-      }
+      },
+
 
     });
   }
