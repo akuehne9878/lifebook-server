@@ -11,6 +11,7 @@ sap.ui.define(
     "sap/base/Log",
     "sap/ui/core/format/NumberFormat"
   ],
+  
   function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log, NumberFormat) {
     return BaseController.extend("lifebook.view.main.detail.AbstractPage", {
 

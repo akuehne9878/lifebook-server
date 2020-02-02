@@ -55,4 +55,4 @@
 			<mvc:XMLView viewName="lifebook.view.main.sidecontent.invoice.Invoice"/>
 		</c:sideContent>
 	</c:MDSPage>
-</mvc:View>
+</mvc:View>                       
