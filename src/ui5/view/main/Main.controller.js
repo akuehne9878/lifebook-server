@@ -240,9 +240,11 @@ sap.ui.define([
             onAfterCloseSideContent: function (oEvent) {
                 var name = oEvent.getParameter("value").getControllerName();
 
-                if (name.indexOf("lifebook.view.main.detail.attachment") === 0) {
+                if (name.indexOf("lifebook.view.main.sidecontent.attachment") === 0) {
                     this.getModel("currAttachment").setProperty("/", null);
-                    this.getController("lifebook.view.main.detail.AbstractPage").unselectAllAttachments();
+
+
+                    this.getController("lifebook.view.main.detail.page.section.attachments.Attachments").unselectAllAttachments();
                     this.setViewMode("view");
                 }
             },

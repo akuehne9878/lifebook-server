@@ -57,7 +57,7 @@ sap.ui.define(
           var sideContent = this._getSideContentView(oBindingContext);
 
           mainController.setViewMode("singleAttachment");
-          mainController._changeSideContent(sideContent, currObject.name);
+          mainController._changeSideContent(sideContent, oBindingContext.getOject().name);
         } else {
           // load multiple
           mainController.setViewMode("selection");
@@ -67,19 +67,20 @@ sap.ui.define(
       },
 
       _getSideContentView: function (oBindingContext) {
-        var currObject = selectedAttachments[0];
+        var currObject = oBindingContext.getObject();
+
         this.getOwnerComponent().getModel("currAttachment").setProperty("/", currObject);
 
-        var sideContent = "lifebook.view.main.detail.sidecontent.AttachmentDefault";
+        var sideContent = "lifebook.view.main.sidecontent.sidecontent.AttachmentDefault";
 
         if (currObject.type === "PDF") {
-          sideContent = "lifebook.view.main.detail.sidecontent.AttachmentPdf";
+          sideContent = "lifebook.view.main.sidecontent.attachment.AttachmentPdf";
         } else if (currObject.type === "JPG") {
-          sideContent = "lifebook.view.main.detail.sidecontent.AttachmentImage";
+          sideContent = "lifebook.view.main.sidecontent.sidecontent.AttachmentImage";
         } else if (currObject.type === "MP4") {
-          sideContent = "lifebook.view.main.detail.sidecontent.AttachmentVideo";
+          sideContent = "lifebook.view.main.sidecontent.sidecontent.AttachmentVideo";
         } else if (currObject.type === "STL") {
-          sideContent = "lifebook.view.main.detail.sidecontent.AttachmentSTL";
+          sideContent = "lifebook.view.main.sidecontent.sidecontent.AttachmentSTL";
         }
         return sideContent;
       },
