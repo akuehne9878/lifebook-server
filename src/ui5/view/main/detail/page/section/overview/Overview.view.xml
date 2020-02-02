@@ -1,0 +1,5 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:c="lifebook.components" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:grid="sap.ui.layout.cssgrid" xmlns:f="sap.f" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.page.section.overview.Overview" xmlns:html="http://www.w3.org/1999/xhtml" height="100%">
+	<List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }">
+		<StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage"/>
+	</List>
+</mvc:View>

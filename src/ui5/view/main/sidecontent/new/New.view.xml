@@ -10,6 +10,7 @@
 				<Select forceSelection="true" selectedKey="{/type}">
 					<core:Item key="standard" text="Standard" />
 					<core:Item key="invoice" text="Rechnung" />
+					<core:Item key="invoice_overview" text="Rechnungübersicht" />
 				</Select>
 			</VBox>
 			<VBox justifyContent="End" alignItems="End" alignContent="End" class="sapUiSmallMarginEnd">

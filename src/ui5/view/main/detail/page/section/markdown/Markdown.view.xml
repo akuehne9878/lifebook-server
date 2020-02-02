@@ -6,10 +6,5 @@
 		<VBox width="100%" visible="{=${toolbar>/savePage} ? false : true}" height="100%" renderType="Bare">
 			<html:div renderType="Bare" id="htmlViewer" class="markdown-body sapUiSmallMargin"/>
 		</VBox>
-		<VBox visible="{currPage>/metainfo/showOverview}">
-			<List items="{currPage>/children}" visible="{= ${currPage>/children}.length > 0 }">
-				<StandardListItem title="{currPage>name}" type="Navigation" press="onNavigateToChildPage"/>
-			</List>
-		</VBox>
 	</VBox>
 </mvc:View>

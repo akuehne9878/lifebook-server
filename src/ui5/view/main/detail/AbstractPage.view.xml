@@ -3,6 +3,7 @@
 		<pages>
 			<mvc:XMLView viewName="lifebook.view.main.detail.page.type.standard.Standard"/>
 			<mvc:XMLView viewName="lifebook.view.main.detail.page.type.invoice.Invoice"/>
+			<mvc:XMLView viewName="lifebook.view.main.detail.page.type.invoiceoverview.InvoiceOverview"/>
 		</pages>
 	</NavContainer>
 </mvc:View>

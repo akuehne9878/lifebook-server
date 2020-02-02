@@ -60,7 +60,6 @@ sap.ui.define([
                     model.setProperty("/movePage", true);
                     model.setProperty("/deletePage", true);
                     model.setProperty("/upload", true);
-                    model.setProperty("/properties", true);
 
                 } else if (sViewMode === "edit") {
                     model.setProperty("/savePage", true);

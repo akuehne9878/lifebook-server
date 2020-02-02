@@ -17,7 +17,8 @@ sap.ui.define(
 
       _pageTypeMap: {
         "standard": "lifebook.view.main.detail.page.type.standard.Standard",
-        "invoice": "lifebook.view.main.detail.page.type.invoice.Invoice"
+        "invoice": "lifebook.view.main.detail.page.type.invoice.Invoice",
+        "invoice_overview": "lifebook.view.main.detail.page.type.invoiceoverview.InvoiceOverview",       
       },
 
       onInit: function (oEvent) {
@@ -26,12 +27,6 @@ sap.ui.define(
       },
 
 
-      onNavigateToChildPage: function (oEvent) {
-        var object = oEvent.getSource().getBindingContext("currPage").getObject();
-        var currPath = this.getOwnerComponent().getModel("currPage").getData().path;
-        this.getController("lifebook.view.main.master.Master").reloadPage(currPath + "\\" + object.name);
-
-      },
 
       reloadPage: function (sPath) {
         var model = new RestModel();
