@@ -11,7 +11,7 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
       // create the views based on the url/hash
       this.getRouter().initialize();
 
-      sap.ui.getCore().getConfiguration().setLanguage( "de" );
+      sap.ui.getCore().getConfiguration().setLanguage("de");
 
 
       this.setModel(new JSONModel(Device), "device");
@@ -31,8 +31,12 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
         sideContentViewName: "",
         sideContentTitle: "",
         showSideContentSpace: !Device.system.phone,
-        showSideContent: false
+        showSideContent: false,
+        showMaster: !Device.system.phone
       }), "mdsPage");
+
+
+
     },
 
     isPhone: function () {

@@ -4,6 +4,7 @@ sap.ui.define(
     "lifebook/model/RestModel",
     "jquery.sap.global",
     "sap/m/MessageBox",
+    "sap/ui/Device",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "sap/ui/core/Fragment",
@@ -11,7 +12,7 @@ sap.ui.define(
     "sap/ui/model/FilterOperator",
     "sap/base/Log"
   ],
-  function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Filter, FilterOperator, Log) {
+  function (BaseController, RestModel, jQuery, MessageBox, Device, JSONModel, MessageToast, Fragment, Filter, FilterOperator, Log) {
     return BaseController.extend("lifebook.view.main.master.Master", {
       onInit: function (oEvent) {
         this.getOwnerComponent().registerController(this);
@@ -19,6 +20,7 @@ sap.ui.define(
 
       reloadLifebookTree: function () {
         var that = this;
+       
         var p = new Promise(function (resolve, reject) {
           var oRestModel = new RestModel();
           oRestModel.tree().then(function (data) {
@@ -28,6 +30,8 @@ sap.ui.define(
             that.getModel("tree").setProperty("/", data);
 
             that.expandTreeItem(localStorage.getItem("lifebook.currPage.path"));
+
+
             resolve();
           });
         })
@@ -45,6 +49,11 @@ sap.ui.define(
         if (oObj.type === "lifebook" || oObj.type === "page") {
           this.reloadPage(oObj.path);
           this.getModel("mdsPage").setProperty("/showSideContent", false);
+
+          if (Device.system.phone) {
+            this.getModel("mdsPage").setProperty("/showMaster", false);
+          }
+
         }
       },
 
@@ -119,7 +128,7 @@ sap.ui.define(
             temp += "\\" + parts[i]
           }
           paths.push(temp);
-          breadcrumbs.push({name: parts[i], path: temp});
+          breadcrumbs.push({ name: parts[i], path: temp });
         }
 
         breadcrumbs.pop();  // remove last element

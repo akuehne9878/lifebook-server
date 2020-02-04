@@ -21,6 +21,7 @@ sap.ui.define([
                 this.setModel(new JSONModel({}), "breadcrumbs")
 
                 this.resetViewMode();
+
             },
 
             resetViewMode: function () {
@@ -88,6 +89,11 @@ sap.ui.define([
                 this.getModel("mdsPage").setProperty("/sideContentViewName", sViewName);
                 this.getModel("mdsPage").setProperty("/sideContentTitle", sTitle);
                 this.getModel("mdsPage").setProperty("/showSideContent", true);
+
+                if (Device.system.phone) {
+                    this.getModel("mdsPage").setProperty("/showMainContent", false);
+                }
+
             },
 
             _loadSideContent: function (sSideContentViewName, sTitle, oSetupOptions) {
@@ -246,6 +252,11 @@ sap.ui.define([
                     this.getController("lifebook.view.main.detail.page.section.attachments.Attachments").unselectAllAttachments();
                     this.setViewMode("view");
                 }
+
+                if (Device.system.phone) {
+                    this.getModel("mdsPage").setProperty("/showMainContent", true);
+                }
+
             },
 
             onShowMenu: function (oEvent) {

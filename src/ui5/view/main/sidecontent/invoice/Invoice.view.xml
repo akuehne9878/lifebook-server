@@ -3,11 +3,11 @@
 		<VBox class="sapUiSmallMargin">
 			<VBox class="sapUiSmallMarginTop">
 				<Label text="Rechnungsname" />
-				<Input type="Text" value="{/invoiceName}" width="100%" submit="onSave" class="sapUiSmallMarginEnd"/>
+				<Input type="Text" value="{/invoiceName}" width="100%" class="sapUiSmallMarginEnd"/>
 			</VBox>
 			<VBox class="sapUiSmallMarginTop">
 				<Label text="Rechnungsnummer" />
-				<Input type="Text" value="{/invoiceNumber}" width="100%" submit="onSave" class="sapUiSmallMarginEnd"/>
+				<Input type="Text" value="{/invoiceNumber}" width="100%" class="sapUiSmallMarginEnd"/>
 			</VBox>
 			<VBox class="sapUiSmallMarginTop">
 				<Label text="Rechnungsdatum" />
@@ -19,11 +19,11 @@
 			</VBox>
 			<VBox class="sapUiSmallMarginTop">
 				<Label text="Betrag" />
-				<Input type="Number" value="{/total}" width="100%" submit="onSave" class="sapUiSmallMarginEnd"/>
+				<Input type="Number" value="{/total}" width="100%" class="sapUiSmallMarginEnd"/>
 			</VBox>
 			<VBox class="sapUiSmallMarginTop">
 				<Label text="Gezahlt von" />
-				<Select  width="100%" selectedKey="{/payedBy}" >
+				<Select width="100%" selectedKey="{/payedBy}">
 					<core:Item key="andreas" text="Andreas" />
 					<core:Item key="sabine" text="Sabine" />
 				</Select>

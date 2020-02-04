@@ -1,0 +1,12 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<ViewSettingsDialog confirm="onSortDialogConfirm">
+		<sortItems>
+			<ViewSettingsItem text="Name" key="name" selected="true" />
+			<ViewSettingsItem text="Rechnungs-Nummer" key="invoice_number" />
+			<ViewSettingsItem text="Rechnungs-Datum" key="invoice_date" />
+			<ViewSettingsItem text="Zahlungs-Datum" key="payment_date" />
+			<ViewSettingsItem text="Gezahlt von" key="payed_by" />
+			<ViewSettingsItem text="Betrag" key="total" />
+		</sortItems>
+	</ViewSettingsDialog>
+</core:FragmentDefinition>

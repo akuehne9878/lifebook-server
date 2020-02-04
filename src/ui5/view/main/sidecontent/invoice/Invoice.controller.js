@@ -14,18 +14,25 @@ sap.ui.define(
     return BaseSideContentController.extend("lifebook.view.main.sidecontent.invoice.Invoice", {
       onInit: function (oEvent) {
         this.getOwnerComponent().registerController(this);
-        this.setModel(new JSONModel({ payedBy: "" }));
+        this.setModel(new JSONModel());
       },
 
       setup: function (oOptions) {
         this.setModel(new JSONModel(oOptions), "options")
-
         var pageid = this.getModel("currPage").getProperty("/metainfo/pageid");
+
+
+        this._bUpdate = false;
 
         var that = this;
         var oRestModel = new RestModel();
         oRestModel.loadInvoice(pageid).then(function (data) {
-          that.getModel().setProperty("/", data[0])
+          if (data.length === 1) {
+            that._bUpdate = true;
+            that.getModel().setProperty("/", data[0])
+          } else {
+            that.setModel(new JSONModel({ invoiceName: "", invoiceNumber: "", invoiceDate: "", paymentDate: "", payedBy: "", total: null }));
+          }
         });
 
       },
@@ -42,15 +49,21 @@ sap.ui.define(
         var obj = this.getModel().getProperty("/");
         var pageid = this.getModel("currPage").getProperty("/metainfo/pageid");
 
+        var pagePath = this.getModel("currPage").getProperty("/path");
+
 
         var oRestModel = new RestModel();
-        if (obj) {
+        if (that._bUpdate) {
+
+
           oRestModel.updateInvoice(pageid, obj).then(function (data) {
+            that.getController("lifebook.view.main.detail.AbstractPage").reloadPage(pagePath);
             that.getModel("mdsPage").setProperty("/showSideContent", false);
           })
         } else {
 
           oRestModel.createInvoice(pageid, obj).then(function (data) {
+            that.getController("lifebook.view.main.detail.AbstractPage").reloadPage(pagePath);
             that.getModel("mdsPage").setProperty("/showSideContent", false);
           });
         }

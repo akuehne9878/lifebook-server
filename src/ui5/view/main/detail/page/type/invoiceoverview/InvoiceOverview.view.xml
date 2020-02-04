@@ -12,7 +12,7 @@
 		<uxap:headerContent>
 		</uxap:headerContent>
 		<uxap:sections>
-			<uxap:ObjectPageSection title="Text">
+			<uxap:ObjectPageSection title="Text" visible="{= ${currPage>/content} !== '' || ${toolbar>/savePage} }">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >
 						<uxap:blocks>
@@ -22,11 +22,11 @@
 				</uxap:subSections>
 			</uxap:ObjectPageSection>
 
-			<uxap:ObjectPageSection title="Übersicht">
+			<uxap:ObjectPageSection title="Rechnungsübersicht">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >
 						<uxap:blocks>
-							<mvc:XMLView viewName="lifebook.view.main.detail.page.section.markdown.Markdown"/>
+							<mvc:XMLView viewName="lifebook.view.main.detail.page.section.invoiceoverview.InvoiceOverview"/>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>
 				</uxap:subSections>

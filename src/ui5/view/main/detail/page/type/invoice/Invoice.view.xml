@@ -56,7 +56,7 @@
 			</Table>
 		</uxap:headerContent>
 		<uxap:sections>
-			<uxap:ObjectPageSection title="Text">
+			<uxap:ObjectPageSection title="Text" visible="{= ${currPage>/content} !== '' || ${toolbar>/savePage} }">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection >
 						<uxap:blocks>

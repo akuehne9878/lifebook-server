@@ -23,13 +23,23 @@ var PATH = Constants.PATH;
 var LIFEBOOK_PATH = Constants.LIFEBOOK_PATH;
 
 var Lifebook = {
+
+  log: function (req) {
+    console.log("--------------------------------------------------------------------");
+    console.log("PATH: \t" + req.path);
+    console.log("BODY: \t" + JSON.stringify(req.body));
+    console.log("---");
+  },
+
+
   /**
    * loadPage
    * @param {*} req 
    * @param {*} res 
    */
   loadPage: function (req, res) {
-    console.log(req.body);
+
+    Lifebook.log(req);
 
     var fullIndexPath = path.join(LIFEBOOK_PATH, req.body.path, "index.md");
     var fullPath = path.join(LIFEBOOK_PATH, req.body.path);
@@ -140,7 +150,7 @@ var Lifebook = {
    * @param {*} res 
    */
   savePage: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
 
     var fullIndexPath = path.join(LIFEBOOK_PATH, req.body.path, "index.md");
     fs.writeFileSync(fullIndexPath, req.body.content);
@@ -154,7 +164,7 @@ var Lifebook = {
    * @param {*} res 
    */
   renamePage: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
 
     var fullPath = path.join(LIFEBOOK_PATH, req.body.path);
 
@@ -185,23 +195,33 @@ var Lifebook = {
    * @param {*} res 
    */
   deletePage: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
 
     var absolutePath = path.join(LIFEBOOK_PATH, req.body.path);
 
     var metainfo = JSON.parse(fs.readFileSync(path.join(absolutePath, "metainfo.json"), "utf8"));
+
     ORM.deleteEntity(
       {
-        name: "page",
+        name: "invoice",
         id: ["page_id"],
         properties: [
           { name: "page_id", value: metainfo.pageid },
         ]
       }
     ).then(function (data) {
+      return {
+        name: "page",
+        id: ["page_id"],
+        properties: [
+          { name: "page_id", value: metainfo.pageid },
+        ]
+      }
+    }).then(function (data) {
       rimraf.sync(absolutePath);
       Lifebook.tree(req, res);
-    })
+
+    });
 
   },
 
@@ -211,7 +231,7 @@ var Lifebook = {
    * @param {*} res 
    */
   copyPage: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
 
     var src = path.join(LIFEBOOK_PATH, req.body.src);
     var dst = path.join(LIFEBOOK_PATH, req.body.dst, req.body.title);
@@ -227,7 +247,7 @@ var Lifebook = {
    * @param {*} res 
    */
   movePage: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
 
     var src = path.join(LIFEBOOK_PATH, req.body.src);
     var dst = path.join(LIFEBOOK_PATH, req.body.dst, req.body.title);
@@ -243,7 +263,7 @@ var Lifebook = {
    * @param {*} res 
    */
   createPage: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
 
     var absolutePath = path.join(LIFEBOOK_PATH, req.body.path);
 
@@ -278,6 +298,9 @@ var Lifebook = {
           ]
         };
         ORM.readEntity(readEntity).then(function (page) {
+
+          console.log("RRRR: " + JSON.stringify(page));
+
           var metainfo = {
             pageid: page.page_id
           };
@@ -377,7 +400,7 @@ var Lifebook = {
 
 
   deleteFile: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
 
     req.body.fileNames.forEach(function (fileName) {
       var absolutePath = path.join(LIFEBOOK_PATH, req.body.path, fileName);
@@ -481,7 +504,7 @@ var Lifebook = {
   },
 
   renameFile: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
 
     var fullPath = path.join(LIFEBOOK_PATH, req.body.path);
 
@@ -501,7 +524,7 @@ var Lifebook = {
  * @param {*} res 
  */
   copyFile: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
 
 
     req.body.fileNames.forEach(function (fileName) {
@@ -521,7 +544,7 @@ var Lifebook = {
  * @param {*} res 
  */
   moveFile: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
 
     req.body.fileNames.forEach(function (fileName) {
       var src = path.join(LIFEBOOK_PATH, req.body.src, fileName);
@@ -533,7 +556,7 @@ var Lifebook = {
   },
 
   loadMetainfo: function (req, res) {
-    console.log(req.body.path);
+    Lifebook.log(req);
 
     var metainfo = fs.readFileSync(path.join(LIFEBOOK_PATH, req.body.path, "metainfo.json"), "utf8");
 
@@ -542,7 +565,7 @@ var Lifebook = {
 
 
   saveMetainfo: function (req, res) {
-    console.log(req.body.path);
+    Lifebook.log(req);
 
     var fullIndexPath = path.join(LIFEBOOK_PATH, req.body.path, "metainfo.json");
     fs.writeFileSync(fullIndexPath, req.body.content);
@@ -552,38 +575,43 @@ var Lifebook = {
 
 
   createInvoice: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
+
     var pageid = req.params.pageid;
 
     var entity = {
       name: "invoice",
       properties: [
         { name: "page_id", value: pageid },
-        { name: "name", value: req.body.name },
+        { name: "name", value: req.body.invoiceName },
         { name: "total", value: req.body.total },
-        { name: "payed_by", value: req.body.payed_by },
-        { name: "invoice_date", value: req.body.invoice_date },
-        { name: "payment_date", value: req.body.payment_date },
-        { name: "invoice_number", value: req.body.invoice_number },
+        { name: "payed_by", value: req.body.payedBy },
+        { name: "invoice_date", value: req.body.invoiceDate },
+        { name: "payment_date", value: req.body.paymentDate },
+        { name: "invoice_number", value: req.body.invoiceNumber },
       ]
     }
-    ORM.createEntity(entity).then(function (data) {
 
-      var readEntity = {
-        name: "invoice",
-        id: ["invoice_id"],
-        properties: [
-          { name: "invoice_id", value: data[0].seq }
-        ]
-      };
 
-      return ORM.readEntity(readEntity). buildResult(res, JSON.stringify(data));
+    ORM.updateEntity({
+      name: "page",
+      id: ["page_id"],
+      properties: [
+        { name: "page_id", value: pageid },
+        { name: "linked_entity", value: "invoice" },
+      ]
+    }).then(function () {
+
+      return ORM.createEntity(entity);
+    }).then(function (data) {
+      buildResult(res, JSON.stringify(data));
     });
 
   },
 
   updateInvoice: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
+
     var pageid = req.params.pageid;
 
     var entity = {
@@ -607,7 +635,7 @@ var Lifebook = {
 
 
   loadInvoice: function (req, res) {
-    console.log(req.body);
+    Lifebook.log(req);
     var pageid = req.params.pageid;
 
 
@@ -645,13 +673,14 @@ var Lifebook = {
 
   executeStatement: function (req, res) {
     var statement = req.body.statement;
+    var params = req.body.params;
 
     var sql = statement;
 
     if (sql === undefined || sql === "") {
       buildResult(res, JSON.stringify({}));
     } else {
-      ORM._run(sql).then(function (data) {
+      ORM._run(sql, params).then(function (data) {
         if (data) {
           buildResult(res, JSON.stringify(data));
         } else {
