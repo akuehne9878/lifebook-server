@@ -86,6 +86,7 @@ sap.ui.define([
             },
 
             _changeSideContent: function (sViewName, sTitle) {
+                
                 this.getModel("mdsPage").setProperty("/sideContentViewName", sViewName);
                 this.getModel("mdsPage").setProperty("/sideContentTitle", sTitle);
                 this.getModel("mdsPage").setProperty("/showSideContent", true);

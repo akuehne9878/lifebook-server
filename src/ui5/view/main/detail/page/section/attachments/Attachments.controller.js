@@ -71,16 +71,16 @@ sap.ui.define(
 
         this.getOwnerComponent().getModel("currAttachment").setProperty("/", currObject);
 
-        var sideContent = "lifebook.view.main.sidecontent.sidecontent.AttachmentDefault";
+        var sideContent = "lifebook.view.main.sidecontent.attachment.AttachmentDefault";
 
         if (currObject.type === "PDF") {
           sideContent = "lifebook.view.main.sidecontent.attachment.AttachmentPdf";
         } else if (currObject.type === "JPG") {
-          sideContent = "lifebook.view.main.sidecontent.sidecontent.AttachmentImage";
+          sideContent = "lifebook.view.main.sidecontent.attachment.AttachmentImage";
         } else if (currObject.type === "MP4") {
-          sideContent = "lifebook.view.main.sidecontent.sidecontent.AttachmentVideo";
+          sideContent = "lifebook.view.main.sidecontent.attachment.AttachmentVideo";
         } else if (currObject.type === "STL") {
-          sideContent = "lifebook.view.main.sidecontent.sidecontent.AttachmentSTL";
+          sideContent = "lifebook.view.main.sidecontent.attachment.AttachmentSTL";
         }
         return sideContent;
       },
@@ -93,7 +93,7 @@ sap.ui.define(
 
         var oObj = oBindingContext.getObject();
 
-        var path = decodeURIComponent(
+        var path = decodeURICompont(
           this.getModel("currPage")
             .getProperty("/path")
         );

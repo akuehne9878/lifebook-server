@@ -49,11 +49,6 @@ sap.ui.define(
         if (oObj.type === "lifebook" || oObj.type === "page") {
           this.reloadPage(oObj.path);
           this.getModel("mdsPage").setProperty("/showSideContent", false);
-
-          if (Device.system.phone) {
-            this.getModel("mdsPage").setProperty("/showMaster", false);
-          }
-
         }
       },
 
@@ -62,7 +57,6 @@ sap.ui.define(
         oRouter.navTo("page", {
           path: sPath
         });
-
 
         var mainController = this.getController("lifebook.view.main.Main");
         mainController.setViewMode("view");

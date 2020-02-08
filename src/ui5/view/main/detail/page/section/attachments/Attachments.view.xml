@@ -1,12 +1,12 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:c="lifebook.components" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:grid="sap.ui.layout.cssgrid" xmlns:f="sap.f" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.page.section.attachments.Attachments" xmlns:html="http://www.w3.org/1999/xhtml" height="100%">
-	<VBox>
+	<VBox alignItems="{= ${device>/system/phone} ? 'Center' : 'Start' }">
 		<f:GridList id="gridList" showUnread="true" items="{path: 'currPage>/files'}" selectionChange="onSelectionChange" growing="true" growingThreshold="25" mode="MultiSelect">
 			<f:customLayout>
 				<grid:GridBasicLayout gridTemplateColumns="repeat(auto-fit, minmax(300px, 0fr))" gridGap="1rem"/>
 			</f:customLayout>
 			<f:GridListItem type="Active" selected="{currPage>selected}" unread="{currPage>selected}" class="noBorderBottom noContentPadding" press="onPress">
 				<VBox height="100%">
-					<HBox class="">
+					<HBox>
 						<Checkbox selected="{currPage>selected}" select="onSelectionChange"/>
 						<Label class="sapUiSmallMarginTop" text="{currPage>name}" wrapping="true"/>
 					</HBox>

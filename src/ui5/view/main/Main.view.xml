@@ -1,11 +1,11 @@
 <mvc:View height="100%" xmlns:c="lifebook.components" controllerName="lifebook.view.main.Main" xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns="sap.m">
-	<c:MDSPage id="mdsPage" showMaster="{mdsPage>/showMaster}" showSecondaryHeader="false" showSideContentSpace="{mdsPage>/showSideContentSpace}" showMainContent="{mdsPage>/showMainContent}" showSideContent="{mdsPage>/showSideContent}" sideContentViewName="{mdsPage>/sideContentViewName}" sideContentTitle="{mdsPage>/sideContentTitle}" afterCloseSideContent="onAfterCloseSideContent" height="100%">
-		<c:primaryHeader>
+	<c:MDSPage id="mdsPage" showMaster="{mdsPage>/showMaster}" showPrimaryHeader="false" showSecondaryHeader="false" showSideContentSpace="{mdsPage>/showSideContentSpace}" showMainContent="{mdsPage>/showMainContent}" showSideContent="{mdsPage>/showSideContent}" sideContentViewName="{mdsPage>/sideContentViewName}" sideContentTitle="{mdsPage>/sideContentTitle}" afterCloseSideContent="onAfterCloseSideContent" height="100%">
+		<!-- <c:primaryHeader>
 			<OverflowToolbar>
 				<Label text="{currPage>/title}" />
 				<ToolbarSpacer />
 			</OverflowToolbar>
-		</c:primaryHeader>
+		</c:primaryHeader> -->
 		<c:detailHeader>
 			<OverflowToolbar>
 				<!-- Page -->

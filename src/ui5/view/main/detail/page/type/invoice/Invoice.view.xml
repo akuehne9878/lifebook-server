@@ -13,7 +13,7 @@
 			<Table inset="false" class="sapUiSmallMarginTop">
 				<columns>
 					<Column width="6em"></Column>
-					<Column width="12em"></Column>
+					<Column width="6em"></Column>
 				</columns>
 				<items>
 					<ColumnListItem>

@@ -9,21 +9,27 @@ sap.ui.define(
     "sap/ui/core/Fragment",
     "sap/ui/core/mvc/Controller",
     "sap/base/Log",
-    "sap/ui/core/format/NumberFormat"
+    "sap/ui/core/format/NumberFormat",
+    "sap/ui/Device",
+    "sap/ui/core/BusyIndicator"
   ],
-  
-  function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log, NumberFormat) {
+
+  function (BaseController, RestModel, jQuery, MessageBox, JSONModel, MessageToast, Fragment, Controller, Log, NumberFormat, Device, BusyIndicator) {
     return BaseController.extend("lifebook.view.main.detail.AbstractPage", {
 
       _pageTypeMap: {
         "standard": "lifebook.view.main.detail.page.type.standard.Standard",
         "invoice": "lifebook.view.main.detail.page.type.invoice.Invoice",
-        "invoice_overview": "lifebook.view.main.detail.page.type.invoiceoverview.InvoiceOverview",       
+        "invoice_overview": "lifebook.view.main.detail.page.type.invoiceoverview.InvoiceOverview",
       },
 
       onInit: function (oEvent) {
         this.getOwnerComponent().registerController(this);
         this.getView().setModel(new JSONModel({ newLifebook: false, viewMode: true }), "meta");
+      },
+
+      onAfterRendering: function (oEvent) {
+        BusyIndicator.hide();
       },
 
 
@@ -48,6 +54,15 @@ sap.ui.define(
 
           that.getController("lifebook.view.main.master.Master").expandTreeItem(localStorage.getItem("lifebook.currPage.path"));
           that.getController("lifebook.view.main.Main").setViewMode("view");
+
+          if (Device.system.phone) {
+            that.getModel("mdsPage").setProperty("/showMaster", false);
+            that.getModel("mdsPage").setProperty("/showSideContentSpace", false);
+            that.getModel("mdsPage").setProperty("/showMainContent", true);
+
+          }
+
+
 
         });
       },

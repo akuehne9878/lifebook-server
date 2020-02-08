@@ -1,4 +1,4 @@
-sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JSONModel", "sap/ui/model/resource/ResourceModel"], function (Device, UIComponent, JSONModel, ResourceModel) {
+sap.ui.define(["sap/ui/core/BusyIndicator","sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JSONModel", "sap/ui/model/resource/ResourceModel"], function (BusyIndicator, Device, UIComponent, JSONModel, ResourceModel) {
   return UIComponent.extend("lifebook.Component", {
     metadata: {
       "includes": ["css/style.css", "css/gfm.css"], //custom css file path
@@ -35,7 +35,7 @@ sap.ui.define(["sap/ui/Device", "sap/ui/core/UIComponent", "sap/ui/model/json/JS
         showMaster: !Device.system.phone
       }), "mdsPage");
 
-
+      BusyIndicator.show();
 
     },
 
