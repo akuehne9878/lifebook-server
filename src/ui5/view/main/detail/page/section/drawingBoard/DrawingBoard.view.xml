@@ -1,5 +1,0 @@
-<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:c="lifebook.components" xmlns:codeeditor="sap.ui.codeeditor" xmlns:core="sap.ui.core" xmlns:grid="sap.ui.layout.cssgrid" xmlns:f="sap.f" xmlns:layout="sap.ui.layout" xmlns:uxap="sap.uxap" controllerName="lifebook.view.main.detail.page.section.drawingBoard.DrawingBoard" xmlns:html="http://www.w3.org/1999/xhtml" height="100%">
-	<VBox renderType="Bare">
-		<c:DrawingBoard  />
-	</VBox>
-</mvc:View>

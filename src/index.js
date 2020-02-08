@@ -3,7 +3,6 @@ const Lifebook = require("./api/Lifebook");
 const fileUpload = require("express-fileupload");
 const Constants = require("./Constants");
 
-
 var fs = require("fs");
 
 var path = require("path");
@@ -33,14 +32,7 @@ function sendFile(fileName, res) {
     console.log("Not found:", fileName);
   }
 }
-// UI5 bootstrapping
-app.get("/", function (req, res) {
-  sendFile(path.join(__dirname, "ui5/index.html"), res);
-});
 
-app.get("/ui5/*", function (req, res) {
-  sendFile(path.join(__dirname, req.path), res);
-});
 
 app.get("/" + Constants.NAME + "/*", function (req, res) {
   sendFile(path.join(Constants.PATH, decodeURIComponent(req.path)), res);
@@ -124,18 +116,14 @@ app.post("/api/page/:pageid/updateInvoice", Lifebook.updateInvoice);
 app.post("/api/page/:pageid/loadInvoice", Lifebook.loadInvoice);
 
 
-
-
-
-
 var lifebookInitialized = new Promise(function (resolve, reject) {
   resolve();
 })
 
 lifebookInitialized.then(function () {
-  const port = 8080;
+  const port = 9080;
   app.listen(port, () => {
-    console.log("Example app listening on port 8080");
+    console.log("lifebook-server listening on port " + port);
   });
 });
 
