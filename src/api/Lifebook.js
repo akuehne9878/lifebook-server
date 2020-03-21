@@ -5,6 +5,7 @@ var rimraf = require("rimraf");
 var sharp = require('sharp');
 var dateFormat = require('dateformat');
 const Constants = require("../Constants");
+var hash = require('object-hash');
 
 const ORM = require("./ORM");
 
@@ -25,10 +26,13 @@ var LIFEBOOK_PATH = Constants.LIFEBOOK_PATH;
 var Lifebook = {
 
   log: function (req) {
-    console.log("--------------------------------------------------------------------");
+    	
+	console.log("--------------------------------------------------------------------");
     console.log("PATH: \t" + req.path);
     console.log("BODY: \t" + JSON.stringify(req.body));
     console.log("---");
+	
+	
   },
 
 
@@ -40,6 +44,11 @@ var Lifebook = {
   loadPage: function (req, res) {
 
     Lifebook.log(req);
+
+
+
+    req.body.path = req.body.path.split("\\").join("/");
+
 
     var fullIndexPath = path.join(LIFEBOOK_PATH, req.body.path, "index.md");
     var fullPath = path.join(LIFEBOOK_PATH, req.body.path);
@@ -74,11 +83,11 @@ var Lifebook = {
 
           obj.type = dirent.name.split(".").pop().toUpperCase();
 
-          obj.file = "/api/file/" + req.body.path + "/" + dirent.name;
+          obj.file = "http://lifebook:9080/api/file/" + req.body.path + "/" + dirent.name;
 
           if (dirent.name.toUpperCase().endsWith("JPG")) {
             promises.push(new Promise(function (resolve, reject) {
-              obj.thumbnail = encodeURI("/api/thumbnail?path=" + req.body.path + "&name=" + dirent.name);
+              obj.thumbnail = encodeURI("http://lifebook:9080/api/thumbnail?path=" + req.body.path + "&name=" + dirent.name);
 
               var absolutePath = path.join(LIFEBOOK_PATH, req.body.path, dirent.name);
 
@@ -441,12 +450,33 @@ var Lifebook = {
 
   thumbnail: function (req, res) {
 
-    var absolutePath = path.join(LIFEBOOK_PATH, req.query.path, req.query.name);
 
-    sharp(absolutePath)
-      .rotate()
-      .resize({ height: 300, width: 300 })
-      .pipe(res);
+    var absolutePath = path.join(LIFEBOOK_PATH, req.query.path, req.query.name);
+	absolutePath = absolutePath.split("\\").join("/") ;
+		
+	var cachedFilePath = path.join(Constants.LIFEBOOK_CACHE_PATH,  hash(absolutePath) + ".jpg");
+	
+	try {
+	  if (fs.existsSync(cachedFilePath)) {
+		 res.sendFile(cachedFilePath);
+	  } else {
+		sharp(absolutePath)
+		  .rotate()
+		  .resize({ height: 300, width: 300 })
+		  .toFile( cachedFilePath, function(err){
+				if(err){
+					res.sendStatus(500);
+					return;
+				}
+				res.sendFile(cachedFilePath);
+			});
+			  
+	  }
+	} catch(err) {
+	  console.error(err)
+	}	
+	
+
 
   },
 
@@ -492,6 +522,7 @@ var Lifebook = {
   getFile: function (req, res) {
 
     var input = decodeURIComponent(req.path);
+	
 
     var fullPath = path.join(LIFEBOOK_PATH, input.replace("/api/file/", ""));
 

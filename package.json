@@ -13,8 +13,9 @@
     "force": "0.0.3",
     "fs-extra": "^8.1.0",
     "gfm.css": "^1.1.2",
+    "object-hash": "^2.0.3",
     "rimraf": "2.6.3",
-    "sharp": "^0.23.4",
+    "sharp": "^0.25.1",
     "sqlite-parser": "^1.0.1",
     "sqlite3": "^4.1.1"
   },

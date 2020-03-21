@@ -34,12 +34,13 @@ function sendFile(fileName, res) {
 }
 
 
+app.get("/api/tree", Lifebook.tree);
+
+
 app.get("/" + Constants.NAME + "/*", function (req, res) {
   sendFile(path.join(Constants.PATH, decodeURIComponent(req.path)), res);
 });
 
-
-app.get("/api/tree", Lifebook.tree);
 
 /* Page */
 
