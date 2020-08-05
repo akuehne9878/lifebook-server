@@ -9,7 +9,7 @@
   "dependencies": {
     "dateformat": "^3.0.3",
     "express": "4.17.1",
-    "express-fileupload": "1.1.5",
+    "express-fileupload": "1.1.9",
     "force": "0.0.3",
     "fs-extra": "^8.1.0",
     "gfm.css": "^1.1.2",
